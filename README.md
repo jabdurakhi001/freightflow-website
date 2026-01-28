@@ -1,20 +1,22 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# FreightFlow LLC — Minimalist Website
 
-# Run and deploy your AI Studio app
+## Deploy on GitHub Pages
+1. Create a new GitHub repository (e.g., `freightflow-website`)
+2. Upload these files/folders to the repo root:
+   - `index.html`
+   - `css/`
+   - `js/`
+   - `assets/`
+3. GitHub → **Settings** → **Pages**
+   - Source: **Deploy from a branch**
+   - Branch: `main` / `(root)`
+4. Your site will publish on GitHub Pages.
 
-This contains everything you need to run your app locally.
+## Local preview
+Open `index.html` in your browser.
 
-View your app in AI Studio: https://ai.studio/apps/drive/1g82GrBCd-BjyHnBiETfAPgR3oqrwRTDx
-
-## Run Locally
-
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Quote form behavior (no backend)
+The form opens a `mailto:` draft. When you have a business email address, set it in `js/main.js`:
+```js
+const to = "dispatch@yourdomain.com";
+```

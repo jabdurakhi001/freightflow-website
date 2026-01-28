@@ -1,80 +1,435 @@
-<!DOCTYPE html>
-<html lang="en" class="light">
+<!doctype html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FreightFlow - Premium Logistics</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    
-    <!-- Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-    <script>
-        tailwind.config = {
-            darkMode: "class",
-            theme: {
-                extend: {
-                    colors: {
-                        "primary": "#137fec",
-                        "primary-dark": "#0b5db0",
-                        "primary-hover": "#0f6ac6",
-                        "background-light": "#f6f7f8",
-                        "background-dark": "#101922",
-                        "surface-light": "#ffffff",
-                        "surface-dark": "#1e293b",
-                        "steel-gray": "#475569",
-                    },
-                    fontFamily: {
-                        "display": ["Inter", "sans-serif"],
-                        "body": ["Inter", "sans-serif"],
-                        "mono": ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"]
-                    },
-                    boxShadow: {
-                        'glass': '0 4px 30px rgba(0, 0, 0, 0.1)',
-                    },
-                    backgroundImage: {
-                        'mesh-pattern': "radial-gradient(at 0% 0%, rgba(19, 127, 236, 0.08) 0px, transparent 50%), radial-gradient(at 100% 100%, rgba(19, 127, 236, 0.08) 0px, transparent 50%)"
-                    }
-                },
-            },
-        }
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>FreightFlow LLC | Chicago, IL | Transportation & Logistics</title>
+    <meta
+      name="description"
+      content="FreightFlow LLC is a Chicago-based transportation and logistics partner providing reliable, technology-driven capacity and compliance-first operations." />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="FreightFlow LLC" />
+    <meta
+      property="og:description"
+      content="Moving Freight. Powering Supply Chains. Chicago-based transportation & logistics." />
+    <meta property="og:type" content="website" />
+
+    <!-- Favicons (optional) -->
+    <link rel="icon" href="assets/logo.svg" type="image/svg+xml" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet" />
+
+    <link rel="stylesheet" href="css/styles.css" />
+
+    <!-- LocalBusiness schema -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "LocalBusiness",
+        "name": "FreightFlow LLC",
+        "telephone": "+1-314-252-0803",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Chicago",
+          "addressRegion": "IL",
+          "addressCountry": "US"
+        },
+        "areaServed": "United States",
+        "url": ""
+      }
     </script>
-    <style>
-      body {
-        font-family: 'Inter', sans-serif;
-      }
-      /* Custom scrollbar */
-      ::-webkit-scrollbar {
-          width: 8px;
-      }
-      ::-webkit-scrollbar-track {
-          background: #f1f1f1; 
-      }
-      ::-webkit-scrollbar-thumb {
-          background: #cbd5e1; 
-          border-radius: 4px;
-      }
-      ::-webkit-scrollbar-thumb:hover {
-          background: #94a3b8; 
-      }
-    </style>
-  <script type="importmap">
-{
-  "imports": {
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react-router-dom": "https://esm.sh/react-router-dom@^7.13.0",
-    "lucide-react": "https://esm.sh/lucide-react@^0.563.0"
-  }
-}
-</script>
-<link rel="stylesheet" href="/index.css">
-</head>
+  </head>
+
   <body>
-    <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <!-- Header -->
+    <header class="header" id="top">
+      <div class="container header__inner">
+        <a class="brand" href="#top" aria-label="FreightFlow LLC home">
+          <img src="assets/logo.svg" class="brand__mark" alt="FreightFlow logo" />
+          <span class="brand__name">FreightFlow LLC</span>
+        </a>
+
+        <nav class="nav" aria-label="Primary">
+          <button class="nav__toggle" id="navToggle" aria-expanded="false" aria-controls="navMenu">
+            <span class="sr-only">Toggle menu</span>
+            <span class="nav__bars" aria-hidden="true"></span>
+          </button>
+
+          <ul class="nav__menu" id="navMenu">
+            <li><a href="#services">Services</a></li>
+            <li><a href="#why">Why FreightFlow</a></li>
+            <li><a href="#safety">Safety</a></li>
+            <li><a href="#technology">Technology</a></li>
+            <li><a href="#quote">Request a Quote</a></li>
+            <li><a class="btn btn--ghost" href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- Hero -->
+      <section class="hero">
+        <div class="container hero__inner">
+          <div class="hero__copy">
+            <p class="pill">Chicago, IL • Asset-based operations • Compliance-first</p>
+            <h1>Moving Freight. Powering Supply Chains.</h1>
+            <p class="lead">
+              FreightFlow LLC delivers reliable, technology-driven transportation solutions designed for shippers,
+              brokers, and enterprise partners who expect performance, visibility, and control.
+            </p>
+            <div class="hero__cta">
+              <a class="btn" href="#quote">Request a Quote</a>
+              <a class="btn btn--ghost" href="tel:13142520803">Call (314) 252-0803</a>
+            </div>
+
+            <div class="trust">
+              <div class="trust__item">
+                <span class="trust__kpi" data-counter="98">0</span><span class="trust__unit">%</span>
+                <span class="trust__label">On-time focus</span>
+              </div>
+              <div class="trust__item">
+                <span class="trust__kpi" data-counter="24">0</span><span class="trust__unit">/7</span>
+                <span class="trust__label">Dispatch coverage</span>
+              </div>
+              <div class="trust__item">
+                <span class="trust__kpi" data-counter="100">0</span><span class="trust__unit">%</span>
+                <span class="trust__label">Compliance mindset</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="hero__panel" aria-hidden="true">
+            <div class="hero__glow"></div>
+            <div class="hero__card">
+              <div class="hero__cardHeader">
+                <span class="dot"></span>
+                <span class="dot"></span>
+                <span class="dot"></span>
+              </div>
+              <div class="hero__cardBody">
+                <p class="mono">STATUS</p>
+                <p class="h3">Capacity ready</p>
+                <p class="muted">Quote response designed for speed, clarity, and documentation.</p>
+                <div class="route">
+                  <div class="route__row">
+                    <span class="tag">Pickup</span>
+                    <span class="route__value">Midwest</span>
+                  </div>
+                  <div class="route__row">
+                    <span class="tag">Delivery</span>
+                    <span class="route__value">Nationwide</span>
+                  </div>
+                  <div class="route__row">
+                    <span class="tag">Visibility</span>
+                    <span class="route__value">Real-time tracking</span>
+                  </div>
+                </div>
+                <a class="btn btn--small" href="#quote">Start a quote</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Services -->
+      <section class="section" id="services">
+        <div class="container">
+          <div class="section__head">
+            <h2>Services</h2>
+            <p class="muted">Straightforward offerings built around reliability, documentation, and scalable execution.</p>
+          </div>
+
+          <div class="grid cards">
+            <article class="card">
+              <h3>Full Truckload (FTL)</h3>
+              <p>Asset-backed capacity for consistent lanes and time-sensitive freight.</p>
+              <ul class="list">
+                <li>Lane stability & dispatch discipline</li>
+                <li>Clean paperwork and POD workflow</li>
+                <li>Proactive ETAs</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Dedicated Routes</h3>
+              <p>Dedicated equipment and drivers for predictable operations and control.</p>
+              <ul class="list">
+                <li>Fixed schedules</li>
+                <li>Performance reporting</li>
+                <li>Scalable capacity planning</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Expedited Freight</h3>
+              <p>Fast turn solutions for high-priority shipments with clear communication.</p>
+              <ul class="list">
+                <li>Rapid dispatch</li>
+                <li>Milestone tracking</li>
+                <li>Exception management</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Regional Hauling</h3>
+              <p>Midwest-forward execution optimized for recurring regional demand.</p>
+              <ul class="list">
+                <li>Local expertise</li>
+                <li>Efficient routing</li>
+                <li>Consistent service levels</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Broker Partnerships</h3>
+              <p>Professional carrier partner with clean compliance, quick response, and visibility.</p>
+              <ul class="list">
+                <li>Fast quote turnaround</li>
+                <li>Document-ready operations</li>
+                <li>On-time accountability</li>
+              </ul>
+            </article>
+
+            <article class="card">
+              <h3>Asset-Based Operations</h3>
+              <p>Operational control with process discipline and technology-supported execution.</p>
+              <ul class="list">
+                <li>Standardized SOPs</li>
+                <li>Fleet monitoring</li>
+                <li>Compliance-first culture</li>
+              </ul>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- Why -->
+      <section class="section section--alt" id="why">
+        <div class="container">
+          <div class="section__head">
+            <h2>Why FreightFlow</h2>
+            <p class="muted">The differentiator is execution: disciplined operations, clean compliance, and visibility you can trust.</p>
+          </div>
+
+          <div class="grid features">
+            <div class="feature">
+              <h3>Reliability</h3>
+              <p>Operational rigor, proactive communication, and clear lane ownership.</p>
+            </div>
+            <div class="feature">
+              <h3>Compliance</h3>
+              <p>Driver screening, ELD discipline, maintenance standards, and audit-ready documentation.</p>
+            </div>
+            <div class="feature">
+              <h3>Visibility</h3>
+              <p>Real-time tracking and milestone updates to reduce surprises and exceptions.</p>
+            </div>
+            <div class="feature">
+              <h3>Scalability</h3>
+              <p>Process-first foundation designed to scale without chaos.</p>
+            </div>
+          </div>
+
+          <div class="banner">
+            <div>
+              <h3>Operating Regions</h3>
+              <p class="muted">Chicago-based coverage with nationwide reach depending on lane, equipment, and timing.</p>
+            </div>
+            <a class="btn btn--ghost" href="#quote">Check lane coverage</a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Safety -->
+      <section class="section" id="safety">
+        <div class="container">
+          <div class="split">
+            <div>
+              <h2>Safety & Compliance</h2>
+              <p class="muted">
+                Safety is not a page—it’s the operating system. Our workflow emphasizes driver qualification,
+                preventive maintenance, ELD compliance, and documentation that stands up to scrutiny.
+              </p>
+              <ul class="list">
+                <li>FMCSA-aligned compliance culture</li>
+                <li>Driver screening & qualification standards</li>
+                <li>ELD discipline & hours-of-service awareness</li>
+                <li>Preventive maintenance routines</li>
+                <li>Insurance-ready documentation</li>
+              </ul>
+            </div>
+            <div class="panel">
+              <p class="mono">COMMITMENT</p>
+              <p class="h3">Audit-ready operations</p>
+              <p class="muted">We build systems that reduce risk: checklists, SOPs, clean paperwork, and visibility.</p>
+              <div class="badges">
+                <span class="badge">ELD</span>
+                <span class="badge">SOP-driven</span>
+                <span class="badge">POD workflow</span>
+                <span class="badge">Maintenance</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Technology -->
+      <section class="section section--alt" id="technology">
+        <div class="container">
+          <div class="section__head">
+            <h2>Technology</h2>
+            <p class="muted">Real-time tracking, operational dashboards, and documentation pipelines built for clarity.</p>
+          </div>
+
+          <div class="grid tech">
+            <div class="card">
+              <h3>Real-time tracking</h3>
+              <p>Milestone updates designed to reduce check calls and improve planning.</p>
+            </div>
+            <div class="card">
+              <h3>Dispatch discipline</h3>
+              <p>Standardized execution with clear ownership, escalation paths, and SOPs.</p>
+            </div>
+            <div class="card">
+              <h3>Digital documentation</h3>
+              <p>Clean paperwork flow with consistent artifacts for billing and compliance.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Quote -->
+      <section class="section" id="quote">
+        <div class="container">
+          <div class="section__head">
+            <h2>Request a Quote</h2>
+            <p class="muted">Provide lane basics. We respond with a clear, documented quote and next steps.</p>
+          </div>
+
+          <form class="form" id="quoteForm" novalidate>
+            <div class="grid form__grid">
+              <label>
+                <span>Name</span>
+                <input name="name" type="text" autocomplete="name" required />
+              </label>
+              <label>
+                <span>Company</span>
+                <input name="company" type="text" autocomplete="organization" />
+              </label>
+              <label>
+                <span>Email</span>
+                <input name="email" type="email" autocomplete="email" required />
+              </label>
+              <label>
+                <span>Phone</span>
+                <input name="phone" type="tel" autocomplete="tel" />
+              </label>
+              <label>
+                <span>Pickup location</span>
+                <input name="pickup" type="text" placeholder="City, ST" required />
+              </label>
+              <label>
+                <span>Delivery location</span>
+                <input name="delivery" type="text" placeholder="City, ST" required />
+              </label>
+              <label>
+                <span>Load type</span>
+                <select name="loadType">
+                  <option>Full Truckload (FTL)</option>
+                  <option>Dedicated</option>
+                  <option>Expedited</option>
+                  <option>Regional</option>
+                  <option>Other</option>
+                </select>
+              </label>
+              <label>
+                <span>Urgency</span>
+                <select name="urgency">
+                  <option>Normal</option>
+                  <option>Time-sensitive</option>
+                  <option>Same-day / ASAP</option>
+                </select>
+              </label>
+              <label class="span2">
+                <span>Message</span>
+                <textarea name="message" rows="4" placeholder="Weight, dimensions, commodity, appointment times, etc."></textarea>
+              </label>
+            </div>
+
+            <div class="form__actions">
+              <button class="btn" type="submit">Submit quote request</button>
+              <p class="fineprint">
+                By submitting, you agree we may contact you about your request. We do not sell personal information.
+              </p>
+            </div>
+
+            <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- Contact -->
+      <section class="section" id="contact">
+        <div class="container">
+          <div class="split">
+            <div>
+              <h2>Contact</h2>
+              <p class="muted">Chicago-based. Nationwide reach depending on lane and equipment availability.</p>
+              <div class="contact">
+                <div class="contact__row">
+                  <span class="contact__label">Company</span>
+                  <span class="contact__value">FreightFlow LLC</span>
+                </div>
+                <div class="contact__row">
+                  <span class="contact__label">Location</span>
+                  <span class="contact__value">Chicago, IL</span>
+                </div>
+                <div class="contact__row">
+                  <span class="contact__label">Phone</span>
+                  <a class="contact__value" href="tel:13142520803">(314) 252-0803</a>
+                </div>
+              </div>
+              <div class="hero__cta" style="margin-top: 16px;">
+                <a class="btn" href="tel:13142520803">Call now</a>
+                <a class="btn btn--ghost" href="#quote">Request a quote</a>
+              </div>
+            </div>
+
+            <div class="panel">
+              <p class="mono">NEXT STEP</p>
+              <p class="h3">Let’s move your freight</p>
+              <p class="muted">If you have a lane, send details via the quote form. If you need an immediate answer, call.</p>
+              <div class="badges">
+                <span class="badge">Fast response</span>
+                <span class="badge">Clean docs</span>
+                <span class="badge">Visibility</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p>© <span id="year"></span> FreightFlow LLC. All rights reserved.</p>
+        <div class="footer__links">
+          <a href="#top">Back to top</a>
+          <a href="tel:13142520803">(314) 252-0803</a>
+        </div>
+      </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+  </body>
 </html>
