@@ -3,6 +3,13 @@
 // ===================================
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Check for successful form submission
+    if (window.location.search.includes('submitted=true')) {
+        showNotification('Thank you! Your message has been sent. We\'ll contact you within 24 hours.', 'success');
+        // Clean up URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    
     // Initialize all components
     initNavigation();
     initMobileMenu();
