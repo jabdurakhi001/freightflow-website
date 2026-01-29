@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreightFlow | Logistics That Move Mountains</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Grain Overlay -->
+    <div class="grain-overlay"></div>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="#" class="logo">
+                <span class="logo-icon">▶</span>
+                <span class="logo-text">FREIGHT<span class="logo-accent">FLOW</span></span>
+            </a>
+            <button class="mobile-menu-btn" aria-label="Toggle menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <ul class="nav-links">
+                <li><a href="#services">Services</a></li>
+                <li><a href="#fleet">Fleet</a></li>
+                <li><a href="#tracking">Tracking</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#contact" class="nav-cta">Get Quote</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-bg-lines"></div>
+        <div class="hero-content">
+            <div class="hero-tag">
+                <span class="tag-line"></span>
+                <span>NATIONWIDE LOGISTICS</span>
+            </div>
+            <h1 class="hero-title">
+                <span class="title-line">MOVING</span>
+                <span class="title-line title-outline">YOUR FREIGHT</span>
+                <span class="title-line">FORWARD<span class="title-dot">.</span></span>
+            </h1>
+            <p class="hero-subtitle">Coast-to-coast trucking solutions with real-time tracking, dedicated fleet management, and guaranteed delivery windows.</p>
+            <div class="hero-actions">
+                <a href="#contact" class="btn btn-primary">
+                    <span>Request Quote</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#tracking" class="btn btn-secondary">Track Shipment</a>
+            </div>
+            <div class="hero-stats">
+                <div class="stat">
+                    <span class="stat-number" data-count="2500">0</span>
+                    <span class="stat-label">Trucks in Fleet</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number" data-count="48">0</span>
+                    <span class="stat-label">States Covered</span>
+                </div>
+                <div class="stat-divider"></div>
+                <div class="stat">
+                    <span class="stat-number" data-count="99">0</span><span class="stat-suffix">%</span>
+                    <span class="stat-label">On-Time Rate</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-visual">
+            <div class="truck-silhouette">
+                <svg viewBox="0 0 400 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="10" y="80" width="200" height="80" rx="4" fill="currentColor"/>
+                    <rect x="210" y="100" width="100" height="60" rx="4" fill="currentColor"/>
+                    <rect x="220" y="110" width="40" height="30" rx="2" fill="#1a1a1a"/>
+                    <circle cx="60" cy="165" r="20" fill="currentColor"/>
+                    <circle cx="60" cy="165" r="10" fill="#1a1a1a"/>
+                    <circle cx="160" cy="165" r="20" fill="currentColor"/>
+                    <circle cx="160" cy="165" r="10" fill="#1a1a1a"/>
+                    <circle cx="280" cy="165" r="20" fill="currentColor"/>
+                    <circle cx="280" cy="165" r="10" fill="#1a1a1a"/>
+                    <path d="M310 120 L380 120 L380 155 L310 155 Z" fill="currentColor"/>
+                </svg>
+            </div>
+            <div class="moving-lines">
+                <span></span><span></span><span></span><span></span><span></span>
+            </div>
+        </div>
+        <div class="scroll-indicator">
+            <span>Scroll</span>
+            <div class="scroll-line"></div>
+        </div>
+    </header>
+
+    <!-- Services Section -->
+    <section id="services" class="services">
+        <div class="section-container">
+            <div class="section-header">
+                <span class="section-tag">01 / SERVICES</span>
+                <h2 class="section-title">LOGISTICS <span class="text-accent">SOLUTIONS</span></h2>
+            </div>
+            <div class="services-grid">
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="4" y="12" width="32" height="24" rx="2"/>
+                            <path d="M36 20h8v12h-8"/>
+                            <circle cx="12" cy="38" r="4"/>
+                            <circle cx="28" cy="38" r="4"/>
+                            <circle cx="40" cy="38" r="4"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">01</span>
+                    <h3>Full Truckload</h3>
+                    <p>Dedicated capacity for large shipments. Your freight, your truck, your timeline. Maximum efficiency for high-volume moves.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="8" width="32" height="32" rx="2"/>
+                            <path d="M8 20h32M20 8v32"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">02</span>
+                    <h3>Less Than Truckload</h3>
+                    <p>Cost-effective shipping for smaller loads. Share space, save money. Ideal for freight that doesn't require full trailer capacity.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M24 4v40M4 24h40"/>
+                            <circle cx="24" cy="24" r="16"/>
+                            <circle cx="24" cy="24" r="8"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">03</span>
+                    <h3>Expedited Freight</h3>
+                    <p>Time-critical deliveries that can't wait. 24/7 dispatch, team drivers, and guaranteed arrival windows for urgent shipments.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="6" y="14" width="36" height="24" rx="2"/>
+                            <path d="M6 22h36M14 14v-6M34 14v-6"/>
+                            <path d="M16 30h4M28 30h4"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">04</span>
+                    <h3>Refrigerated Transport</h3>
+                    <p>Temperature-controlled logistics for perishables. Continuous monitoring, precise climate control, and cold chain integrity.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="8" y="16" width="32" height="24" rx="2"/>
+                            <path d="M16 16V8h16v8"/>
+                            <path d="M24 24v8M20 28h8"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">05</span>
+                    <h3>Warehousing</h3>
+                    <p>Strategic storage solutions across key markets. Inventory management, cross-docking, and seamless distribution integration.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+                <article class="service-card">
+                    <div class="service-icon">
+                        <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="24" cy="24" r="18"/>
+                            <path d="M24 12v12l8 8"/>
+                        </svg>
+                    </div>
+                    <span class="service-number">06</span>
+                    <h3>Last Mile Delivery</h3>
+                    <p>Final stretch fulfillment with precision. Residential and commercial delivery with real-time customer notifications.</p>
+                    <a href="#" class="service-link">Learn More →</a>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Fleet Section -->
+    <section id="fleet" class="fleet">
+        <div class="section-container">
+            <div class="fleet-content">
+                <div class="section-header">
+                    <span class="section-tag">02 / FLEET</span>
+                    <h2 class="section-title">MODERN <span class="text-accent">FLEET</span></h2>
+                </div>
+                <p class="fleet-description">Our fleet represents the pinnacle of American trucking. Every vehicle is equipped with advanced telematics, maintained to rigorous standards, and operated by certified professionals.</p>
+                <div class="fleet-features">
+                    <div class="fleet-feature">
+                        <span class="feature-icon">◆</span>
+                        <span>GPS Real-Time Tracking</span>
+                    </div>
+                    <div class="fleet-feature">
+                        <span class="feature-icon">◆</span>
+                        <span>ELD Compliant</span>
+                    </div>
+                    <div class="fleet-feature">
+                        <span class="feature-icon">◆</span>
+                        <span>Dash Cam Security</span>
+                    </div>
+                    <div class="fleet-feature">
+                        <span class="feature-icon">◆</span>
+                        <span>Fuel Efficient Routes</span>
+                    </div>
+                </div>
+                <div class="fleet-numbers">
+                    <div class="fleet-stat">
+                        <span class="fleet-stat-number">2,500+</span>
+                        <span class="fleet-stat-label">Power Units</span>
+                    </div>
+                    <div class="fleet-stat">
+                        <span class="fleet-stat-number">5,000+</span>
+                        <span class="fleet-stat-label">Trailers</span>
+                    </div>
+                    <div class="fleet-stat">
+                        <span class="fleet-stat-number">3 yrs</span>
+                        <span class="fleet-stat-label">Avg. Fleet Age</span>
+                    </div>
+                </div>
+            </div>
+            <div class="fleet-visual">
+                <div class="fleet-image-container">
+                    <div class="fleet-image-placeholder">
+                        <svg viewBox="0 0 600 400" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Stylized fleet illustration -->
+                            <rect width="600" height="400" fill="#0d0d0d"/>
+                            <g opacity="0.3">
+                                <line x1="0" y1="50" x2="600" y2="50" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="100" x2="600" y2="100" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="150" x2="600" y2="150" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="200" x2="600" y2="200" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="250" x2="600" y2="250" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="300" x2="600" y2="300" stroke="#ff4d00" stroke-width="1"/>
+                                <line x1="0" y1="350" x2="600" y2="350" stroke="#ff4d00" stroke-width="1"/>
+                            </g>
+                            <!-- Truck 1 -->
+                            <g transform="translate(50, 180)">
+                                <rect x="0" y="20" width="120" height="60" rx="3" fill="#ff4d00"/>
+                                <rect x="120" y="35" width="60" height="45" rx="3" fill="#ff4d00"/>
+                                <rect x="130" y="42" width="25" height="20" rx="2" fill="#1a1a1a"/>
+                                <circle cx="30" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="30" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="90" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="90" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="160" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="160" cy="82" r="6" fill="#0d0d0d"/>
+                            </g>
+                            <!-- Truck 2 -->
+                            <g transform="translate(280, 140)" opacity="0.6">
+                                <rect x="0" y="20" width="120" height="60" rx="3" fill="#ff4d00"/>
+                                <rect x="120" y="35" width="60" height="45" rx="3" fill="#ff4d00"/>
+                                <rect x="130" y="42" width="25" height="20" rx="2" fill="#1a1a1a"/>
+                                <circle cx="30" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="30" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="90" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="90" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="160" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="160" cy="82" r="6" fill="#0d0d0d"/>
+                            </g>
+                            <!-- Truck 3 -->
+                            <g transform="translate(380, 220)" opacity="0.3">
+                                <rect x="0" y="20" width="120" height="60" rx="3" fill="#ff4d00"/>
+                                <rect x="120" y="35" width="60" height="45" rx="3" fill="#ff4d00"/>
+                                <rect x="130" y="42" width="25" height="20" rx="2" fill="#1a1a1a"/>
+                                <circle cx="30" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="30" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="90" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="90" cy="82" r="6" fill="#0d0d0d"/>
+                                <circle cx="160" cy="82" r="12" fill="#ff4d00"/>
+                                <circle cx="160" cy="82" r="6" fill="#0d0d0d"/>
+                            </g>
+                        </svg>
+                    </div>
+                    <div class="fleet-badge">
+                        <span>DOT</span>
+                        <span>CERTIFIED</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tracking Section -->
+    <section id="tracking" class="tracking">
+        <div class="section-container">
+            <div class="tracking-content">
+                <div class="section-header">
+                    <span class="section-tag">03 / TRACKING</span>
+                    <h2 class="section-title">REAL-TIME <span class="text-accent">VISIBILITY</span></h2>
+                </div>
+                <p class="tracking-description">Know exactly where your freight is, every mile of the journey. Our advanced tracking system provides live updates, ETAs, and delivery confirmations.</p>
+                <form class="tracking-form">
+                    <div class="input-group">
+                        <input type="text" placeholder="Enter tracking number or PRO#" class="tracking-input">
+                        <button type="submit" class="btn btn-primary">
+                            <span>Track</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="11" cy="11" r="8"/>
+                                <path d="M21 21l-4.35-4.35"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+                <div class="tracking-features">
+                    <div class="tracking-feature">
+                        <div class="tracking-feature-icon">📍</div>
+                        <h4>Live GPS</h4>
+                        <p>Real-time location updates every 5 minutes</p>
+                    </div>
+                    <div class="tracking-feature">
+                        <div class="tracking-feature-icon">📱</div>
+                        <h4>SMS Alerts</h4>
+                        <p>Automatic notifications at key milestones</p>
+                    </div>
+                    <div class="tracking-feature">
+                        <div class="tracking-feature-icon">📊</div>
+                        <h4>Analytics</h4>
+                        <p>Historical data and delivery performance</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="map-visual">
+            <svg viewBox="0 0 800 300" fill="none" xmlns="http://www.w3.org/2000/svg" class="map-svg">
+                <!-- Simplified US Map outline -->
+                <path d="M100 150 L150 100 L200 90 L250 85 L300 80 L400 75 L500 80 L550 90 L600 100 L650 120 L700 150 L680 180 L650 200 L600 210 L550 215 L500 220 L400 225 L300 220 L250 210 L200 195 L150 180 L100 150Z" 
+                      fill="none" stroke="#ff4d00" stroke-width="2" opacity="0.3"/>
+                <!-- Route line -->
+                <path d="M150 160 Q300 100 400 130 Q500 160 650 140" 
+                      fill="none" stroke="#ff4d00" stroke-width="3" stroke-dasharray="10 5" class="route-line"/>
+                <!-- Origin point -->
+                <circle cx="150" cy="160" r="8" fill="#ff4d00"/>
+                <circle cx="150" cy="160" r="15" fill="none" stroke="#ff4d00" stroke-width="2" opacity="0.5" class="pulse-ring"/>
+                <!-- Destination point -->
+                <circle cx="650" cy="140" r="8" fill="#ff4d00"/>
+                <!-- Truck indicator -->
+                <circle cx="400" cy="130" r="12" fill="#ff4d00" class="truck-dot"/>
+                <circle cx="400" cy="130" r="20" fill="none" stroke="#ff4d00" stroke-width="2" opacity="0.3" class="pulse-ring"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="about">
+        <div class="section-container">
+            <div class="about-grid">
+                <div class="about-content">
+                    <div class="section-header">
+                        <span class="section-tag">04 / ABOUT</span>
+                        <h2 class="section-title">BUILT ON <span class="text-accent">RELIABILITY</span></h2>
+                    </div>
+                    <p class="about-text">Since 2008, FreightFlow has been the backbone of American commerce. We started with 12 trucks in Chicago and grew into a nationwide operation through one simple principle: deliver what we promise, when we promise it.</p>
+                    <p class="about-text">Our drivers average 15+ years of experience. Our dispatchers work 24/7/365. Our commitment to your supply chain is unwavering.</p>
+                    <div class="about-values">
+                        <div class="value">
+                            <span class="value-number">01</span>
+                            <div>
+                                <h4>Safety First</h4>
+                                <p>Zero-tolerance safety culture with continuous driver training</p>
+                            </div>
+                        </div>
+                        <div class="value">
+                            <span class="value-number">02</span>
+                            <div>
+                                <h4>Technology Driven</h4>
+                                <p>Industry-leading TMS and real-time visibility platform</p>
+                            </div>
+                        </div>
+                        <div class="value">
+                            <span class="value-number">03</span>
+                            <div>
+                                <h4>Customer Obsessed</h4>
+                                <p>Dedicated account teams with direct communication lines</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="about-image">
+                        <div class="about-image-inner">
+                            <span class="about-year">EST. 2008</span>
+                        </div>
+                    </div>
+                    <div class="certifications">
+                        <span class="cert">SmartWay Partner</span>
+                        <span class="cert">ISO 9001</span>
+                        <span class="cert">C-TPAT</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="contact">
+        <div class="section-container">
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="section-header">
+                        <span class="section-tag">05 / CONTACT</span>
+                        <h2 class="section-title">LET'S <span class="text-accent">MOVE</span></h2>
+                    </div>
+                    <p class="contact-description">Ready to optimize your supply chain? Our logistics experts are standing by to build a custom solution for your freight needs.</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <span class="method-label">24/7 Dispatch</span>
+                            <a href="tel:1-800-FREIGHT" class="method-value">1-800-FREIGHT</a>
+                        </div>
+                        <div class="contact-method">
+                            <span class="method-label">Email</span>
+                            <a href="mailto:dispatch@freightflow.com" class="method-value">dispatch@freightflow.com</a>
+                        </div>
+                        <div class="contact-method">
+                            <span class="method-label">Headquarters</span>
+                            <span class="method-value">Chicago, IL</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form-container">
+                    <form class="contact-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Full Name</label>
+                                <input type="text" id="name" name="name" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="company">Company</label>
+                                <input type="text" id="company" name="company">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="email">Email</label>
+                                <input type="email" id="email" name="email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="phone">Phone</label>
+                                <input type="tel" id="phone" name="phone">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="service">Service Needed</label>
+                            <select id="service" name="service">
+                                <option value="">Select a service</option>
+                                <option value="ftl">Full Truckload</option>
+                                <option value="ltl">Less Than Truckload</option>
+                                <option value="expedited">Expedited Freight</option>
+                                <option value="refrigerated">Refrigerated Transport</option>
+                                <option value="warehousing">Warehousing</option>
+                                <option value="lastmile">Last Mile Delivery</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="4" placeholder="Tell us about your freight needs..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full">
+                            <span>Send Request</span>
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                            </svg>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-main">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <span class="logo-icon">▶</span>
+                        <span class="logo-text">FREIGHT<span class="logo-accent">FLOW</span></span>
+                    </a>
+                    <p>Nationwide trucking and logistics solutions. Moving American commerce forward since 2008.</p>
+                </div>
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Services</h4>
+                        <ul>
+                            <li><a href="#">Full Truckload</a></li>
+                            <li><a href="#">LTL Shipping</a></li>
+                            <li><a href="#">Expedited</a></li>
+                            <li><a href="#">Refrigerated</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Company</h4>
+                        <ul>
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">News</a></li>
+                            <li><a href="#">Contact</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <ul>
+                            <li><a href="#">Track Shipment</a></li>
+                            <li><a href="#">Get Quote</a></li>
+                            <li><a href="#">BOL Forms</a></li>
+                            <li><a href="#">FAQ</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 FreightFlow Logistics. All rights reserved.</p>
+                <div class="footer-legal">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">MC# 123456</a>
+                    <a href="#">DOT# 7891011</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
