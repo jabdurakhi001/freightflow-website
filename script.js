@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initCounterAnimation();
     initScrollAnimations();
-    initFormValidation();
+    initTrackingForm();
     initSmoothScroll();
 });
 
@@ -170,45 +170,9 @@ function initScrollAnimations() {
     });
 }
 
-// Form validation
-function initFormValidation() {
-    const contactForm = document.querySelector('.contact-form');
+// Tracking form only (Contact form submits directly to Web3Forms)
+function initTrackingForm() {
     const trackingForm = document.querySelector('.tracking-form');
-    
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            // Get form data
-            const formData = new FormData(contactForm);
-            const data = Object.fromEntries(formData);
-            
-            // Basic validation
-            if (!data.name || !data.email) {
-                showNotification('Please fill in all required fields', 'error');
-                return;
-            }
-            
-            if (!isValidEmail(data.email)) {
-                showNotification('Please enter a valid email address', 'error');
-                return;
-            }
-            
-            // Simulate form submission
-            const submitBtn = contactForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<span>Sending...</span>';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                showNotification('Thank you! We\'ll be in touch within 24 hours.', 'success');
-                contactForm.reset();
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
-        });
-    }
     
     if (trackingForm) {
         trackingForm.addEventListener('submit', (e) => {
@@ -236,11 +200,6 @@ function initFormValidation() {
             }, 1500);
         });
     }
-}
-
-function isValidEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
 }
 
 function showNotification(message, type = 'info') {
