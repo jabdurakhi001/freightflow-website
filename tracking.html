@@ -1,0 +1,881 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Track Your Shipment | FreightFlow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700&family=Barlow+Condensed:wght@600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ===================================
+           FREIGHTFLOW - Tracking Page
+           =================================== */
+        
+        :root {
+            --color-black: #0a0a0a;
+            --color-dark: #141414;
+            --color-darker: #1a1a1a;
+            --color-gray: #2a2a2a;
+            --color-gray-light: #3a3a3a;
+            --color-text: #e8e8e8;
+            --color-text-muted: #888888;
+            --color-accent: #ff4d00;
+            --color-accent-dark: #cc3d00;
+            --color-accent-light: #ff6a2b;
+            --color-white: #ffffff;
+            --color-success: #22c55e;
+            --color-warning: #eab308;
+            --color-info: #3b82f6;
+            
+            --font-display: 'Bebas Neue', sans-serif;
+            --font-heading: 'Barlow Condensed', sans-serif;
+            --font-body: 'Barlow', sans-serif;
+        }
+        
+        *, *::before, *::after {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-body);
+            background-color: var(--color-black);
+            color: var(--color-text);
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        /* Navigation */
+        .nav {
+            padding: 1rem 0;
+            background: rgba(10, 10, 10, 0.95);
+            border-bottom: 1px solid var(--color-gray);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-decoration: none;
+        }
+        
+        .logo-icon {
+            color: var(--color-accent);
+            font-size: 1.5rem;
+        }
+        
+        .logo-text {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            letter-spacing: 0.05em;
+            color: var(--color-white);
+        }
+        
+        .logo-accent {
+            color: var(--color-accent);
+        }
+        
+        .back-link {
+            color: var(--color-text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: color 0.2s;
+        }
+        
+        .back-link:hover {
+            color: var(--color-accent);
+        }
+        
+        /* Main Content */
+        .tracking-page {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 2rem;
+        }
+        
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .page-title {
+            font-family: var(--font-display);
+            font-size: clamp(2.5rem, 6vw, 4rem);
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+        
+        .page-title span {
+            color: var(--color-accent);
+        }
+        
+        .page-subtitle {
+            color: var(--color-text-muted);
+            font-size: 1.1rem;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        /* Search Box */
+        .search-container {
+            background: var(--color-dark);
+            border: 1px solid var(--color-gray);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 1.25rem 1.5rem;
+            font-family: var(--font-body);
+            font-size: 1.1rem;
+            background: var(--color-darker);
+            border: 2px solid var(--color-gray);
+            color: var(--color-white);
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        .search-input::placeholder {
+            color: var(--color-text-muted);
+        }
+        
+        .search-input:focus {
+            border-color: var(--color-accent);
+        }
+        
+        .search-btn {
+            padding: 1.25rem 2.5rem;
+            font-family: var(--font-body);
+            font-weight: 600;
+            font-size: 1rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--color-accent);
+            color: var(--color-white);
+            border: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .search-btn:hover {
+            background: var(--color-accent-light);
+            transform: translateY(-2px);
+        }
+        
+        .search-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .search-hint {
+            margin-top: 1rem;
+            font-size: 0.85rem;
+            color: var(--color-text-muted);
+        }
+        
+        /* Results */
+        .results-container {
+            display: none;
+        }
+        
+        .results-container.active {
+            display: block;
+        }
+        
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            display: none;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--color-gray);
+            border-top-color: var(--color-accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Error State */
+        .error-message {
+            background: #4a1a1a;
+            border: 1px solid #7a2d2d;
+            padding: 2rem;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message.active {
+            display: block;
+        }
+        
+        .error-message h3 {
+            color: #ff6b6b;
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .error-message p {
+            color: var(--color-text-muted);
+        }
+        
+        /* Shipment Card */
+        .shipment-card {
+            background: var(--color-dark);
+            border: 1px solid var(--color-gray);
+            display: none;
+        }
+        
+        .shipment-card.active {
+            display: block;
+        }
+        
+        .shipment-header {
+            background: var(--color-darker);
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--color-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        
+        .shipment-number {
+            font-family: var(--font-display);
+            font-size: 1.75rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .shipment-number span {
+            color: var(--color-accent);
+        }
+        
+        .status-badge {
+            padding: 0.5rem 1.25rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+        
+        .status-badge.in-transit {
+            background: rgba(59, 130, 246, 0.2);
+            color: var(--color-info);
+            border: 1px solid var(--color-info);
+        }
+        
+        .status-badge.delivered {
+            background: rgba(34, 197, 94, 0.2);
+            color: var(--color-success);
+            border: 1px solid var(--color-success);
+        }
+        
+        .status-badge.pending {
+            background: rgba(234, 179, 8, 0.2);
+            color: var(--color-warning);
+            border: 1px solid var(--color-warning);
+        }
+        
+        .status-badge.dispatched {
+            background: rgba(255, 77, 0, 0.2);
+            color: var(--color-accent);
+            border: 1px solid var(--color-accent);
+        }
+        
+        .shipment-body {
+            padding: 2rem;
+        }
+        
+        /* Route Visualization */
+        .route-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 2.5rem;
+            position: relative;
+            padding: 1rem 0;
+        }
+        
+        .route-point {
+            text-align: center;
+            z-index: 2;
+            flex: 0 0 auto;
+        }
+        
+        .route-point.origin {
+            text-align: left;
+        }
+        
+        .route-point.destination {
+            text-align: right;
+        }
+        
+        .route-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .route-point.origin .route-icon {
+            background: var(--color-accent);
+            color: var(--color-white);
+        }
+        
+        .route-point.destination .route-icon {
+            background: var(--color-gray);
+            color: var(--color-text);
+            border: 2px solid var(--color-accent);
+        }
+        
+        .route-point.destination.completed .route-icon {
+            background: var(--color-success);
+            border-color: var(--color-success);
+        }
+        
+        .route-city {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--color-white);
+            margin-bottom: 0.25rem;
+        }
+        
+        .route-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+        }
+        
+        .route-line {
+            position: absolute;
+            top: 50%;
+            left: 60px;
+            right: 60px;
+            height: 4px;
+            background: var(--color-gray);
+            transform: translateY(-15px);
+            z-index: 1;
+        }
+        
+        .route-progress {
+            height: 100%;
+            background: var(--color-accent);
+            transition: width 0.5s ease;
+        }
+        
+        .truck-indicator {
+            position: absolute;
+            top: 50%;
+            transform: translate(-50%, -32px);
+            font-size: 1.5rem;
+            z-index: 3;
+            transition: left 0.5s ease;
+        }
+        
+        /* Shipment Details Grid */
+        .details-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .detail-item {
+            padding: 1.25rem;
+            background: var(--color-darker);
+            border: 1px solid var(--color-gray);
+        }
+        
+        .detail-label {
+            font-size: 0.75rem;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: var(--color-text-muted);
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-value {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            color: var(--color-white);
+        }
+        
+        .detail-value.highlight {
+            color: var(--color-accent);
+        }
+        
+        /* Timeline */
+        .timeline-section {
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--color-gray);
+        }
+        
+        .timeline-title {
+            font-family: var(--font-heading);
+            font-size: 1.25rem;
+            margin-bottom: 1.5rem;
+            color: var(--color-white);
+        }
+        
+        .timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+        
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 7px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--color-gray);
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -2rem;
+            top: 0;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: var(--color-gray);
+            border: 2px solid var(--color-dark);
+        }
+        
+        .timeline-item.completed .timeline-dot {
+            background: var(--color-success);
+        }
+        
+        .timeline-item.current .timeline-dot {
+            background: var(--color-accent);
+            box-shadow: 0 0 0 4px rgba(255, 77, 0, 0.3);
+        }
+        
+        .timeline-content {
+            padding-left: 0.5rem;
+        }
+        
+        .timeline-date {
+            font-size: 0.8rem;
+            color: var(--color-text-muted);
+            margin-bottom: 0.25rem;
+        }
+        
+        .timeline-event {
+            font-weight: 500;
+            color: var(--color-white);
+        }
+        
+        .timeline-location {
+            font-size: 0.9rem;
+            color: var(--color-text-muted);
+        }
+        
+        /* Footer */
+        .page-footer {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--color-text-muted);
+            font-size: 0.9rem;
+        }
+        
+        .page-footer a {
+            color: var(--color-accent);
+            text-decoration: none;
+        }
+        
+        .page-footer a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive */
+        @media (max-width: 600px) {
+            .search-form {
+                flex-direction: column;
+            }
+            
+            .search-btn {
+                justify-content: center;
+            }
+            
+            .shipment-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .route-visual {
+                flex-direction: column;
+                gap: 2rem;
+            }
+            
+            .route-point {
+                text-align: center !important;
+            }
+            
+            .route-line {
+                display: none;
+            }
+            
+            .truck-indicator {
+                display: none;
+            }
+            
+            .details-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="logo-icon">▶</span>
+                <span class="logo-text">FREIGHT<span class="logo-accent">FLOW</span></span>
+            </a>
+            <a href="index.html" class="back-link">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"/>
+                </svg>
+                Back to Home
+            </a>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="tracking-page">
+        <header class="page-header">
+            <h1 class="page-title">TRACK YOUR <span>SHIPMENT</span></h1>
+            <p class="page-subtitle">Enter your load number or PRO number to get real-time status updates on your freight.</p>
+        </header>
+
+        <!-- Search Box -->
+        <div class="search-container">
+            <form class="search-form" id="trackingForm">
+                <input 
+                    type="text" 
+                    class="search-input" 
+                    id="trackingInput"
+                    placeholder="Enter Load # (e.g., FF-1001)"
+                    autocomplete="off"
+                    required
+                >
+                <button type="submit" class="search-btn" id="searchBtn">
+                    <span>Track</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                </button>
+            </form>
+            <p class="search-hint">💡 Your load number can be found on your Bill of Lading or booking confirmation email.</p>
+        </div>
+
+        <!-- Results Container -->
+        <div class="results-container" id="resultsContainer">
+            <!-- Loading State -->
+            <div class="loading" id="loadingState">
+                <div class="spinner"></div>
+                <p>Looking up your shipment...</p>
+            </div>
+
+            <!-- Error State -->
+            <div class="error-message" id="errorState">
+                <h3>Shipment Not Found</h3>
+                <p>We couldn't find a shipment with that number. Please check and try again, or contact us at <strong>1-800-FREIGHT</strong>.</p>
+            </div>
+
+            <!-- Shipment Card -->
+            <div class="shipment-card" id="shipmentCard">
+                <div class="shipment-header">
+                    <div class="shipment-number">LOAD# <span id="displayLoadNumber">FF-1001</span></div>
+                    <div class="status-badge in-transit" id="statusBadge">In Transit</div>
+                </div>
+                <div class="shipment-body">
+                    <!-- Route Visualization -->
+                    <div class="route-visual">
+                        <div class="route-point origin">
+                            <div class="route-icon">📍</div>
+                            <div class="route-city" id="originCity">Chicago, IL</div>
+                            <div class="route-label">Origin</div>
+                        </div>
+                        <div class="route-line">
+                            <div class="route-progress" id="routeProgress" style="width: 50%;"></div>
+                        </div>
+                        <div class="truck-indicator" id="truckIndicator" style="left: 50%;">🚛</div>
+                        <div class="route-point destination" id="destinationPoint">
+                            <div class="route-icon">📍</div>
+                            <div class="route-city" id="destCity">Dallas, TX</div>
+                            <div class="route-label">Destination</div>
+                        </div>
+                    </div>
+
+                    <!-- Details Grid -->
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <div class="detail-label">Customer</div>
+                            <div class="detail-value" id="customerName">ABC Corporation</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Estimated Delivery</div>
+                            <div class="detail-value highlight" id="etaDate">Jan 31, 2026</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Pickup Date</div>
+                            <div class="detail-value" id="pickupDate">Jan 28, 2026</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Service Type</div>
+                            <div class="detail-value" id="serviceType">Full Truckload</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Weight</div>
+                            <div class="detail-value" id="weight">42,000 lbs</div>
+                        </div>
+                        <div class="detail-item">
+                            <div class="detail-label">Driver</div>
+                            <div class="detail-value" id="driverName">Mike Johnson</div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline -->
+                    <div class="timeline-section">
+                        <h3 class="timeline-title">Shipment Updates</h3>
+                        <div class="timeline" id="timeline">
+                            <!-- Timeline items will be inserted here -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="page-footer">
+        <p>Need help? Call <strong>1-800-FREIGHT</strong> or <a href="index.html#contact">contact us</a></p>
+        <p style="margin-top: 0.5rem;">&copy; 2024 FreightFlow Logistics. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // =====================================================
+        // FREIGHTFLOW TRACKING SYSTEM
+        // Connected to Google Sheets Database
+        // =====================================================
+
+        // 🔴 IMPORTANT: Replace this with your Google Sheets Web App URL
+        const GOOGLE_SHEETS_API = 'YOUR_GOOGLE_SHEETS_WEB_APP_URL';
+
+        // DOM Elements
+        const trackingForm = document.getElementById('trackingForm');
+        const trackingInput = document.getElementById('trackingInput');
+        const searchBtn = document.getElementById('searchBtn');
+        const resultsContainer = document.getElementById('resultsContainer');
+        const loadingState = document.getElementById('loadingState');
+        const errorState = document.getElementById('errorState');
+        const shipmentCard = document.getElementById('shipmentCard');
+
+        // Form submission
+        trackingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const loadNumber = trackingInput.value.trim().toUpperCase();
+            
+            if (!loadNumber) return;
+            
+            await trackShipment(loadNumber);
+        });
+
+        // Main tracking function
+        async function trackShipment(loadNumber) {
+            // Show loading
+            resultsContainer.classList.add('active');
+            loadingState.classList.add('active');
+            errorState.classList.remove('active');
+            shipmentCard.classList.remove('active');
+            searchBtn.disabled = true;
+
+            try {
+                // Fetch from Google Sheets
+                const response = await fetch(`${GOOGLE_SHEETS_API}?loadNumber=${encodeURIComponent(loadNumber)}`);
+                const data = await response.json();
+
+                // Hide loading
+                loadingState.classList.remove('active');
+                searchBtn.disabled = false;
+
+                if (data.success && data.shipment) {
+                    displayShipment(data.shipment);
+                } else {
+                    errorState.classList.add('active');
+                }
+            } catch (error) {
+                console.error('Tracking error:', error);
+                loadingState.classList.remove('active');
+                errorState.classList.add('active');
+                searchBtn.disabled = false;
+            }
+        }
+
+        // Display shipment data
+        function displayShipment(shipment) {
+            shipmentCard.classList.add('active');
+
+            // Update basic info
+            document.getElementById('displayLoadNumber').textContent = shipment.loadNumber;
+            document.getElementById('originCity').textContent = shipment.origin;
+            document.getElementById('destCity').textContent = shipment.destination;
+            document.getElementById('customerName').textContent = shipment.customer;
+            document.getElementById('etaDate').textContent = shipment.eta;
+            document.getElementById('pickupDate').textContent = shipment.pickupDate;
+            document.getElementById('serviceType').textContent = shipment.serviceType || 'Full Truckload';
+            document.getElementById('weight').textContent = shipment.weight || 'N/A';
+            document.getElementById('driverName').textContent = shipment.driver || 'Assigned';
+
+            // Update status badge
+            const statusBadge = document.getElementById('statusBadge');
+            const status = shipment.status.toLowerCase().replace(' ', '-');
+            statusBadge.className = 'status-badge ' + status;
+            statusBadge.textContent = shipment.status;
+
+            // Update progress
+            const progress = getProgressPercentage(shipment.status);
+            document.getElementById('routeProgress').style.width = progress + '%';
+            document.getElementById('truckIndicator').style.left = `calc(60px + ${progress}% * (100% - 120px) / 100)`;
+
+            // Update destination marker if delivered
+            const destPoint = document.getElementById('destinationPoint');
+            if (shipment.status.toLowerCase() === 'delivered') {
+                destPoint.classList.add('completed');
+            } else {
+                destPoint.classList.remove('completed');
+            }
+
+            // Update timeline
+            updateTimeline(shipment.updates || getDefaultUpdates(shipment));
+        }
+
+        // Calculate progress percentage based on status
+        function getProgressPercentage(status) {
+            const statusMap = {
+                'pending': 0,
+                'dispatched': 20,
+                'picked up': 35,
+                'in transit': 60,
+                'out for delivery': 85,
+                'delivered': 100
+            };
+            return statusMap[status.toLowerCase()] || 50;
+        }
+
+        // Generate default timeline updates
+        function getDefaultUpdates(shipment) {
+            const updates = [];
+            const status = shipment.status.toLowerCase();
+            
+            updates.push({
+                date: shipment.pickupDate,
+                event: 'Shipment picked up',
+                location: shipment.origin,
+                completed: true
+            });
+
+            if (status === 'in transit' || status === 'out for delivery' || status === 'delivered') {
+                updates.push({
+                    date: 'In Progress',
+                    event: 'In transit to destination',
+                    location: 'En route',
+                    current: status === 'in transit'
+                });
+            }
+
+            if (status === 'out for delivery' || status === 'delivered') {
+                updates.push({
+                    date: shipment.eta,
+                    event: 'Out for delivery',
+                    location: shipment.destination,
+                    current: status === 'out for delivery'
+                });
+            }
+
+            if (status === 'delivered') {
+                updates.push({
+                    date: shipment.deliveredDate || shipment.eta,
+                    event: 'Delivered',
+                    location: shipment.destination,
+                    completed: true
+                });
+            }
+
+            return updates;
+        }
+
+        // Update timeline UI
+        function updateTimeline(updates) {
+            const timeline = document.getElementById('timeline');
+            timeline.innerHTML = updates.map(update => `
+                <div class="timeline-item ${update.completed ? 'completed' : ''} ${update.current ? 'current' : ''}">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <div class="timeline-date">${update.date}</div>
+                        <div class="timeline-event">${update.event}</div>
+                        <div class="timeline-location">${update.location}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+    </script>
+</body>
+</html>
