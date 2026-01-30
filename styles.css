@@ -364,14 +364,6 @@ a {
 
 .stat {
     text-align: left;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-}
-
-.stat-number-row {
-    display: flex;
-    align-items: baseline;
 }
 
 .stat-number {
@@ -379,11 +371,6 @@ a {
     font-size: 3rem;
     color: var(--color-white);
     line-height: 1;
-    display: block;
-}
-
-.stat-number-row .stat-number {
-    display: inline;
 }
 
 .stat-suffix {
