@@ -738,6 +738,17 @@
             await trackShipment(loadNumber);
         });
 
+        // Check URL for load number on page load
+        window.addEventListener('DOMContentLoaded', () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const loadFromUrl = urlParams.get('load');
+            
+            if (loadFromUrl) {
+                trackingInput.value = loadFromUrl.toUpperCase();
+                trackShipment(loadFromUrl.toUpperCase());
+            }
+        });
+
         // Main tracking function
         async function trackShipment(loadNumber) {
             // Show loading
