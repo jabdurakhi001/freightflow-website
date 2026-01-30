@@ -366,8 +366,12 @@ a {
     text-align: left;
 }
 
+.stat-number-row {
+    display: flex;
+    align-items: baseline;
+}
+
 .stat-number {
-    display: inline;
     font-family: var(--font-display);
     font-size: 3rem;
     color: var(--color-white);
@@ -378,7 +382,6 @@ a {
     font-family: var(--font-display);
     font-size: 3rem;
     color: var(--color-accent);
-    display: inline;
 }
 
 .stat-label {
