@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMobileMenu();
     initCounterAnimation();
     initScrollAnimations();
-    initTrackingForm();
     initSmoothScroll();
 });
 
@@ -170,37 +169,8 @@ function initScrollAnimations() {
     });
 }
 
-// Tracking form only (Contact form submits directly to Web3Forms)
-function initTrackingForm() {
-    const trackingForm = document.querySelector('.tracking-form');
-    
-    if (trackingForm) {
-        trackingForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            
-            const input = trackingForm.querySelector('.tracking-input');
-            const trackingNumber = input.value.trim();
-            
-            if (!trackingNumber) {
-                showNotification('Please enter a tracking number', 'error');
-                return;
-            }
-            
-            // Simulate tracking lookup
-            const submitBtn = trackingForm.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
-            
-            submitBtn.innerHTML = '<span>Searching...</span>';
-            submitBtn.disabled = true;
-            
-            setTimeout(() => {
-                showNotification(`Tracking ${trackingNumber}: In Transit - ETA 2 days`, 'success');
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }, 1500);
-        });
-    }
-}
+// Tracking form - now redirects to tracking.html (form action handles it)
+// No JavaScript interception needed
 
 function showNotification(message, type = 'info') {
     // Remove existing notifications
