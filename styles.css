@@ -367,7 +367,7 @@ a {
 }
 
 .stat-number {
-    display: block;
+    display: inline;
     font-family: var(--font-display);
     font-size: 3rem;
     color: var(--color-white);
@@ -378,13 +378,16 @@ a {
     font-family: var(--font-display);
     font-size: 3rem;
     color: var(--color-accent);
+    display: inline;
 }
 
 .stat-label {
+    display: block;
     font-size: 0.75rem;
     letter-spacing: 0.1em;
     text-transform: uppercase;
     color: var(--color-text-muted);
+    margin-top: 0.25rem;
 }
 
 .stat-divider {
