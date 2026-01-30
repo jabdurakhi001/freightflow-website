@@ -13,17 +13,17 @@
            =================================== */
         
         :root {
-            --color-black: #0a0a0a;
-            --color-dark: #141414;
-            --color-darker: #1a1a1a;
-            --color-gray: #2a2a2a;
-            --color-gray-light: #3a3a3a;
-            --color-text: #e8e8e8;
-            --color-text-muted: #888888;
-            --color-accent: #ff4d00;
-            --color-accent-dark: #cc3d00;
-            --color-accent-light: #ff6a2b;
-            --color-white: #ffffff;
+            --color-black: #ffffff;
+            --color-dark: #f5f7fa;
+            --color-darker: #eef1f5;
+            --color-gray: #d1d9e6;
+            --color-gray-light: #c5cdd8;
+            --color-text: #2d3748;
+            --color-text-muted: #64748b;
+            --color-accent: #f97316;
+            --color-accent-dark: #ea580c;
+            --color-accent-light: #fb923c;
+            --color-white: #1a202c;
             --color-success: #22c55e;
             --color-warning: #eab308;
             --color-info: #3b82f6;
@@ -50,8 +50,9 @@
         /* Navigation */
         .nav {
             padding: 1rem 0;
-            background: rgba(10, 10, 10, 0.95);
+            background: rgba(255, 255, 255, 0.95);
             border-bottom: 1px solid var(--color-gray);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
         }
         
         .nav-container {
@@ -233,11 +234,12 @@
         
         /* Error State */
         .error-message {
-            background: #4a1a1a;
-            border: 1px solid #7a2d2d;
+            background: #fef2f2;
+            border: 1px solid #fecaca;
             padding: 2rem;
             text-align: center;
             display: none;
+            border-radius: 8px;
         }
         
         .error-message.active {
@@ -245,7 +247,7 @@
         }
         
         .error-message h3 {
-            color: #ff6b6b;
+            color: #dc2626;
             font-family: var(--font-heading);
             font-size: 1.5rem;
             margin-bottom: 0.5rem;
