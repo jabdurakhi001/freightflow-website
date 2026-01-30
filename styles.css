@@ -646,14 +646,53 @@ a {
     border: 2px solid var(--color-gray);
 }
 
-.fleet-image-placeholder {
+.fleet-photo-placeholder {
     aspect-ratio: 3/2;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e2e8f0 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
 }
 
-.fleet-image-placeholder svg {
+.photo-placeholder-content {
+    text-align: center;
+    padding: 2rem;
+    color: #64748b;
+}
+
+.photo-placeholder-content svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.photo-placeholder-content h4 {
+    font-family: var(--font-heading);
+    font-size: 1.25rem;
+    color: #475569;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.photo-placeholder-content p {
+    font-size: 1rem;
+    color: #f97316;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.photo-instructions {
+    font-size: 0.75rem;
+    color: #94a3b8;
+    display: block;
+}
+
+.fleet-photo {
     width: 100%;
-    height: 100%;
+    height: auto;
+    aspect-ratio: 3/2;
+    object-fit: cover;
 }
 
 .fleet-badge {
@@ -666,6 +705,7 @@ a {
     flex-direction: column;
     align-items: center;
     line-height: 1.2;
+    color: white;
 }
 
 .fleet-badge span:first-child {
@@ -759,9 +799,33 @@ a {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    width: 60%;
-    opacity: 0.6;
+    width: 65%;
     pointer-events: none;
+}
+
+.us-map-container {
+    width: 100%;
+    background: rgba(245, 247, 250, 0.5);
+    border-radius: 8px;
+    padding: 1rem;
+}
+
+.us-map-svg {
+    width: 100%;
+    height: auto;
+}
+
+.us-map-svg .states path {
+    transition: fill 0.3s ease;
+}
+
+.us-map-svg .highways path {
+    animation: dashMove 20s linear infinite;
+}
+
+@keyframes dashMove {
+    0% { stroke-dashoffset: 0; }
+    100% { stroke-dashoffset: 100; }
 }
 
 .map-svg {
