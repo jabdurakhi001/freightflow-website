@@ -6,6 +6,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     initThemeToggle();
     initNavigation();
+    initActiveNavLinks();
     initMobileMenu();
     initScrollAnimations();
     initSmoothScroll();
@@ -41,6 +42,47 @@ function initNavigation() {
 
     window.addEventListener('scroll', () => {
         nav.classList.toggle('scrolled', window.pageYOffset > 50);
+    });
+}
+
+// ---- Active nav link highlighting ----
+function initActiveNavLinks() {
+    const navLinks = document.querySelectorAll('.nav-link[href^="#"]');
+
+    // Switch active class on click
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            navLinks.forEach(l => l.classList.remove('active'));
+            link.classList.add('active');
+        });
+    });
+
+    // Update active link on scroll based on which section is in view
+    const sections = [];
+    navLinks.forEach(link => {
+        const id = link.getAttribute('href');
+        if (id && id !== '#') {
+            const section = document.querySelector(id);
+            if (section) sections.push({ el: section, link });
+        }
+    });
+
+    if (sections.length === 0) return;
+
+    window.addEventListener('scroll', () => {
+        const scrollPos = window.pageYOffset + 120; // offset for fixed nav
+
+        let current = null;
+        for (const { el, link } of sections) {
+            if (el.offsetTop <= scrollPos) {
+                current = link;
+            }
+        }
+
+        if (current) {
+            navLinks.forEach(l => l.classList.remove('active'));
+            current.classList.add('active');
+        }
     });
 }
 
