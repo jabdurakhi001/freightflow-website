@@ -5,7 +5,7 @@ import {defineConfig} from 'vite';
 
 export default defineConfig(({mode}) => {
   return {
-    base: '/freightflow-website/',
+    base: '/',
     plugins: [react(), tailwindcss()],
     resolve: {
       alias: {
