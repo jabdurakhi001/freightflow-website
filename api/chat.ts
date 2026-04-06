@@ -32,7 +32,7 @@ SERVICES:
 - Logistics Coordination: Comprehensive oversight of multimodal touchpoints and cargo transitions.
 
 FLEET:
-- Exclusively 2025-2026 Freightliner Cascadia units
+- 2024-2026 Freightliner Cascadia and Volvo units
 - Average fleet age: 0.5 years
 - Uptime rate: 99.2%
 - Equipped with the latest safety and fuel-efficiency technology

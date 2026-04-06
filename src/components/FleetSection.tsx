@@ -6,7 +6,7 @@ export default function FleetSection() {
           <div className="md:w-1/2">
             <h2 className="text-4xl font-black text-primary dark:text-white tracking-tighter mb-6">Modern Equipment. <br/>Operational Readiness.</h2>
             <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
-              Our fleet consists exclusively of <span className="font-black text-primary dark:text-white">2025–2026 Freightliner Cascadia units</span>. We invest in the newest technology to ensure peak performance, maximum fuel efficiency, and the lowest possible failure rate.
+              Our fleet consists of <span className="font-black text-primary dark:text-white">2024–2026 Freightliner Cascadia and Volvo units</span>. We invest in the newest technology to ensure peak performance, maximum fuel efficiency, and the lowest possible failure rate.
             </p>
             <div className="grid grid-cols-2 gap-4">
               <div className="p-4 bg-surface-container-high rounded-lg">
@@ -28,7 +28,7 @@ export default function FleetSection() {
             />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-secondary text-white p-4 md:p-8 rounded-lg shadow-xl">
               <p className="text-sm font-black uppercase tracking-[0.2em]">Ready to Launch</p>
-              <p className="text-4xl font-black">2026 Ready</p>
+              <p className="text-4xl font-black">2024–2026</p>
             </div>
           </div>
         </div>

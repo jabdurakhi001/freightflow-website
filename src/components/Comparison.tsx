@@ -44,7 +44,7 @@ export default function Comparison() {
                 </li>
                 <li className="flex items-center gap-4">
                   <CheckCircle2 className="text-secondary w-6 h-6 shrink-0" />
-                  2025–2026 Freightliner Fleet
+                  2024–2026 Freightliner & Volvo Fleet
                 </li>
               </ul>
             </div>
