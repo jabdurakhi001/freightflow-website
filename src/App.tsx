@@ -11,6 +11,7 @@ import FleetSection from './components/FleetSection';
 import RecruitmentSection from './components/RecruitmentSection';
 import CTASection from './components/CTASection';
 import Footer from './components/Footer';
+import ChatWidget from './components/ChatWidget';
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
@@ -66,6 +67,7 @@ export default function App() {
       </main>
 
       <Footer />
+      <ChatWidget />
     </div>
   );
 }
