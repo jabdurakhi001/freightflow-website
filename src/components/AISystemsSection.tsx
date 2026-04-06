@@ -40,8 +40,8 @@ export default function AISystemsSection() {
             <img
               loading="lazy"
               className="w-4/5 h-4/5 object-cover rounded-lg shadow-2xl grayscale contrast-125"
-              alt="Abstract macro shot of a circuit board"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKzajrTvw_CNB8vSsePSFr-8P52IIY9adZT1rbwbU6PxFhDceYCDvKpRK3HRb3o3Y61XhHo_3wpJnvg_bAvjqRmAU8LUNIkaCHRgSn8NLFkvRjurDYyxJu-a5lg7oGdzXRsBga-fD3YMz0tpy2nR0OuO1Bnpq-4_UNVdkov8udGiWkqQn629hsEPWYRRQRlK4PYS59neQkYIB4P-YDtLMaZEg8zRYNvMn4F2gNSBqtUtXKVo1ElVzR7rOCFWyc9vgsY_pWw-JaAOg"
+              alt="Technology and logistics systems visualization"
+              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80&auto=format"
             />
           </div>
         </div>

@@ -6,8 +6,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <img
           className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
-          alt="Modern Freightliner Cascadia truck at dawn"
-          src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFdl8BXC5e8TckZk1C8fG2pHX00vdRMKOPmglJZ5FDuy9btIpP50jTaLMHVLopqqNsq2zsdi63NadcavdW3TRxLYgcrraq-ApMtEw40aJRbdzoAEpVibTuORhyJ--aOH8d8Mil7JEWEOEroeYFH1OUpS3WhXYyNFQNl73lb70qJusRzvZI2RblikA4Jxuksmfc9nhbuk2wTrNnxPA1fmfkXoiVVT12FbYQpjZI2ix92zSD61oOECCOygJ2qezHH41oBaHluRuDh-4"
+          alt="Semi truck on highway at sunset"
+          src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1920&q=80&auto=format"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/80 to-transparent"></div>
       </div>

@@ -23,8 +23,8 @@ export default function FleetSection() {
             <img
               loading="lazy"
               className="w-full h-auto rounded-xl shadow-2xl"
-              alt="Professional cinematic photograph of new 2026 semi-trucks"
-              src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5qWk7HEslTdMu8MBmnIBlNEWfncrgoK7h9JiyiLp-bGVs6brLh7yZhkLTzEsu1osNA1-qqrOXPWygTDPSzORgCyd51VgMEkLeOsgMPKEOSrC8lvM2NviXFnZauxenOXFaULF3oc8SjvNwEhoy4plc0j6xjOt7gCcfvjr7eVQ7Htltkz4hKew8OYhzmgtCuTBa_oQvji89dAxVIkYRAq3dVXQzl7S73dNW4PaTIYDmc85XTrYX7ICIOUPa9CYcLwPFYJCJHPthw1w"
+              alt="Modern white semi truck fleet at loading dock"
+              src="https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=1200&q=80&auto=format"
             />
             <div className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-secondary text-white p-4 md:p-8 rounded-lg shadow-xl">
               <p className="text-sm font-black uppercase tracking-[0.2em]">Ready to Launch</p>
