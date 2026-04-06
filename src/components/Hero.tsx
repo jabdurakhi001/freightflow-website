@@ -6,8 +6,8 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <img
           className="w-full h-full object-cover opacity-40 mix-blend-luminosity"
-          alt="Semi truck on highway at sunset"
-          src="https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?w=1920&q=80&auto=format"
+          alt="Semi truck on mountain highway"
+          src="https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920"
         />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/80 to-transparent"></div>
       </div>
