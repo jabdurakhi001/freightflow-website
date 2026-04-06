@@ -35,7 +35,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-40 bg-primary/95 backdrop-blur-lg flex flex-col items-center justify-center gap-8 md:hidden">
+        <div className="fixed inset-0 z-[45] pt-20 bg-primary backdrop-blur-lg flex flex-col items-center justify-center gap-8 md:hidden">
           <a className="text-2xl font-black uppercase tracking-widest text-white hover:text-secondary transition-colors" href="#solutions" onClick={() => setMobileMenuOpen(false)}>Solutions</a>
           <a className="text-2xl font-black uppercase tracking-widest text-white hover:text-secondary transition-colors" href="#compliance" onClick={() => setMobileMenuOpen(false)}>Compliance</a>
           <a className="text-2xl font-black uppercase tracking-widest text-white hover:text-secondary transition-colors" href="#ai-systems" onClick={() => setMobileMenuOpen(false)}>AI Systems</a>
