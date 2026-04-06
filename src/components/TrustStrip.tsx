@@ -12,7 +12,7 @@ export default function TrustStrip() {
             <span className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">Operational Strength</span>
           </div>
           <div className="flex flex-col">
-            <span className="text-primary dark:text-white font-black text-2xl">2025–2026 Fleet</span>
+            <span className="text-primary dark:text-white font-black text-2xl">2024–2026 Fleet</span>
             <span className="text-on-surface-variant text-[10px] uppercase font-bold tracking-widest">Modern Equipment</span>
           </div>
           <div className="flex flex-col">
