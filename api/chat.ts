@@ -1,5 +1,20 @@
-import type { VercelRequest, VercelResponse } from '@vercel/node';
+import type { IncomingMessage, ServerResponse } from 'http';
 import { GoogleGenAI } from '@google/genai';
+
+interface VercelRequest extends IncomingMessage {
+  body?: any;
+  query?: Record<string, string | string[]>;
+  method?: string;
+}
+
+type VercelResponse = ServerResponse & {
+  status: (code: number) => VercelResponse;
+  json: (data: any) => VercelResponse;
+  setHeader: (name: string, value: string) => VercelResponse;
+  write: (chunk: string) => boolean;
+  end: () => void;
+  headersSent: boolean;
+};
 
 const SYSTEM_PROMPT = `You are the FreightFlow virtual assistant — a professional, knowledgeable customer service agent for FreightFlow Logistics.
 
