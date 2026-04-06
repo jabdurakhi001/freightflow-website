@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, X, Send } from 'lucide-react';
+import { MessageCircle, X, Send, Forward } from 'lucide-react';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -9,7 +9,7 @@ interface Message {
 
 const WELCOME_MESSAGE: Message = {
   role: 'assistant',
-  content: "Hello! I'm FreightFlow's AI assistant. I can help you with information about our freight services, fleet, compliance, quote requests, or driver recruitment. How can I help you today?",
+  content: "Hey there! 👋 I'm FreightFlow's AI assistant. I can help you with info about our freight services, fleet, compliance, quote requests, or driver recruitment. What can I help you with?",
 };
 
 export default function ChatWidget() {
@@ -18,13 +18,17 @@ export default function ChatWidget() {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [showContactForm, setShowContactForm] = useState(false);
+  const [contactName, setContactName] = useState('');
+  const [contactInfo, setContactInfo] = useState('');
+  const [notifySending, setNotifySending] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   // Auto-scroll to bottom on new messages
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, showContactForm]);
 
   // Focus input when chat opens
   useEffect(() => {
@@ -66,7 +70,6 @@ export default function ChatWidget() {
       const decoder = new TextDecoder();
       let assistantContent = '';
 
-      // Add empty assistant message to stream into
       setMessages((prev) => [...prev, { role: 'assistant', content: '' }]);
 
       if (reader) {
@@ -85,6 +88,46 @@ export default function ChatWidget() {
       setError(err instanceof Error ? err.message : 'Connection error. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const forwardToTeam = async () => {
+    if (!contactName.trim()) return;
+    setNotifySending(true);
+
+    // Collect the last few messages as context
+    const recentMessages = messages
+      .slice(-6)
+      .map((m) => `${m.role === 'user' ? 'Customer' : 'AI'}: ${m.content}`)
+      .join('\n');
+
+    try {
+      const response = await fetch('/api/notify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: contactName.trim(),
+          contact: contactInfo.trim() || 'Not provided',
+          question: recentMessages,
+        }),
+      });
+
+      if (!response.ok) throw new Error('Failed to send');
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: 'assistant',
+          content: `Thanks ${contactName}! 🎉 I've forwarded your conversation to our team. Someone will get back to you shortly during business hours (Mon-Fri 8AM-5PM CST). Is there anything else I can help with?`,
+        },
+      ]);
+      setShowContactForm(false);
+      setContactName('');
+      setContactInfo('');
+    } catch {
+      setError('Could not forward your message. Please email us at info@freightflow.group');
+    } finally {
+      setNotifySending(false);
     }
   };
 
@@ -165,6 +208,48 @@ export default function ChatWidget() {
                 </div>
               )}
 
+              {/* Contact Form (for forwarding to team) */}
+              {showContactForm && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="bg-surface-container dark:bg-surface-container-high rounded-2xl rounded-bl-sm p-4 space-y-3"
+                >
+                  <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Connect with our team</p>
+                  <input
+                    type="text"
+                    value={contactName}
+                    onChange={(e) => setContactName(e.target.value)}
+                    placeholder="Your name *"
+                    className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
+                  />
+                  <input
+                    type="text"
+                    value={contactInfo}
+                    onChange={(e) => setContactInfo(e.target.value)}
+                    placeholder="Email or phone (optional)"
+                    className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
+                  />
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      onClick={forwardToTeam}
+                      disabled={!contactName.trim() || notifySending}
+                      className="flex-1 bg-secondary text-white rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-40"
+                    >
+                      {notifySending ? 'Sending...' : 'Send to team'}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setShowContactForm(false)}
+                      className="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
               <div ref={messagesEndRef} />
             </div>
 
@@ -181,6 +266,16 @@ export default function ChatWidget() {
                   disabled={isLoading}
                   className="flex-1 bg-surface-container dark:bg-surface-container-high rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary transition-all disabled:opacity-50"
                 />
+                <button
+                  type="button"
+                  onClick={() => setShowContactForm(true)}
+                  disabled={isLoading || messages.length < 2}
+                  className="text-on-surface-variant hover:text-secondary rounded-lg px-2 py-3 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                  aria-label="Forward to team"
+                  title="Talk to a human"
+                >
+                  <Forward className="w-4 h-4" />
+                </button>
                 <button
                   type="button"
                   onClick={sendMessage}
