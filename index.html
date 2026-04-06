@@ -1,398 +1,45 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FreightFlow | Reliable Freight Capacity Backed by Systems</title>
-    <meta name="description" content="FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <!-- TopNavBar -->
-    <nav class="nav">
-        <div class="nav-container">
-            <a href="#" class="logo">
-                <span class="logo-text">Freight</span><span class="logo-accent">Flow</span>
-            </a>
-            <button class="mobile-menu-btn" aria-label="Toggle menu">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
-            <div class="nav-links">
-                <a href="#solutions" class="nav-link active">Solutions</a>
-                <a href="#compliance" class="nav-link">Compliance</a>
-                <a href="#ai-systems" class="nav-link">AI Systems</a>
-                <a href="#fleet" class="nav-link">Fleet</a>
-                <a href="#recruitment" class="nav-link">Recruitment</a>
-                <a href="tracking.html" class="nav-link">Tracking</a>
-            </div>
-            <div class="nav-actions">
-                <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-                    <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
-                    <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
-                </button>
-                <a href="#contact" class="btn-quote">Request a Quote</a>
-            </div>
-        </div>
-    </nav>
+    <meta name="description" content="FreightFlow delivers consistent, compliant, and scalable freight transportation across all 48 states — powered by structured operations, real-time tracking, and a modern 2025-2026 Freightliner fleet.">
+    <link rel="canonical" href="https://freightflow.group/">
 
-    <main>
-        <!-- Hero Section -->
-        <section class="hero">
-            <div class="hero-bg">
-                <img class="hero-bg-img" alt="Modern Freightliner Cascadia truck at dawn" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCFdl8BXC5e8TckZk1C8fG2pHX00vdRMKOPmglJZ5FDuy9btIpP50jTaLMHVLopqqNsq2zsdi63NadcavdW3TRxLYgcrraq-ApMtEw40aJRbdzoAEpVibTuORhyJ--aOH8d8Mil7JEWEOEroeYFH1OUpS3WhXYyNFQNl73lb70qJusRzvZI2RblikA4Jxuksmfc9nhbuk2wTrNnxPA1fmfkXoiVVT12FbYQpjZI2ix92zSD61oOECCOygJ2qezHH41oBaHluRuDh-4" loading="eager">
-                <div class="hero-gradient"></div>
-            </div>
-            <div class="hero-content">
-                <div class="hero-inner">
-                    <span class="hero-tag">Precision Kineticism</span>
-                    <h1 class="hero-title animate-fade-up">Reliable Freight Capacity Backed by Systems, <span class="text-secondary">Not Guesswork</span></h1>
-                    <p class="hero-subtitle animate-fade-up delay-1">FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.</p>
-                    <p class="hero-quote">We don't just move freight. We execute with precision.</p>
-                    <div class="hero-actions animate-fade-up delay-2">
-                        <a href="#contact" class="btn btn-primary">Request a Quote</a>
-                        <a href="#recruitment" class="btn btn-outline">Work With Us</a>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="FreightFlow | Reliable Freight Capacity Backed by Systems">
+    <meta property="og:description" content="Consistent, compliant, and scalable freight transportation across 48 states — powered by structured operations and real-time visibility.">
+    <meta property="og:url" content="https://freightflow.group/">
+    <meta property="og:site_name" content="FreightFlow Logistics">
 
-        <!-- Trust Strip -->
-        <section class="trust-strip">
-            <div class="container">
-                <div class="trust-grid">
-                    <div class="trust-item">
-                        <span class="trust-value text-secondary">48 States</span>
-                        <span class="trust-label">Nationwide Coverage</span>
-                    </div>
-                    <div class="trust-item">
-                        <span class="trust-value">Midwest Hub</span>
-                        <span class="trust-label">Operational Strength</span>
-                    </div>
-                    <div class="trust-item">
-                        <span class="trust-value">2025–26 Fleet</span>
-                        <span class="trust-label">Modern Equipment</span>
-                    </div>
-                    <div class="trust-item">
-                        <span class="trust-value">ISO-Ready</span>
-                        <span class="trust-label">Process-Driven</span>
-                    </div>
-                </div>
-            </div>
-        </section>
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="FreightFlow | Reliable Freight Capacity Backed by Systems">
+    <meta name="twitter:description" content="Consistent, compliant, and scalable freight transportation across 48 states — powered by structured operations and real-time visibility.">
 
-        <!-- Compliance Section -->
-        <section id="compliance" class="section bg-surface">
-            <div class="container">
-                <div class="compliance-grid">
-                    <div class="compliance-content">
-                        <h2 class="section-title">Built for Compliance. <br>Operated for Reliability.</h2>
-                        <div class="compliance-items">
-                            <div class="compliance-item">
-                                <svg class="icon-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
-                                <div>
-                                    <h4>Active USDOT & MC Registration</h4>
-                                    <p>Fully authorized for interstate commerce with transparent filings.</p>
-                                </div>
-                            </div>
-                            <div class="compliance-item">
-                                <svg class="icon-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg>
-                                <div>
-                                    <h4>Fully Insured Operations</h4>
-                                    <p>Comprehensive cargo and liability coverage for high-value protection.</p>
-                                </div>
-                            </div>
-                            <div class="compliance-item">
-                                <svg class="icon-accent" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/><circle cx="12" cy="12" r="3"/></svg>
-                                <div>
-                                    <h4>Safety-Focused Fleet Management</h4>
-                                    <p>Rigorous maintenance schedules using predictive analytics.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <blockquote class="compliance-quote">"We don't cut corners. We build systems that hold up under scrutiny."</blockquote>
-                    </div>
-                    <div class="compliance-cards">
-                        <div class="info-card kinetic-strip">
-                            <span class="card-label">Structured Recruitment</span>
-                            <h4>Driver Qualification Process</h4>
-                            <p>Only top 5% of applicants clear our technical and safety vetting protocols.</p>
-                        </div>
-                        <div class="info-card kinetic-strip">
-                            <span class="card-label">Centralized Command</span>
-                            <h4>Compliance-Driven Dispatch</h4>
-                            <p>Automated HOS monitoring prevents violations before they occur.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Solutions / Services -->
-        <section id="solutions" class="section bg-container">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2 class="section-title">Freight Solutions Designed for Execution</h2>
-                </div>
-                <div class="services-grid">
-                    <div class="service-card">
-                        <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18h2l5-5V9.5a.5.5 0 0 0-.5-.5H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
-                        <h3>Full Truckload (FTL)</h3>
-                        <p>High-capacity equipment for massive volumes across the continental US.</p>
-                        <a href="#" class="card-link">Learn More &rarr;</a>
-                    </div>
-                    <div class="service-card">
-                        <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4"/><path d="M16 2v4"/><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M3 10h18"/></svg>
-                        <h3>Dedicated Freight</h3>
-                        <p>Predictable capacity for recurring lanes and complex supply chains.</p>
-                        <a href="#" class="card-link">Learn More &rarr;</a>
-                    </div>
-                    <div class="service-card">
-                        <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.106 5.553a2 2 0 0 0 1.788 0l3.659-1.83A1 1 0 0 1 21 4.619v12.764a1 1 0 0 1-.553.894l-4.553 2.277a2 2 0 0 1-1.788 0l-4.212-2.106a2 2 0 0 0-1.788 0l-3.659 1.83A1 1 0 0 1 3 19.381V6.618a1 1 0 0 1 .553-.894l4.553-2.277a2 2 0 0 1 1.788 0z"/><path d="M15 5.764v15"/><path d="M9 3.236v15"/></svg>
-                        <h3>Regional & Long-Haul</h3>
-                        <p>Optimized routing for both high-frequency regional and coast-to-coast hauls.</p>
-                        <a href="#" class="card-link">Learn More &rarr;</a>
-                    </div>
-                    <div class="service-card">
-                        <svg class="service-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg>
-                        <h3>Logistics Coordination</h3>
-                        <p>Comprehensive oversight of multimodal touchpoints and cargo transitions.</p>
-                        <a href="#" class="card-link">Learn More &rarr;</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- AI + Systems Section -->
-        <section id="ai-systems" class="section bg-primary">
-            <div class="container">
-                <div class="ai-grid">
-                    <div class="ai-content">
-                        <h2 class="section-title text-white">Powered by Intelligent Logistics Systems</h2>
-                        <p class="ai-description">We differentiate ourselves through <strong>structured workflows, automation, and real-time tracking</strong>. We don't just drive; we compute the most efficient path.</p>
-                        <ul class="ai-features">
-                            <li><span class="dot"></span> Automated dispatch workflows for zero-latency communication.</li>
-                            <li><span class="dot"></span> Real-time load tracking & visibility for every stakeholder.</li>
-                            <li><span class="dot"></span> Dynamic routing optimization based on live traffic and weather.</li>
-                            <li><span class="dot"></span> Predictive maintenance alerts for fleet uptime reliability.</li>
-                            <li><span class="dot"></span> Digital document management for instant POD access.</li>
-                        </ul>
-                        <div class="ai-outcome">
-                            <span class="outcome-label">System Outcome</span>
-                            <p class="outcome-text">More control. Fewer delays. Predictable execution.</p>
-                        </div>
-                    </div>
-                    <div class="ai-visual">
-                        <div class="ai-image-frame">
-                            <div class="ai-dots"></div>
-                            <img class="ai-image" alt="Abstract macro shot of a circuit board" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAKzajrTvw_CNB8vSsePSFr-8P52IIY9adZT1rbwbU6PxFhDceYCDvKpRK3HRb3o3Y61XhHo_3wpJnvg_bAvjqRmAU8LUNIkaCHRgSn8NLFkvRjurDYyxJu-a5lg7oGdzXRsBga-fD3YMz0tpy2nR0OuO1Bnpq-4_UNVdkov8udGiWkqQn629hsEPWYRRQRlK4PYS59neQkYIB4P-YDtLMaZEg8zRYNvMn4F2gNSBqtUtXKVo1ElVzR7rOCFWyc9vgsY_pWw-JaAOg" loading="lazy">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- How It Works -->
-        <section class="section bg-surface">
-            <div class="container">
-                <div class="section-header text-center">
-                    <h2 class="section-title">How It Works</h2>
-                    <p class="section-subtitle">Clear process. No confusion. No surprises.</p>
-                </div>
-                <div class="steps-grid">
-                    <div class="step">
-                        <span class="step-number">01</span>
-                        <h4>Request a Quote</h4>
-                        <p>Provide lane details via our rapid response portal.</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">02</span>
-                        <h4>Load Confirmation</h4>
-                        <p>System-verified capacity is assigned to your specific haul.</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">03</span>
-                        <h4>Dispatch & Tracking</h4>
-                        <p>Live GPS updates and milestone notifications commence.</p>
-                    </div>
-                    <div class="step">
-                        <span class="step-number">04</span>
-                        <h4>Delivery & Verification</h4>
-                        <p>Immediate digital POD and status reconciliation.</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Comparison Section -->
-        <section class="section bg-container-low">
-            <div class="container">
-                <div class="comparison-box">
-                    <div class="comparison-grid">
-                        <div class="comparison-col comparison-others">
-                            <h3 class="comparison-label">Other Carriers</h3>
-                            <ul class="comparison-list">
-                                <li class="comparison-item strikethrough"><svg class="icon-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Inconsistent capacity availability</li>
-                                <li class="comparison-item strikethrough"><svg class="icon-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Limited load visibility</li>
-                                <li class="comparison-item strikethrough"><svg class="icon-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Manual communication lag</li>
-                                <li class="comparison-item strikethrough"><svg class="icon-error" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg> Aging, unreliable equipment</li>
-                            </ul>
-                        </div>
-                        <div class="comparison-col comparison-ff kinetic-strip">
-                            <h3 class="comparison-label text-secondary">FreightFlow</h3>
-                            <ul class="comparison-list">
-                                <li class="comparison-item"><svg class="icon-success" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Structured, guaranteed capacity</li>
-                                <li class="comparison-item"><svg class="icon-success" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Real-time GPS communication</li>
-                                <li class="comparison-item"><svg class="icon-success" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> Automated milestone reporting</li>
-                                <li class="comparison-item"><svg class="icon-success" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><path d="m9 11 3 3L22 4"/></svg> 2025–2026 Freightliner Fleet</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-                <p class="comparison-tagline">"Reliability is not luck. It's engineered."</p>
-            </div>
-        </section>
-
-        <!-- Fleet Section -->
-        <section id="fleet" class="section bg-surface">
-            <div class="container">
-                <div class="fleet-grid">
-                    <div class="fleet-content">
-                        <h2 class="section-title">Modern Equipment. <br>Operational Readiness.</h2>
-                        <p class="fleet-description">Our fleet consists exclusively of <strong>2025–2026 Freightliner Cascadia units</strong>. We invest in the newest technology to ensure peak performance, maximum fuel efficiency, and the lowest possible failure rate.</p>
-                        <div class="fleet-stats">
-                            <div class="fleet-stat">
-                                <span class="stat-label">Avg. Fleet Age</span>
-                                <span class="stat-value">0.5 Years</span>
-                            </div>
-                            <div class="fleet-stat">
-                                <span class="stat-label">Uptime Rate</span>
-                                <span class="stat-value">99.2%</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="fleet-visual">
-                        <img class="fleet-image" alt="Professional cinematic photograph of new 2026 semi-trucks" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB5qWk7HEslTdMu8MBmnIBlNEWfncrgoK7h9JiyiLp-bGVs6brLh7yZhkLTzEsu1osNA1-qqrOXPWygTDPSzORgCyd51VgMEkLeOsgMPKEOSrC8lvM2NviXFnZauxenOXFaULF3oc8SjvNwEhoy4plc0j6xjOt7gCcfvjr7eVQ7Htltkz4hKew8OYhzmgtCuTBa_oQvji89dAxVIkYRAq3dVXQzl7S73dNW4PaTIYDmc85XTrYX7ICIOUPa9CYcLwPFYJCJHPthw1w" loading="lazy">
-                        <div class="fleet-badge">
-                            <span class="badge-label">Ready to Launch</span>
-                            <span class="badge-value">2026 Ready</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Driver Recruitment -->
-        <section id="recruitment" class="section bg-primary text-center">
-            <div class="recruitment-bg"></div>
-            <div class="container recruitment-content">
-                <h2 class="section-title text-white">Drive With a Carrier That Runs Like a Business</h2>
-                <p class="recruitment-subtitle">Consistent loads. Structured operations. Professional support. We respect your time and your expertise.</p>
-                <div class="recruitment-perks">
-                    <div class="perk">
-                        <svg class="perk-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="12" x="2" y="6" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
-                        <span>Premium Pay</span>
-                    </div>
-                    <div class="perk">
-                        <svg class="perk-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                        <span>Home Time</span>
-                    </div>
-                    <div class="perk">
-                        <svg class="perk-icon" xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-                        <span>Elite Dispatch</span>
-                    </div>
-                </div>
-                <a href="#" class="btn btn-secondary-lg">Apply Now</a>
-            </div>
-        </section>
-
-        <!-- Lead Gen CTA -->
-        <section id="contact" class="section bg-secondary">
-            <div class="container">
-                <div class="cta-grid">
-                    <div class="cta-content">
-                        <h2 class="cta-title">Need Reliable Freight Movement?</h2>
-                        <p class="cta-subtitle">Join the shippers who have moved from guesswork to systems.</p>
-                    </div>
-                    <div class="cta-actions">
-                        <a href="mailto:info@freightflow.group" class="btn btn-dark">Request a Quote</a>
-                        <a href="mailto:info@freightflow.group" class="btn btn-outline-light">Speak With Our Team</a>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <div class="footer-logo">FreightFlow</div>
-                    <p class="footer-desc">Executive logistics and heavy infrastructure for the modern era. We engineer reliability through systems-driven transport.</p>
-                    <div class="footer-contact">
-                        <div class="contact-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-                            <span>info@freightflow.group</span>
-                        </div>
-                        <div class="contact-item">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
-                            <span>Midwest Operations Center</span>
-                        </div>
-                    </div>
-                    <div class="footer-certs">
-                        <span>USDOT 4357973</span>
-                        <span>MC 1704871</span>
-                    </div>
-                    <div class="footer-social">
-                        <a href="#" aria-label="LinkedIn"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect width="4" height="12" x="2" y="9"/><circle cx="4" cy="4" r="2"/></svg></a>
-                        <a href="#" aria-label="X (Twitter)"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"/></svg></a>
-                        <a href="#" aria-label="Instagram"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="20" height="20" x="2" y="2" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/></svg></a>
-                        <a href="#" aria-label="YouTube"><svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 17a24.12 24.12 0 0 1 0-10 2 2 0 0 1 1.4-1.4 49.56 49.56 0 0 1 16.2 0A2 2 0 0 1 21.5 7a24.12 24.12 0 0 1 0 10 2 2 0 0 1-1.4 1.4 49.55 49.55 0 0 1-16.2 0A2 2 0 0 1 2.5 17"/><path d="m10 15 5-3-5-3z"/></svg></a>
-                    </div>
-                </div>
-                <div class="footer-links-group">
-                    <h4>Company</h4>
-                    <nav>
-                        <a href="#ai-systems">About Us</a>
-                        <a href="#fleet">Our Fleet</a>
-                        <a href="#recruitment">Careers</a>
-                        <a href="#contact">Contact</a>
-                    </nav>
-                </div>
-                <div class="footer-links-group">
-                    <h4>Services</h4>
-                    <nav>
-                        <a href="#solutions">Full Truckload</a>
-                        <a href="#solutions">Dedicated Freight</a>
-                        <a href="#solutions">Regional Haul</a>
-                        <a href="#solutions">Logistics</a>
-                    </nav>
-                </div>
-                <div class="footer-links-group">
-                    <h4>Legal</h4>
-                    <nav>
-                        <a href="#">Privacy Policy</a>
-                        <a href="#">Terms of Service</a>
-                        <a href="#compliance">FMCSA Compliance</a>
-                        <a href="#">Carrier Login</a>
-                    </nav>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <span>&copy; 2025 FreightFlow Logistics. All Rights Reserved.</span>
-                <div class="footer-bottom-links">
-                    <span>Engineered for Reliability</span>
-                    <span>Systems First Infrastructure</span>
-                </div>
-            </div>
-        </div>
-    </footer>
-
-    <script src="script.js"></script>
-</body>
+    <!-- Schema.org Organization -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "FreightFlow Logistics",
+      "url": "https://freightflow.group",
+      "email": "info@freightflow.group",
+      "description": "Executive logistics and heavy infrastructure carrier providing reliable freight capacity across 48 states.",
+      "address": {
+        "@type": "PostalAddress",
+        "addressRegion": "Midwest",
+        "addressCountry": "US"
+      },
+      "sameAs": []
+    }
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
+

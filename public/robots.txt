@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://freightflow.group/sitemap.xml
