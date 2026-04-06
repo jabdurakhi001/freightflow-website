@@ -144,7 +144,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     res.setHeader('Transfer-Encoding', 'chunked');
 
     const response = await ai.models.generateContentStream({
-      model: 'gemini-2.0-flash',
+      model: 'gemini-2.5-flash',
       config: {
         systemInstruction: SYSTEM_PROMPT,
         temperature: 0.7,
