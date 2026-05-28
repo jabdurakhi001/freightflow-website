@@ -12,6 +12,8 @@ import RecruitmentSection from './components/RecruitmentSection';
 import CTASection from './components/CTASection';
 import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
+import ScrollProgress from './components/ScrollProgress';
+import BackToTop from './components/BackToTop';
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
@@ -46,6 +48,8 @@ export default function App() {
         Skip to main content
       </a>
 
+      <ScrollProgress />
+
       <Navbar
         isDark={isDark}
         toggleTheme={toggleTheme}
@@ -68,6 +72,7 @@ export default function App() {
 
       <Footer />
       <ChatWidget />
+      <BackToTop />
     </div>
   );
 }
