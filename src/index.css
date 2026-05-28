@@ -7,6 +7,11 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Keep jump-link targets clear of the fixed navbar */
+section[id] {
+  scroll-margin-top: 5rem;
+}
+
 body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
