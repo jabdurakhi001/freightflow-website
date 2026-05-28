@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react';
 import Reveal from './Reveal';
+import Aurora from './Aurora';
 
 const FEATURES = [
   'Automated dispatch workflows for zero-latency communication.',
@@ -13,10 +14,12 @@ export default function AISystemsSection() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section id="ai-systems" className="py-20 bg-primary text-white overflow-hidden relative">
-      <div className="max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center">
+    <section id="ai-systems" className="py-24 bg-primary text-white overflow-hidden relative grain">
+      <Aurora className="opacity-60" />
+      <div className="relative z-10 max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center">
         <Reveal direction="right" className="relative z-10">
-          <h2 className="text-4xl font-black tracking-tighter mb-6">Powered by Intelligent Logistics Systems</h2>
+          <span className="eyebrow mb-4">Built On Systems</span>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] mb-6">Powered by Intelligent Logistics Systems</h2>
           <p className="text-on-primary-container text-lg mb-10">
             We differentiate ourselves through <span className="text-white font-bold">structured workflows, automation, and real-time tracking</span>. We don't just drive; we compute the most efficient path.
           </p>

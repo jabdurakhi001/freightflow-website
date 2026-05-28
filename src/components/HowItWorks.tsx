@@ -15,14 +15,15 @@ export default function HowItWorks() {
     <section className="py-20 bg-surface">
       <div className="max-w-7xl mx-auto px-8">
         <motion.div
-          className="text-center mb-16"
+          className="flex flex-col items-center text-center mb-20"
           initial={{ opacity: 0, y: 24 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-4xl font-black text-primary dark:text-white tracking-tighter mb-4">How It Works</h2>
-          <p className="text-on-surface-variant font-bold uppercase tracking-widest text-xs">Clear process. No confusion. No surprises.</p>
+          <span className="eyebrow mb-4">The Process</span>
+          <h2 className="text-4xl md:text-5xl font-black text-primary dark:text-white tracking-tighter leading-[1.05] mb-4">How It Works</h2>
+          <p className="text-on-surface-variant font-medium text-lg">Clear process. No confusion. No surprises.</p>
         </motion.div>
 
         <motion.div
