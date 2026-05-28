@@ -7,6 +7,12 @@ html {
   scroll-behavior: smooth;
 }
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
 @theme {
   --color-primary: #0A1128;
   --color-on-primary: #FFFFFF;
@@ -80,4 +86,134 @@ button:focus-visible {
   outline: 2px solid var(--color-secondary);
   outline-offset: 2px;
   border-radius: 4px;
+}
+
+/* ============================================================
+   Premium visual system
+   ============================================================ */
+
+@layer utilities {
+  /* Gradient accent text (orange → warm amber) */
+  .gradient-text {
+    background-image: linear-gradient(110deg, #FF8A5B 0%, #FF5A1F 45%, #FF7A3C 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Eyebrow label with leading accent line */
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.6875rem;
+    font-weight: 800;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--color-secondary);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 2rem;
+    height: 1px;
+    background-image: linear-gradient(90deg, transparent, var(--color-secondary));
+  }
+
+  /* Film-grain overlay — adds subtle texture so flat fills read as "designed" */
+  .grain::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.035;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Glassmorphism */
+  .glass {
+    background-color: color-mix(in srgb, var(--color-primary) 70%, transparent);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Soft brand glow */
+  .glow-secondary {
+    box-shadow: 0 10px 40px -10px color-mix(in srgb, var(--color-secondary) 60%, transparent);
+  }
+
+  /* Card with a 1px gradient hairline border and lift-on-hover */
+  .card-premium {
+    position: relative;
+    border-radius: 1rem;
+    background:
+      linear-gradient(var(--color-surface-container-lowest), var(--color-surface-container-lowest)) padding-box,
+      linear-gradient(160deg, rgba(255, 255, 255, 0.18), rgba(148, 163, 184, 0.06)) border-box;
+    border: 1px solid transparent;
+    transition: transform 0.4s cubic-bezier(0.21, 0.47, 0.32, 0.98), box-shadow 0.4s ease;
+  }
+  .dark .card-premium {
+    background:
+      linear-gradient(var(--color-surface-container), var(--color-surface-container)) padding-box,
+      linear-gradient(160deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)) border-box;
+  }
+  .card-premium:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 24px 50px -20px rgba(10, 17, 40, 0.45),
+      0 0 0 1px color-mix(in srgb, var(--color-secondary) 30%, transparent);
+  }
+
+  /* Premium button: gradient fill, glow, and a sweeping shine on hover */
+  .btn-premium {
+    position: relative;
+    overflow: hidden;
+    background-image: linear-gradient(120deg, #FF7A3C, #FF5A1F);
+    box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--color-secondary) 70%, transparent);
+    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+  }
+  .btn-premium:hover {
+    filter: brightness(1.06);
+    box-shadow: 0 18px 44px -12px color-mix(in srgb, var(--color-secondary) 85%, transparent);
+  }
+  .btn-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -120%;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.35), transparent);
+    transform: skewX(-20deg);
+    transition: left 0.6s ease;
+  }
+  .btn-premium:hover::before {
+    left: 140%;
+  }
+
+  /* Animated aurora blobs for dark sections */
+  .aurora {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(80px);
+    opacity: 0.5;
+    pointer-events: none;
+    will-change: transform;
+  }
+  .aurora-drift {
+    animation: aurora-drift 18s ease-in-out infinite alternate;
+  }
+}
+
+@keyframes aurora-drift {
+  0%   { transform: translate3d(0, 0, 0) scale(1); }
+  50%  { transform: translate3d(40px, -30px, 0) scale(1.15); }
+  100% { transform: translate3d(-30px, 20px, 0) scale(0.95); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .aurora-drift,
+  .btn-premium::before { animation: none; transition: none; }
 }

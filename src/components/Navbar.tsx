@@ -18,6 +18,14 @@ const NAV_LINKS = [
 
 export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileMenuOpen }: NavbarProps) {
   const [activeSection, setActiveSection] = useState('');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const sectionIds = NAV_LINKS.map((link) => link.href.replace('#', ''));
@@ -43,10 +51,15 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
 
   return (
     <>
-      <nav className="fixed top-0 w-full flex justify-between items-center px-8 py-4 backdrop-blur-md bg-opacity-90 bg-primary z-50 shadow-2xl">
-        <div className="text-xl font-black text-white tracking-tighter">
-          <span>Freight</span><span className="text-secondary">Flow</span>
-        </div>
+      <nav
+        className={`fixed top-0 w-full flex justify-between items-center px-8 z-50 transition-all duration-300 ${
+          scrolled ? 'py-3 glass shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)]' : 'py-5 bg-transparent'
+        }`}
+      >
+        <a href="#main-content" className="group text-xl font-black text-white tracking-tighter flex items-center gap-2">
+          <span className="inline-block w-2.5 h-2.5 rounded-sm bg-secondary rotate-45 group-hover:rotate-[135deg] transition-transform duration-500" />
+          <span><span>Freight</span><span className="gradient-text">Flow</span></span>
+        </a>
         <div className="hidden md:flex items-center space-x-8">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.href.replace('#', '');
@@ -69,7 +82,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
           <button onClick={toggleTheme} className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle dark mode" type="button">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <a href="mailto:info@freightflow.group?subject=Quote%20Request" className="hidden md:inline-flex bg-secondary-container text-on-secondary-container px-6 py-2 rounded-md font-bold text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all">
+          <a href="mailto:info@freightflow.group?subject=Quote%20Request" className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
             Request a Quote
           </a>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle menu" type="button">

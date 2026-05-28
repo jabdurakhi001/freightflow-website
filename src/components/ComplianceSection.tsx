@@ -7,7 +7,8 @@ export default function ComplianceSection() {
       <div className="max-w-7xl mx-auto px-8">
         <div className="grid md:grid-cols-2 gap-16 items-center">
           <Reveal direction="right">
-            <h2 className="text-4xl font-black text-primary dark:text-white tracking-tighter mb-8">
+            <span className="eyebrow mb-4">Compliance First</span>
+            <h2 className="text-4xl md:text-5xl font-black text-primary dark:text-white tracking-tighter leading-[1.05] mb-8">
               Built for Compliance. <br/>Operated for Reliability.
             </h2>
             <div className="space-y-6">

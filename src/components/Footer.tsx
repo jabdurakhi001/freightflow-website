@@ -2,11 +2,12 @@ import { Mail, MapPin, Linkedin, Twitter, Instagram, Youtube } from 'lucide-reac
 
 export default function Footer() {
   return (
-    <footer className="bg-primary pt-20 pb-12 text-white">
-      <div className="max-w-7xl mx-auto px-8">
+    <footer className="relative bg-primary pt-20 pb-12 text-white grain overflow-hidden">
+      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary to-transparent" />
+      <div className="relative z-10 max-w-7xl mx-auto px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
           <div className="lg:col-span-2">
-            <div className="text-2xl font-black text-white tracking-tighter mb-6">FreightFlow</div>
+            <div className="text-2xl font-black tracking-tighter mb-6">Freight<span className="gradient-text">Flow</span></div>
             <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-sm">
               Executive logistics and heavy infrastructure for the modern era. We engineer reliability through systems-driven transport.
             </p>

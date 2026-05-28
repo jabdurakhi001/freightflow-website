@@ -8,7 +8,8 @@ export default function FleetSection() {
       <div className="max-w-7xl mx-auto px-8">
         <div className="flex flex-col md:flex-row items-center gap-16">
           <Reveal direction="right" className="md:w-1/2">
-            <h2 className="text-4xl font-black text-primary dark:text-white tracking-tighter mb-6">Modern Equipment. <br/>Operational Readiness.</h2>
+            <span className="eyebrow mb-4">The Fleet</span>
+            <h2 className="text-4xl md:text-5xl font-black text-primary dark:text-white tracking-tighter leading-[1.05] mb-6">Modern Equipment. <br/>Operational Readiness.</h2>
             <p className="text-on-surface-variant text-lg leading-relaxed mb-8">
               Our fleet consists exclusively of <span className="font-black text-primary dark:text-white">2025–2026 Freightliner Cascadia units</span>. We invest in the newest technology to ensure peak performance, maximum fuel efficiency, and the lowest possible failure rate.
             </p>
