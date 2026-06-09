@@ -1,6 +1,7 @@
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity } from 'lucide-react';
 import Aurora from './Aurora';
+import { useQuoteModal } from '../QuoteContext';
 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
@@ -10,6 +11,7 @@ const HIGHLIGHTS = [
 
 export default function Hero() {
   const reduceMotion = useReducedMotion();
+  const { openQuote } = useQuoteModal();
   const { scrollY } = useScroll();
   const bgY = useTransform(scrollY, [0, 600], [0, 120]);
   const bgScale = useTransform(scrollY, [0, 600], [1, 1.15]);
@@ -87,15 +89,16 @@ export default function Hero() {
             transition={{ duration: 0.6, delay: 0.6 }}
             className="flex flex-wrap gap-4"
           >
-            <motion.a
-              href="mailto:info@freightflow.group?subject=Quote%20Request"
+            <motion.button
+              type="button"
+              onClick={openQuote}
               whileHover={{ scale: 1.04 }}
               whileTap={{ scale: 0.96 }}
-              className="btn-premium group inline-flex items-center gap-2 text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest"
+              className="btn-premium group inline-flex items-center gap-2 text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest cursor-pointer"
             >
               Request a Quote
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-            </motion.a>
+            </motion.button>
             <motion.a
               href="#recruitment"
               whileHover={{ scale: 1.04 }}

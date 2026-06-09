@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Sun, Moon, X, Menu } from 'lucide-react';
+import { useQuoteModal } from '../QuoteContext';
 
 interface NavbarProps {
   isDark: boolean;
@@ -19,6 +20,7 @@ const NAV_LINKS = [
 export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileMenuOpen }: NavbarProps) {
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
+  const { openQuote } = useQuoteModal();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -82,9 +84,9 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
           <button onClick={toggleTheme} className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle dark mode" type="button">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <a href="mailto:info@freightflow.group?subject=Quote%20Request" className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
+          <button type="button" onClick={openQuote} className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
             Request a Quote
-          </a>
+          </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle menu" type="button">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -103,7 +105,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
               {link.label}
             </a>
           ))}
-          <a className="mt-4 bg-secondary-container text-on-secondary-container px-10 py-4 rounded-md font-bold text-sm uppercase tracking-widest hover:brightness-110 transition-all" href="mailto:info@freightflow.group" onClick={() => setMobileMenuOpen(false)}>Request a Quote</a>
+          <button type="button" className="btn-premium mt-4 text-white px-10 py-4 rounded-full font-bold text-sm uppercase tracking-widest" onClick={() => { setMobileMenuOpen(false); openQuote(); }}>Request a Quote</button>
         </div>
       )}
     </>

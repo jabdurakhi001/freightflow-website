@@ -2,8 +2,10 @@ import { motion } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import Reveal from './Reveal';
 import Aurora from './Aurora';
+import { useQuoteModal } from '../QuoteContext';
 
 export default function CTASection() {
+  const { openQuote } = useQuoteModal();
   return (
     <section className="py-24 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
@@ -19,15 +21,16 @@ export default function CTASection() {
                 <p className="text-lg font-medium text-white/70">Join the shippers who have moved from guesswork to systems.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 shrink-0">
-                <motion.a
-                  href="mailto:info@freightflow.group?subject=Quote%20Request"
+                <motion.button
+                  type="button"
+                  onClick={openQuote}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="btn-premium group inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest"
+                  className="btn-premium group inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest cursor-pointer"
                 >
                   Request a Quote
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                </motion.a>
+                </motion.button>
                 <motion.a
                   href="mailto:info@freightflow.group?subject=Freight%20Inquiry"
                   whileHover={{ scale: 1.04 }}
