@@ -2,6 +2,8 @@ import { Truck, Calendar, Map as MapIcon, Network, ArrowUpRight } from 'lucide-r
 import type { LucideIcon } from 'lucide-react';
 import Reveal from './Reveal';
 import SectionHeading from './SectionHeading';
+import TiltCard from './TiltCard';
+import { useQuoteModal } from '../QuoteContext';
 
 interface Solution {
   icon: LucideIcon;
@@ -33,6 +35,7 @@ const SOLUTIONS: Solution[] = [
 ];
 
 export default function SolutionsSection() {
+  const { openQuote } = useQuoteModal();
   return (
     <section id="solutions" className="py-24 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
@@ -46,21 +49,24 @@ export default function SolutionsSection() {
           {SOLUTIONS.map((solution, i) => {
             const Icon = solution.icon;
             return (
-              <Reveal key={solution.title} direction="up" delay={i * 0.1}>
-                <a
-                  href="mailto:info@freightflow.group?subject=Service%20Inquiry"
-                  className="card-premium group flex h-full flex-col p-7"
-                >
-                  <div className="mb-6 inline-flex w-fit items-center justify-center rounded-xl bg-gradient-to-br from-secondary to-secondary-fixed-dim p-3 glow-secondary">
-                    <Icon className="w-6 h-6 text-white" />
-                  </div>
-                  <h3 className="font-black text-xl mb-3 tracking-tight text-primary dark:text-white">{solution.title}</h3>
-                  <p className="text-sm text-on-surface-variant leading-relaxed mb-6">{solution.description}</p>
-                  <span className="mt-auto inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-primary dark:text-white group-hover:text-secondary transition-colors">
-                    Learn More
-                    <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                  </span>
-                </a>
+              <Reveal key={solution.title} direction="up" delay={i * 0.1} className="h-full">
+                <TiltCard className="h-full">
+                  <button
+                    type="button"
+                    onClick={openQuote}
+                    className="card-premium group flex h-full w-full flex-col p-7 text-left cursor-pointer"
+                  >
+                    <div className="mb-6 inline-flex w-fit items-center justify-center rounded-xl bg-gradient-to-br from-secondary to-secondary-fixed-dim p-3 glow-secondary">
+                      <Icon className="w-6 h-6 text-white" />
+                    </div>
+                    <h3 className="font-black text-xl mb-3 tracking-tight text-primary dark:text-white">{solution.title}</h3>
+                    <p className="text-sm text-on-surface-variant leading-relaxed mb-6">{solution.description}</p>
+                    <span className="mt-auto inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-primary dark:text-white group-hover:text-secondary transition-colors">
+                      Get a Quote
+                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                    </span>
+                  </button>
+                </TiltCard>
               </Reveal>
             );
           })}

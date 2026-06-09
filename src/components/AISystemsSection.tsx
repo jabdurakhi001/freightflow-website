@@ -1,6 +1,7 @@
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import Reveal from './Reveal';
 import Aurora from './Aurora';
+import OpsConsole from './OpsConsole';
 
 const FEATURES = [
   'Automated dispatch workflows for zero-latency communication.',
@@ -11,8 +12,6 @@ const FEATURES = [
 ];
 
 export default function AISystemsSection() {
-  const reduceMotion = useReducedMotion();
-
   return (
     <section id="ai-systems" className="py-24 bg-primary text-white overflow-hidden relative grain">
       <Aurora className="opacity-60" />
@@ -51,19 +50,7 @@ export default function AISystemsSection() {
           </div>
         </Reveal>
         <Reveal direction="left" className="relative">
-          <motion.div
-            className="aspect-square bg-gradient-to-br from-primary-container to-secondary/20 rounded-xl flex items-center justify-center border border-white/10 relative"
-            animate={reduceMotion ? undefined : { y: [0, -12, 0] }}
-            transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <div className="absolute inset-0 opacity-20 pointer-events-none" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
-            <img
-              loading="lazy"
-              className="w-4/5 h-4/5 object-cover rounded-lg shadow-2xl grayscale contrast-125"
-              alt="Technology and logistics systems visualization"
-              src="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&q=80&auto=format"
-            />
-          </motion.div>
+          <OpsConsole />
         </Reveal>
       </div>
     </section>

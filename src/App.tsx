@@ -14,6 +14,10 @@ import Footer from './components/Footer';
 import ChatWidget from './components/ChatWidget';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
+import LanesMarquee from './components/LanesMarquee';
+import FAQSection from './components/FAQSection';
+import QuoteModal from './components/QuoteModal';
+import { QuoteModalProvider } from './QuoteContext';
 
 export default function App() {
   const [isDark, setIsDark] = useState(false);
@@ -43,6 +47,7 @@ export default function App() {
   };
 
   return (
+    <QuoteModalProvider>
     <div className="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container min-h-screen">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-secondary focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:font-bold focus:text-sm">
         Skip to main content
@@ -60,6 +65,7 @@ export default function App() {
       <main id="main-content">
         <Hero />
         <TrustStrip />
+        <LanesMarquee />
         <ComplianceSection />
         <SolutionsSection />
         <AISystemsSection />
@@ -67,12 +73,15 @@ export default function App() {
         <Comparison />
         <FleetSection />
         <RecruitmentSection />
+        <FAQSection />
         <CTASection />
       </main>
 
       <Footer />
       <ChatWidget />
       <BackToTop />
+      <QuoteModal />
     </div>
+    </QuoteModalProvider>
   );
 }
