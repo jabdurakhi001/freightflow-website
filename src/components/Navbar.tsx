@@ -15,6 +15,7 @@ const NAV_LINKS = [
   { href: '#ai-systems', label: 'AI Systems' },
   { href: '#fleet', label: 'Fleet' },
   { href: '#recruitment', label: 'Recruitment' },
+  { href: '#faq', label: 'FAQ' },
 ];
 
 export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileMenuOpen }: NavbarProps) {
