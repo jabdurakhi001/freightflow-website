@@ -65,7 +65,7 @@ function StaticHero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-4 font-light leading-relaxed max-w-2xl short:hidden"
           >
-            FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.
+            FreightFlow turns vision into motion — delivering consistent, compliant, and scalable transportation across all 48 states through structured operations and real-time visibility.
           </motion.p>
 
           <motion.p

@@ -205,7 +205,7 @@ export default function ScrollDriveHero() {
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>
               <p className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl short:hidden">
-                FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.
+                FreightFlow turns vision into motion — delivering consistent, compliant, and scalable transportation across all 48 states through structured operations and real-time visibility.
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <motion.button
