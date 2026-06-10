@@ -118,12 +118,19 @@ export default function ScrollDriveHero() {
     const bmps: (ImageBitmap | null)[] = new Array(FRAME_COUNT).fill(null);
     bitmapsRef.current = bmps;
 
+    // Decode frames no larger than the device needs, so memory stays bounded
+    // on phones while desktops still get full 1280-wide frames.
+    const decodeWidth = Math.min(
+      Math.round(window.innerWidth * Math.min(window.devicePixelRatio || 1, 2)),
+      1280,
+    );
+
     (async () => {
       for (let i = 0; i < FRAME_COUNT; i++) {
         try {
           const res = await fetch(frameSrc(i));
           const blob = await res.blob();
-          const bmp = await createImageBitmap(blob);
+          const bmp = await createImageBitmap(blob, { resizeWidth: decodeWidth, resizeQuality: 'high' });
           if (cancelled) {
             bmp.close();
             return;

@@ -14,52 +14,34 @@ const HIGHLIGHTS = [
   { icon: Activity, label: '99.2% Fleet Uptime' },
 ];
 
-type Variant = 'scrub' | 'video' | 'static';
-
-// Decide once, synchronously, to avoid a hero flash on load.
-function pickVariant(): Variant {
-  if (typeof window === 'undefined') return 'static';
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static';
-  return window.matchMedia('(min-width: 768px) and (pointer: fine)').matches ? 'scrub' : 'video';
+// Decide once, synchronously, to avoid a hero flash on load. The scroll
+// scrubber (truck advances only as you scroll) runs on every device that
+// allows motion; reduced-motion users get a static poster.
+function prefersReducedMotion(): boolean {
+  if (typeof window === 'undefined') return false;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 export default function Hero() {
-  const [variant] = useState<Variant>(pickVariant);
+  const [reduced] = useState<boolean>(prefersReducedMotion);
 
-  if (variant === 'scrub') return <ScrollDriveHero />;
-  return <StaticHero useVideo={variant === 'video'} />;
+  if (reduced) return <StaticHero />;
+  return <ScrollDriveHero />;
 }
 
-/**
- * Non-scrubbed hero. On motion-capable touch devices the background is a
- * looping muted video; under reduced motion it's a static poster image.
- */
-function StaticHero({ useVideo }: { useVideo: boolean }) {
+/** Static poster hero shown when the user prefers reduced motion. */
+function StaticHero() {
   const reduceMotion = useReducedMotion();
   const { openQuote } = useQuoteModal();
 
   return (
     <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain">
       <div className="absolute inset-0 z-0">
-        {useVideo ? (
-          <video
-            className="w-full h-full object-cover opacity-40"
-            src="/hero-drive.mp4"
-            poster={HERO_POSTER}
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        ) : (
-          <img
-            className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
-            alt="Semi truck on mountain highway"
-            src={HERO_POSTER}
-          />
-        )}
+        <img
+          className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+          alt="Semi truck on mountain highway"
+          src={HERO_POSTER}
+        />
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/85 to-primary/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent" />
       </div>
