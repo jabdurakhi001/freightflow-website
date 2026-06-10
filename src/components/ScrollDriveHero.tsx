@@ -12,10 +12,11 @@ import { useQuoteModal } from '../QuoteContext';
 const HERO_POSTER =
   'https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920';
 
-// Pre-extracted frame sequence (1280x720). Scrubbing draws the frame that
-// matches scroll position to a canvas — no video seeking, so it's both
-// perfectly scroll-aligned and smooth.
-const FRAME_COUNT = 96;
+// Pre-extracted frame sequence (1280x720). Each frame is decoded once into a
+// GPU-ready ImageBitmap, and a smoothing playhead eases toward the scroll
+// position — so scrubbing is both scroll-aligned and free of decode jank or
+// frame-stepping.
+const FRAME_COUNT = 64;
 const frameSrc = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, '0')}.jpg`;
 
 const HIGHLIGHTS = [
@@ -33,22 +34,15 @@ function Readout<T extends string | number>({ value, className }: { value: Motio
   return <span className={className}>{v}</span>;
 }
 
-/**
- * Cinematic hero whose truck footage is scrubbed by scroll. Instead of seeking
- * an H.264 video per frame (which is far too slow on a 720p/1080p source and
- * caused the scroll jank), the clip is pre-extracted to ~96 JPEG frames and the
- * frame matching the scroll position is painted to a canvas. drawImage of a
- * decoded JPEG is ~1ms, so playback is both scroll-aligned and smooth. A live
- * telemetry HUD tracks the same scroll. Used on pointer-fine desktop with
- * motion enabled; other devices get a static hero variant.
- */
 export default function ScrollDriveHero() {
   const { openQuote } = useQuoteModal();
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imagesRef = useRef<HTMLImageElement[]>([]);
-  const targetIndexRef = useRef(0);
+  const bitmapsRef = useRef<(ImageBitmap | null)[]>([]);
+  const targetRef = useRef(0); // frame index the scroll wants
+  const currentRef = useRef(0); // eased frame index actually shown
   const rafRef = useRef(0);
+  const runningRef = useRef(false);
   const [ready, setReady] = useState(false);
 
   const { scrollYProgress } = useScroll({
@@ -56,100 +50,121 @@ export default function ScrollDriveHero() {
     offset: ['start start', 'end end'],
   });
 
-  // Cover-fit draw of the frame nearest to the current scroll position.
-  const draw = useCallback(() => {
-    rafRef.current = 0;
+  // Paint a given frame (cover-fit), falling back to the nearest decoded one.
+  const renderFrame = useCallback((wanted: number) => {
     const canvas = canvasRef.current;
     const ctx = canvas?.getContext('2d');
     if (!canvas || !ctx) return;
+    const bmps = bitmapsRef.current;
 
-    const imgs = imagesRef.current;
-    const isLoaded = (i: number) => !!imgs[i] && imgs[i].complete && imgs[i].naturalWidth > 0;
-
-    let idx = targetIndexRef.current;
-    if (!isLoaded(idx)) {
+    let idx = Math.max(0, Math.min(wanted, FRAME_COUNT - 1));
+    if (!bmps[idx]) {
       let back = idx;
-      while (back >= 0 && !isLoaded(back)) back--;
+      while (back >= 0 && !bmps[back]) back--;
       if (back >= 0) idx = back;
       else {
         let fwd = idx;
-        while (fwd < FRAME_COUNT && !isLoaded(fwd)) fwd++;
+        while (fwd < FRAME_COUNT && !bmps[fwd]) fwd++;
         if (fwd < FRAME_COUNT) idx = fwd;
-        else return; // nothing loaded yet — poster shows through
+        else return;
       }
     }
-
-    const img = imgs[idx];
+    const bmp = bmps[idx]!;
     const vw = canvas.clientWidth;
     const vh = canvas.clientHeight;
-    const scale = Math.max(vw / img.naturalWidth, vh / img.naturalHeight);
-    const dw = img.naturalWidth * scale;
-    const dh = img.naturalHeight * scale;
-    ctx.drawImage(img, (vw - dw) / 2, (vh - dh) / 2, dw, dh);
+    const scale = Math.max(vw / bmp.width, vh / bmp.height);
+    const dw = bmp.width * scale;
+    const dh = bmp.height * scale;
+    ctx.drawImage(bmp, (vw - dw) / 2, (vh - dh) / 2, dw, dh);
   }, []);
 
-  const scheduleDraw = useCallback(() => {
-    if (!rafRef.current) rafRef.current = requestAnimationFrame(draw);
-  }, [draw]);
+  // Easing loop: nudge the shown frame toward the scroll target each tick.
+  const tick = useCallback(() => {
+    const target = targetRef.current;
+    const diff = target - currentRef.current;
+    if (Math.abs(diff) < 0.35) {
+      currentRef.current = target;
+      renderFrame(Math.round(target));
+      runningRef.current = false;
+      rafRef.current = 0;
+      return;
+    }
+    currentRef.current += diff * 0.2;
+    renderFrame(Math.round(currentRef.current));
+    rafRef.current = requestAnimationFrame(tick);
+  }, [renderFrame]);
+
+  const ensureRunning = useCallback(() => {
+    if (!runningRef.current) {
+      runningRef.current = true;
+      rafRef.current = requestAnimationFrame(tick);
+    }
+  }, [tick]);
 
   const sizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
-    const vw = canvas.clientWidth;
-    const vh = canvas.clientHeight;
-    canvas.width = Math.round(vw * dpr);
-    canvas.height = Math.round(vh * dpr);
+    canvas.width = Math.round(canvas.clientWidth * dpr);
+    canvas.height = Math.round(canvas.clientHeight * dpr);
     const ctx = canvas.getContext('2d');
     if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    draw();
-  }, [draw]);
+    renderFrame(Math.round(currentRef.current));
+  }, [renderFrame]);
 
-  // Preload the frame sequence.
+  // Decode the whole sequence to ImageBitmaps once.
   useEffect(() => {
-    let firstLoaded = false;
-    const imgs: HTMLImageElement[] = [];
-    for (let i = 0; i < FRAME_COUNT; i++) {
-      const img = new Image();
-      img.decoding = 'async';
-      img.src = frameSrc(i);
-      img.onload = () => {
-        if (!firstLoaded) {
-          firstLoaded = true;
-          setReady(true);
-        }
-        scheduleDraw(); // sharpen current position as frames stream in
-      };
-      imgs[i] = img;
-    }
-    imagesRef.current = imgs;
-    return () => {
-      for (const img of imgs) img.onload = null;
-    };
-  }, [scheduleDraw]);
+    let cancelled = false;
+    const bmps: (ImageBitmap | null)[] = new Array(FRAME_COUNT).fill(null);
+    bitmapsRef.current = bmps;
 
-  // Size canvas now and on resize.
+    (async () => {
+      for (let i = 0; i < FRAME_COUNT; i++) {
+        try {
+          const res = await fetch(frameSrc(i));
+          const blob = await res.blob();
+          const bmp = await createImageBitmap(blob);
+          if (cancelled) {
+            bmp.close();
+            return;
+          }
+          bmps[i] = bmp;
+          if (i === 0) setReady(true);
+          renderFrame(Math.round(currentRef.current)); // sharpen as frames arrive
+        } catch {
+          /* skip a frame that fails to load/decode */
+        }
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      for (const b of bmps) b?.close();
+    };
+  }, [renderFrame]);
+
   useEffect(() => {
     sizeCanvas();
     window.addEventListener('resize', sizeCanvas);
-    return () => window.removeEventListener('resize', sizeCanvas);
+    return () => {
+      window.removeEventListener('resize', sizeCanvas);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
   }, [sizeCanvas]);
 
-  // Map scroll → frame index.
   useMotionValueEvent(scrollYProgress, 'change', (v) => {
-    const clamped = Math.max(0, Math.min(v, 1));
-    targetIndexRef.current = Math.round(clamped * (FRAME_COUNT - 1));
-    scheduleDraw();
+    targetRef.current = Math.max(0, Math.min(v, 1)) * (FRAME_COUNT - 1);
+    ensureRunning();
   });
 
-  // Phase transitions (opacity only)
+  // Phase transitions
   const introOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const introY = useTransform(scrollYProgress, [0, 0.12], [0, -50]);
   const hudOpacity = useTransform(scrollYProgress, [0.14, 0.26, 0.88, 1], [0, 1, 1, 0]);
   const outroOpacity = useTransform(scrollYProgress, [0.8, 0.92], [0, 1]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
 
-  // Live HUD values, all derived from scroll
+  // Live HUD values
   const speed = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0, 68, 64, 0]);
   const speedText = useTransform(speed, (v) => Math.round(v).toString());
   const miles = useTransform(scrollYProgress, [0, 1], [968, 0]);
@@ -161,17 +176,14 @@ export default function ScrollDriveHero() {
   return (
     <section ref={wrapRef} className="relative h-[240vh] bg-primary">
       <div className="sticky top-0 h-screen w-full overflow-hidden grain">
-        {/* Poster (shows until first frame is painted) */}
         <img
           src={HERO_POSTER}
           alt=""
           aria-hidden="true"
           className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${ready ? 'opacity-0' : 'opacity-100'}`}
         />
-        {/* Scroll-scrubbed frame canvas */}
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
 
-        {/* Legibility overlays (static gradients) */}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/75 to-primary/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/40" />
 
@@ -230,7 +242,6 @@ export default function ScrollDriveHero() {
         {/* ---------- Phase 2: Live telemetry HUD ---------- */}
         <motion.div style={{ opacity: hudOpacity }} className="absolute inset-0 z-10 pointer-events-none will-change-[opacity]">
           <div className="max-w-7xl mx-auto px-8 h-full relative">
-            {/* Top-left live tag */}
             <div className="absolute top-28 left-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/10">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
@@ -239,7 +250,6 @@ export default function ScrollDriveHero() {
               <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Load FF-2481 · Live</span>
             </div>
 
-            {/* Speed gauge — top right */}
             <div className="absolute top-28 right-8 text-right">
               <div className="inline-flex items-baseline gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/10">
                 <Gauge className="w-4 h-4 text-secondary self-center" />
@@ -248,7 +258,6 @@ export default function ScrollDriveHero() {
               </div>
             </div>
 
-            {/* Center prompt */}
             <div className="absolute top-1/2 left-8 -translate-y-1/2 max-w-md">
               <span className="eyebrow mb-3">Keep Scrolling</span>
               <p className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-tight">
@@ -259,7 +268,6 @@ export default function ScrollDriveHero() {
               </p>
             </div>
 
-            {/* Bottom telemetry bar */}
             <div className="absolute bottom-10 left-8 right-8">
               <div className="rounded-2xl bg-black/45 border border-white/10 px-6 py-4">
                 <div className="flex items-center justify-between mb-3 text-[10px] font-black uppercase tracking-[0.2em]">
@@ -271,7 +279,6 @@ export default function ScrollDriveHero() {
                     <ShieldCheck className="w-3.5 h-3.5" /> HOS Clear
                   </span>
                 </div>
-                {/* Route progress (transform-only) */}
                 <div className="relative h-1.5 rounded-full bg-white/10 overflow-visible">
                   <motion.div
                     className="absolute inset-0 rounded-full bg-gradient-to-r from-secondary-fixed-dim to-secondary origin-left"
@@ -296,14 +303,13 @@ export default function ScrollDriveHero() {
           </div>
         </motion.div>
 
-        {/* ---------- Outro tagline ---------- */}
+        {/* ---------- Outro ---------- */}
         <motion.div style={{ opacity: outroOpacity }} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none will-change-[opacity]">
           <p className="text-4xl md:text-6xl font-black text-white tracking-tighter text-center px-8">
             Every mile, <span className="gradient-text">accounted for.</span>
           </p>
         </motion.div>
 
-        {/* Scroll cue */}
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
           <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll to Drive</span>
           <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
