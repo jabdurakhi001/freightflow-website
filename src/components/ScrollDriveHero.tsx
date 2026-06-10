@@ -197,21 +197,21 @@ export default function ScrollDriveHero() {
         {/* ---------- Phase 1: Intro ---------- */}
         <motion.div
           style={{ opacity: introOpacity, y: introY }}
-          className="absolute inset-0 z-10 flex items-center pt-20 pb-10 md:py-0 will-change-[opacity,transform]"
+          className="absolute inset-0 z-10 flex items-center pt-20 pb-10 md:py-0 short:pt-16 will-change-[opacity,transform]"
         >
           <div className="max-w-7xl mx-auto px-8 w-full">
             <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-white mb-5 sm:mb-7">
+              <span className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-white mb-5 sm:mb-7 short:hidden">
                 <span className="relative flex h-2 w-2">
                   <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
                   <span className="relative inline-flex h-2 w-2 rounded-full bg-secondary" />
                 </span>
                 Precision Logistics · Live Operations
               </span>
-              <h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6">
+              <h1 className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6 short:mb-3">
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>
-              <p className="text-base sm:text-xl text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl">
+              <p className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl short:hidden">
                 FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4">
@@ -234,7 +234,7 @@ export default function ScrollDriveHero() {
                   Work With Us
                 </motion.a>
               </div>
-              <div className="mt-8 sm:mt-12 hidden sm:flex flex-wrap gap-x-8 gap-y-3">
+              <div className="mt-8 sm:mt-12 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3">
                 {HIGHLIGHTS.map(({ icon: Icon, label }) => (
                   <div key={label} className="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
                     <Icon className="w-4 h-4 text-secondary" />
@@ -265,7 +265,7 @@ export default function ScrollDriveHero() {
               </div>
             </div>
 
-            <div className="absolute top-1/2 left-8 -translate-y-1/2 max-w-md hidden sm:block">
+            <div className="absolute top-1/2 left-8 -translate-y-1/2 max-w-md hidden sm:block short:!hidden">
               <span className="eyebrow mb-3">Keep Scrolling</span>
               <p className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-tight">
                 You're in the cab.<br />Watch the system work.

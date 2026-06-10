@@ -3,6 +3,9 @@
 
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* Short viewports — primarily landscape phones (wide but very short). */
+@custom-variant short (@media (max-height: 600px));
+
 html {
   scroll-behavior: smooth;
 }
