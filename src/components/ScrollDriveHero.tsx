@@ -1,10 +1,9 @@
-import { useRef, useState, useEffect } from 'react';
+import { useRef, useState, useEffect, useCallback } from 'react';
 import {
   motion,
   useScroll,
   useTransform,
   useMotionValueEvent,
-  useInView,
   type MotionValue,
 } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity, Navigation, Gauge } from 'lucide-react';
@@ -13,13 +12,18 @@ import { useQuoteModal } from '../QuoteContext';
 const HERO_POSTER =
   'https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920';
 
+// Pre-extracted frame sequence (1280x720). Scrubbing draws the frame that
+// matches scroll position to a canvas — no video seeking, so it's both
+// perfectly scroll-aligned and smooth.
+const FRAME_COUNT = 96;
+const frameSrc = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, '0')}.jpg`;
+
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
   { icon: ShieldCheck, label: 'USDOT & MC Authorized' },
   { icon: Activity, label: '99.2% Fleet Uptime' },
 ];
 
-// Waypoints surfaced in the HUD as the lane progresses (illustrative).
 const WAYPOINTS = ['I-90 · Chicago, IL', 'I-55 S · Bloomington, IL', 'I-44 · Springfield, MO', 'US-75 · Sherman, TX'];
 
 /** Renders a string/number MotionValue as live text in a type-safe way. */
@@ -30,34 +34,115 @@ function Readout<T extends string | number>({ value, className }: { value: Motio
 }
 
 /**
- * Cinematic hero: the driving video plays normally as a smooth, GPU-decoded
- * background while a live telemetry HUD (speed, route progress, ETA, waypoint)
- * is driven by scroll position through a tall pinned section. The video plays
- * forward (no per-frame currentTime seeking — that is far too expensive for a
- * 1080p H.264 source and was the cause of scroll jank). The video pauses when
- * the hero scrolls out of view. Used on pointer-fine desktop with motion
- * enabled; other devices get a static hero variant.
+ * Cinematic hero whose truck footage is scrubbed by scroll. Instead of seeking
+ * an H.264 video per frame (which is far too slow on a 720p/1080p source and
+ * caused the scroll jank), the clip is pre-extracted to ~96 JPEG frames and the
+ * frame matching the scroll position is painted to a canvas. drawImage of a
+ * decoded JPEG is ~1ms, so playback is both scroll-aligned and smooth. A live
+ * telemetry HUD tracks the same scroll. Used on pointer-fine desktop with
+ * motion enabled; other devices get a static hero variant.
  */
 export default function ScrollDriveHero() {
   const { openQuote } = useQuoteModal();
   const wrapRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const inView = useInView(wrapRef, { amount: 0.05 });
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imagesRef = useRef<HTMLImageElement[]>([]);
+  const targetIndexRef = useRef(0);
+  const rafRef = useRef(0);
+  const [ready, setReady] = useState(false);
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ['start start', 'end end'],
   });
 
-  // Only decode while the hero is on screen.
-  useEffect(() => {
-    const vid = videoRef.current;
-    if (!vid) return;
-    if (inView) vid.play().catch(() => {});
-    else vid.pause();
-  }, [inView]);
+  // Cover-fit draw of the frame nearest to the current scroll position.
+  const draw = useCallback(() => {
+    rafRef.current = 0;
+    const canvas = canvasRef.current;
+    const ctx = canvas?.getContext('2d');
+    if (!canvas || !ctx) return;
 
-  // Phase transitions (opacity only — cheap to composite)
+    const imgs = imagesRef.current;
+    const isLoaded = (i: number) => !!imgs[i] && imgs[i].complete && imgs[i].naturalWidth > 0;
+
+    let idx = targetIndexRef.current;
+    if (!isLoaded(idx)) {
+      let back = idx;
+      while (back >= 0 && !isLoaded(back)) back--;
+      if (back >= 0) idx = back;
+      else {
+        let fwd = idx;
+        while (fwd < FRAME_COUNT && !isLoaded(fwd)) fwd++;
+        if (fwd < FRAME_COUNT) idx = fwd;
+        else return; // nothing loaded yet — poster shows through
+      }
+    }
+
+    const img = imgs[idx];
+    const vw = canvas.clientWidth;
+    const vh = canvas.clientHeight;
+    const scale = Math.max(vw / img.naturalWidth, vh / img.naturalHeight);
+    const dw = img.naturalWidth * scale;
+    const dh = img.naturalHeight * scale;
+    ctx.drawImage(img, (vw - dw) / 2, (vh - dh) / 2, dw, dh);
+  }, []);
+
+  const scheduleDraw = useCallback(() => {
+    if (!rafRef.current) rafRef.current = requestAnimationFrame(draw);
+  }, [draw]);
+
+  const sizeCanvas = useCallback(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const vw = canvas.clientWidth;
+    const vh = canvas.clientHeight;
+    canvas.width = Math.round(vw * dpr);
+    canvas.height = Math.round(vh * dpr);
+    const ctx = canvas.getContext('2d');
+    if (ctx) ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }, [draw]);
+
+  // Preload the frame sequence.
+  useEffect(() => {
+    let firstLoaded = false;
+    const imgs: HTMLImageElement[] = [];
+    for (let i = 0; i < FRAME_COUNT; i++) {
+      const img = new Image();
+      img.decoding = 'async';
+      img.src = frameSrc(i);
+      img.onload = () => {
+        if (!firstLoaded) {
+          firstLoaded = true;
+          setReady(true);
+        }
+        scheduleDraw(); // sharpen current position as frames stream in
+      };
+      imgs[i] = img;
+    }
+    imagesRef.current = imgs;
+    return () => {
+      for (const img of imgs) img.onload = null;
+    };
+  }, [scheduleDraw]);
+
+  // Size canvas now and on resize.
+  useEffect(() => {
+    sizeCanvas();
+    window.addEventListener('resize', sizeCanvas);
+    return () => window.removeEventListener('resize', sizeCanvas);
+  }, [sizeCanvas]);
+
+  // Map scroll → frame index.
+  useMotionValueEvent(scrollYProgress, 'change', (v) => {
+    const clamped = Math.max(0, Math.min(v, 1));
+    targetIndexRef.current = Math.round(clamped * (FRAME_COUNT - 1));
+    scheduleDraw();
+  });
+
+  // Phase transitions (opacity only)
   const introOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const introY = useTransform(scrollYProgress, [0, 0.12], [0, -50]);
   const hudOpacity = useTransform(scrollYProgress, [0.14, 0.26, 0.88, 1], [0, 1, 1, 0]);
@@ -76,21 +161,17 @@ export default function ScrollDriveHero() {
   return (
     <section ref={wrapRef} className="relative h-[240vh] bg-primary">
       <div className="sticky top-0 h-screen w-full overflow-hidden grain">
-        {/* Cinematic background video (plays forward — not scrubbed) */}
-        <video
-          ref={videoRef}
-          className="absolute inset-0 w-full h-full object-cover"
-          src="/hero-drive.mp4"
-          poster={HERO_POSTER}
-          muted
-          loop
-          autoPlay
-          playsInline
-          preload="auto"
+        {/* Poster (shows until first frame is painted) */}
+        <img
+          src={HERO_POSTER}
+          alt=""
           aria-hidden="true"
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-500 ${ready ? 'opacity-0' : 'opacity-100'}`}
         />
+        {/* Scroll-scrubbed frame canvas */}
+        <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
 
-        {/* Legibility overlays (static gradients — no per-frame compositing) */}
+        {/* Legibility overlays (static gradients) */}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/75 to-primary/30" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/40" />
 
@@ -190,7 +271,7 @@ export default function ScrollDriveHero() {
                     <ShieldCheck className="w-3.5 h-3.5" /> HOS Clear
                   </span>
                 </div>
-                {/* Route progress (transform-only: scaleX fill + translateX marker) */}
+                {/* Route progress (transform-only) */}
                 <div className="relative h-1.5 rounded-full bg-white/10 overflow-visible">
                   <motion.div
                     className="absolute inset-0 rounded-full bg-gradient-to-r from-secondary-fixed-dim to-secondary origin-left"
@@ -224,7 +305,7 @@ export default function ScrollDriveHero() {
 
         {/* Scroll cue */}
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll to Drive</span>
           <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
             <motion.span
               className="w-1 h-1.5 rounded-full bg-secondary"
