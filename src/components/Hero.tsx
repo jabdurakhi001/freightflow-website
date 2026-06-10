@@ -35,7 +35,7 @@ function StaticHero() {
   const { openQuote } = useQuoteModal();
 
   return (
-    <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain pt-24 pb-12 md:py-0">
+    <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain pt-24 pb-12 md:py-0 short:pt-20">
       <div className="absolute inset-0 z-0">
         <img
           className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
@@ -54,7 +54,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[10px] font-black uppercase tracking-[0.2em] text-white mb-7"
+            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[10px] font-black uppercase tracking-[0.2em] text-white mb-7 short:hidden"
           >
             <span className="relative flex h-2 w-2">
               {!reduceMotion && (
@@ -69,7 +69,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6"
+            className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6 short:mb-3"
           >
             Reliable Freight Capacity Backed by Systems,{' '}
             <span className="gradient-text">Not Guesswork</span>
@@ -79,7 +79,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-base sm:text-xl text-white/70 mb-4 font-light leading-relaxed max-w-2xl"
+            className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-4 font-light leading-relaxed max-w-2xl short:hidden"
           >
             FreightFlow delivers consistent, compliant, and scalable transportation across all 48 states — powered by structured operations and real-time visibility.
           </motion.p>
@@ -88,7 +88,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.45 }}
-            className="text-secondary-fixed-dim font-bold tracking-tight mb-8 sm:mb-10 border-l-2 border-secondary pl-4 text-sm sm:text-base"
+            className="text-secondary-fixed-dim font-bold tracking-tight mb-8 sm:mb-10 border-l-2 border-secondary pl-4 text-sm sm:text-base short:hidden"
           >
             We don't just move freight. We execute with precision.
           </motion.p>
@@ -123,7 +123,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-10 hidden sm:flex flex-wrap gap-x-8 gap-y-3"
+            className="mt-10 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3"
           >
             {HIGHLIGHTS.map(({ icon: Icon, label }) => (
               <div key={label} className="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
