@@ -1,7 +1,12 @@
-import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import { useState } from 'react';
+import { motion, useReducedMotion } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity } from 'lucide-react';
 import Aurora from './Aurora';
+import ScrollDriveHero from './ScrollDriveHero';
 import { useQuoteModal } from '../QuoteContext';
+
+const HERO_POSTER =
+  'https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920';
 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
@@ -9,33 +14,56 @@ const HIGHLIGHTS = [
   { icon: Activity, label: '99.2% Fleet Uptime' },
 ];
 
+type Variant = 'scrub' | 'video' | 'static';
+
+// Decide once, synchronously, to avoid a hero flash on load.
+function pickVariant(): Variant {
+  if (typeof window === 'undefined') return 'static';
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return 'static';
+  return window.matchMedia('(min-width: 768px) and (pointer: fine)').matches ? 'scrub' : 'video';
+}
+
 export default function Hero() {
+  const [variant] = useState<Variant>(pickVariant);
+
+  if (variant === 'scrub') return <ScrollDriveHero />;
+  return <StaticHero useVideo={variant === 'video'} />;
+}
+
+/**
+ * Non-scrubbed hero. On motion-capable touch devices the background is a
+ * looping muted video; under reduced motion it's a static poster image.
+ */
+function StaticHero({ useVideo }: { useVideo: boolean }) {
   const reduceMotion = useReducedMotion();
   const { openQuote } = useQuoteModal();
-  const { scrollY } = useScroll();
-  const bgY = useTransform(scrollY, [0, 600], [0, 120]);
-  const bgScale = useTransform(scrollY, [0, 600], [1, 1.15]);
 
   return (
     <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain">
-      {/* Photographic backdrop with parallax */}
-      <motion.div
-        className="absolute inset-0 z-0"
-        style={reduceMotion ? undefined : { y: bgY, scale: bgScale }}
-      >
-        <motion.img
-          className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
-          alt="Semi truck on mountain highway"
-          src="https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920"
-          initial={reduceMotion ? false : { scale: 1.1 }}
-          animate={reduceMotion ? undefined : { scale: 1 }}
-          transition={{ duration: 8, ease: 'easeOut' }}
-        />
+      <div className="absolute inset-0 z-0">
+        {useVideo ? (
+          <video
+            className="w-full h-full object-cover opacity-40"
+            src="/hero-drive.mp4"
+            poster={HERO_POSTER}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+          />
+        ) : (
+          <img
+            className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+            alt="Semi truck on mountain highway"
+            src={HERO_POSTER}
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/85 to-primary/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent" />
-      </motion.div>
+      </div>
 
-      {/* Ambient color */}
       <Aurora className="z-0 opacity-70" />
 
       <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
@@ -109,7 +137,6 @@ export default function Hero() {
             </motion.a>
           </motion.div>
 
-          {/* Inline trust row */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -125,25 +152,6 @@ export default function Hero() {
           </motion.div>
         </div>
       </div>
-
-      {/* Scroll cue */}
-      {!reduceMotion && (
-        <motion.div
-          className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.6 }}
-        >
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll</span>
-          <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
-            <motion.span
-              className="w-1 h-1.5 rounded-full bg-secondary"
-              animate={{ y: [0, 10, 0], opacity: [1, 0.3, 1] }}
-              transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </div>
-        </motion.div>
-      )}
     </section>
   );
 }
