@@ -37,12 +37,12 @@ function StaticHero() {
     <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain pt-24 pb-12 md:py-0 short:pt-20">
       <div className="absolute inset-0 z-0">
         <img
-          className="w-full h-full object-cover opacity-30 mix-blend-luminosity"
+          className="w-full h-full object-cover opacity-60"
           alt="Semi truck on mountain highway"
           src={HERO_POSTER}
         />
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/85 to-primary/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent" />
       </div>
 
       <Aurora className="z-0 opacity-70" />
@@ -65,7 +65,7 @@ function StaticHero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-4 font-light leading-relaxed max-w-2xl short:hidden"
           >
-            FreightFlow turns vision into motion — delivering consistent, compliant, and scalable transportation across all 48 states through structured operations and real-time visibility.
+            FreightFlow turns vision into motion — consistent, compliant freight across all 48 states.
           </motion.p>
 
           <motion.p

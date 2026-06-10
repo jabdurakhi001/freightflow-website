@@ -191,8 +191,8 @@ export default function ScrollDriveHero() {
         />
         <canvas ref={canvasRef} className="absolute inset-0 w-full h-full" aria-hidden="true" />
 
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/75 to-primary/30" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/40" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/45 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent" />
 
         {/* ---------- Phase 1: Intro ---------- */}
         <motion.div
@@ -205,7 +205,7 @@ export default function ScrollDriveHero() {
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>
               <p className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl short:hidden">
-                FreightFlow turns vision into motion — delivering consistent, compliant, and scalable transportation across all 48 states through structured operations and real-time visibility.
+                FreightFlow turns vision into motion — consistent, compliant freight across all 48 states.
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <motion.button
