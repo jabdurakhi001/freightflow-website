@@ -222,7 +222,7 @@ export default function ScrollDriveHero() {
                   href="#recruitment"
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="border border-white/20 bg-white/5 backdrop-blur-sm text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-white/10 transition-all"
+                  className="border border-white/40 bg-black/40 backdrop-blur-md text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-black/60 hover:border-white/60 transition-all"
                 >
                   Work With Us
                 </motion.a>
