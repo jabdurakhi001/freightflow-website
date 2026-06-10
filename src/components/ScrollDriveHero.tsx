@@ -201,13 +201,6 @@ export default function ScrollDriveHero() {
         >
           <div className="max-w-7xl mx-auto px-8 w-full">
             <div className="max-w-3xl">
-              <span className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-white mb-5 sm:mb-7 short:hidden">
-                <span className="relative flex h-2 w-2">
-                  <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
-                  <span className="relative inline-flex h-2 w-2 rounded-full bg-secondary" />
-                </span>
-                Precision Logistics · Live Operations
-              </span>
               <h1 className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6 short:mb-3">
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>

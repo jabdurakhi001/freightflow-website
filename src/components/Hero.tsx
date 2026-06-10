@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { motion, useReducedMotion } from 'motion/react';
+import { motion } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity } from 'lucide-react';
 import Aurora from './Aurora';
 import ScrollDriveHero from './ScrollDriveHero';
@@ -31,7 +31,6 @@ export default function Hero() {
 
 /** Static poster hero shown when the user prefers reduced motion. */
 function StaticHero() {
-  const reduceMotion = useReducedMotion();
   const { openQuote } = useQuoteModal();
 
   return (
@@ -50,21 +49,6 @@ function StaticHero() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
         <div className="max-w-3xl">
-          <motion.span
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full border border-white/15 bg-white/5 backdrop-blur-sm text-[10px] font-black uppercase tracking-[0.2em] text-white mb-7 short:hidden"
-          >
-            <span className="relative flex h-2 w-2">
-              {!reduceMotion && (
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-secondary opacity-75" />
-              )}
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-secondary" />
-            </span>
-            Precision Logistics · Live Operations
-          </motion.span>
-
           <motion.h1
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
