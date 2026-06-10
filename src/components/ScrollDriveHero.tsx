@@ -2,9 +2,9 @@ import { useRef, useState, useEffect } from 'react';
 import {
   motion,
   useScroll,
-  useSpring,
   useTransform,
   useMotionValueEvent,
+  useInView,
   type MotionValue,
 } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity, Navigation, Gauge } from 'lucide-react';
@@ -30,62 +30,39 @@ function Readout<T extends string | number>({ value, className }: { value: Motio
 }
 
 /**
- * Cinematic hero whose background video is scrubbed by scroll position: as the
- * user scrolls through a tall pinned section, the truck "drives" and a live
- * telemetry HUD (speed, route progress, ETA, waypoint) tracks the same scroll.
- * Used on pointer-fine desktop with motion enabled; other devices get a static
- * hero variant.
+ * Cinematic hero: the driving video plays normally as a smooth, GPU-decoded
+ * background while a live telemetry HUD (speed, route progress, ETA, waypoint)
+ * is driven by scroll position through a tall pinned section. The video plays
+ * forward (no per-frame currentTime seeking — that is far too expensive for a
+ * 1080p H.264 source and was the cause of scroll jank). The video pauses when
+ * the hero scrolls out of view. Used on pointer-fine desktop with motion
+ * enabled; other devices get a static hero variant.
  */
 export default function ScrollDriveHero() {
   const { openQuote } = useQuoteModal();
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [ready, setReady] = useState(false);
+  const inView = useInView(wrapRef, { amount: 0.05 });
 
   const { scrollYProgress } = useScroll({
     target: wrapRef,
     offset: ['start start', 'end end'],
   });
 
-  // Smooth the raw scroll so the video scrub feels weighted, not twitchy.
-  const progress = useSpring(scrollYProgress, { stiffness: 120, damping: 30, mass: 0.4 });
-
-  // Prime the video (muted play→pause) so seek shows decoded frames, then pause.
+  // Only decode while the hero is on screen.
   useEffect(() => {
     const vid = videoRef.current;
     if (!vid) return;
-    const onMeta = () => {
-      setReady(true);
-      vid.play().then(() => vid.pause()).catch(() => vid.pause());
-    };
-    if (vid.readyState >= 1) onMeta();
-    else vid.addEventListener('loadedmetadata', onMeta, { once: true });
-    return () => vid.removeEventListener('loadedmetadata', onMeta);
-  }, []);
+    if (inView) vid.play().catch(() => {});
+    else vid.pause();
+  }, [inView]);
 
-  // Drive video time from smoothed scroll progress.
-  useMotionValueEvent(progress, 'change', (v) => {
-    const vid = videoRef.current;
-    if (!vid || !ready) return;
-    const d = vid.duration;
-    if (!d || Number.isNaN(d)) return;
-    const t = Math.max(0, Math.min(v, 1)) * d;
-    if (Math.abs(vid.currentTime - t) > 0.016) {
-      try {
-        vid.currentTime = t;
-      } catch {
-        /* seek can throw mid-load; ignore */
-      }
-    }
-  });
-
-  // Phase transitions
+  // Phase transitions (opacity only — cheap to composite)
   const introOpacity = useTransform(scrollYProgress, [0, 0.12], [1, 0]);
   const introY = useTransform(scrollYProgress, [0, 0.12], [0, -50]);
   const hudOpacity = useTransform(scrollYProgress, [0.14, 0.26, 0.88, 1], [0, 1, 1, 0]);
   const outroOpacity = useTransform(scrollYProgress, [0.8, 0.92], [0, 1]);
   const cueOpacity = useTransform(scrollYProgress, [0, 0.06], [1, 0]);
-  const overlayOpacity = useTransform(scrollYProgress, [0, 0.5, 1], [0.55, 0.4, 0.7]);
 
   // Live HUD values, all derived from scroll
   const speed = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0, 68, 64, 0]);
@@ -93,33 +70,34 @@ export default function ScrollDriveHero() {
   const miles = useTransform(scrollYProgress, [0, 1], [968, 0]);
   const milesText = useTransform(miles, (v) => Math.round(v).toLocaleString());
   const markerLeft = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-  const routeFill = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
+  const routeScaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
   const waypoint = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], WAYPOINTS);
 
   return (
-    <section ref={wrapRef} className="relative h-[260vh] bg-primary">
+    <section ref={wrapRef} className="relative h-[240vh] bg-primary">
       <div className="sticky top-0 h-screen w-full overflow-hidden grain">
-        {/* Scroll-scrubbed video */}
+        {/* Cinematic background video (plays forward — not scrubbed) */}
         <video
           ref={videoRef}
           className="absolute inset-0 w-full h-full object-cover"
           src="/hero-drive.mp4"
           poster={HERO_POSTER}
           muted
+          loop
+          autoPlay
           playsInline
           preload="auto"
           aria-hidden="true"
         />
 
-        {/* Legibility overlays */}
-        <motion.div className="absolute inset-0 bg-primary" style={{ opacity: overlayOpacity }} />
-        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/70 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/30" />
+        {/* Legibility overlays (static gradients — no per-frame compositing) */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-primary via-primary/75 to-primary/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-transparent to-primary/40" />
 
         {/* ---------- Phase 1: Intro ---------- */}
         <motion.div
           style={{ opacity: introOpacity, y: introY }}
-          className="absolute inset-0 z-10 flex items-center"
+          className="absolute inset-0 z-10 flex items-center will-change-[opacity,transform]"
         >
           <div className="max-w-7xl mx-auto px-8 w-full">
             <div className="max-w-3xl">
@@ -169,10 +147,10 @@ export default function ScrollDriveHero() {
         </motion.div>
 
         {/* ---------- Phase 2: Live telemetry HUD ---------- */}
-        <motion.div style={{ opacity: hudOpacity }} className="absolute inset-0 z-10 pointer-events-none">
+        <motion.div style={{ opacity: hudOpacity }} className="absolute inset-0 z-10 pointer-events-none will-change-[opacity]">
           <div className="max-w-7xl mx-auto px-8 h-full relative">
             {/* Top-left live tag */}
-            <div className="absolute top-28 left-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/30 border border-white/10 backdrop-blur-md">
+            <div className="absolute top-28 left-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/10">
               <span className="relative flex h-2 w-2">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
@@ -182,7 +160,7 @@ export default function ScrollDriveHero() {
 
             {/* Speed gauge — top right */}
             <div className="absolute top-28 right-8 text-right">
-              <div className="inline-flex items-baseline gap-1.5 px-4 py-2 rounded-xl bg-black/30 border border-white/10 backdrop-blur-md">
+              <div className="inline-flex items-baseline gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/10">
                 <Gauge className="w-4 h-4 text-secondary self-center" />
                 <Readout value={speedText} className="text-3xl font-black text-white tabular-nums tracking-tight" />
                 <span className="text-[10px] font-black uppercase tracking-widest text-white/50">mph</span>
@@ -202,7 +180,7 @@ export default function ScrollDriveHero() {
 
             {/* Bottom telemetry bar */}
             <div className="absolute bottom-10 left-8 right-8">
-              <div className="rounded-2xl bg-black/35 border border-white/10 backdrop-blur-md px-6 py-4">
+              <div className="rounded-2xl bg-black/45 border border-white/10 px-6 py-4">
                 <div className="flex items-center justify-between mb-3 text-[10px] font-black uppercase tracking-[0.2em]">
                   <span className="inline-flex items-center gap-1.5 text-white/70">
                     <Navigation className="w-3.5 h-3.5 text-secondary" />
@@ -212,10 +190,16 @@ export default function ScrollDriveHero() {
                     <ShieldCheck className="w-3.5 h-3.5" /> HOS Clear
                   </span>
                 </div>
-                {/* Route progress */}
-                <div className="relative h-1.5 rounded-full bg-white/10">
-                  <motion.div className="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-secondary-fixed-dim to-secondary" style={{ width: routeFill }} />
-                  <motion.div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 w-5 h-5 rounded-full bg-white shadow-lg flex items-center justify-center" style={{ left: markerLeft }}>
+                {/* Route progress (transform-only: scaleX fill + translateX marker) */}
+                <div className="relative h-1.5 rounded-full bg-white/10 overflow-visible">
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-secondary-fixed-dim to-secondary origin-left"
+                    style={{ scaleX: routeScaleX }}
+                  />
+                  <motion.div
+                    className="absolute top-1/2 w-5 h-5 rounded-full bg-white shadow-lg flex items-center justify-center"
+                    style={{ left: markerLeft, x: '-50%', y: '-50%' }}
+                  >
                     <Truck className="w-3 h-3 text-primary" />
                   </motion.div>
                 </div>
@@ -232,7 +216,7 @@ export default function ScrollDriveHero() {
         </motion.div>
 
         {/* ---------- Outro tagline ---------- */}
-        <motion.div style={{ opacity: outroOpacity }} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+        <motion.div style={{ opacity: outroOpacity }} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none will-change-[opacity]">
           <p className="text-4xl md:text-6xl font-black text-white tracking-tighter text-center px-8">
             Every mile, <span className="gradient-text">accounted for.</span>
           </p>
@@ -240,7 +224,7 @@ export default function ScrollDriveHero() {
 
         {/* Scroll cue */}
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll to Drive</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll</span>
           <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
             <motion.span
               className="w-1 h-1.5 rounded-full bg-secondary"
