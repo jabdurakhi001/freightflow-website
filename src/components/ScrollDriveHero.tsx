@@ -9,8 +9,9 @@ import {
 import { ArrowRight, ShieldCheck, Truck, Activity, Gauge } from 'lucide-react';
 import { useQuoteModal } from '../QuoteContext';
 
-const HERO_POSTER =
-  'https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920';
+// First frame of the scrub sequence, used as the pre-decode poster so the
+// placeholder matches the footage (no jarring stock image flash on refresh).
+const HERO_POSTER = '/hero-frames/frame-001.jpg';
 
 // Pre-extracted frame sequence (1280x720). Each frame is decoded once into a
 // GPU-ready ImageBitmap, and a smoothing playhead eases toward the scroll
