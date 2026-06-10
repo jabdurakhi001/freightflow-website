@@ -5,8 +5,7 @@ import Aurora from './Aurora';
 import ScrollDriveHero from './ScrollDriveHero';
 import { useQuoteModal } from '../QuoteContext';
 
-const HERO_POSTER =
-  'https://images.pexels.com/photos/93398/pexels-photo-93398.jpeg?auto=compress&cs=tinysrgb&w=1920';
+const HERO_POSTER = '/hero-frames/frame-001.jpg';
 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
@@ -38,7 +37,7 @@ function StaticHero() {
       <div className="absolute inset-0 z-0">
         <img
           className="w-full h-full object-cover opacity-60"
-          alt="Semi truck on mountain highway"
+          alt="Freight truck on the open highway"
           src={HERO_POSTER}
         />
         <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/45 to-transparent" />
