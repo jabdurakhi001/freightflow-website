@@ -6,7 +6,7 @@ import {
   useMotionValueEvent,
   type MotionValue,
 } from 'motion/react';
-import { ArrowRight, ShieldCheck, Truck, Activity, Navigation, Gauge } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Truck, Activity, Gauge } from 'lucide-react';
 import { useQuoteModal } from '../QuoteContext';
 
 const HERO_POSTER =
@@ -24,8 +24,6 @@ const HIGHLIGHTS = [
   { icon: ShieldCheck, label: 'USDOT & MC Authorized' },
   { icon: Activity, label: '99.2% Fleet Uptime' },
 ];
-
-const WAYPOINTS = ['I-90 · Chicago, IL', 'I-55 S · Bloomington, IL', 'I-44 · Springfield, MO', 'US-75 · Sherman, TX'];
 
 /** Renders a string/number MotionValue as live text in a type-safe way. */
 function Readout<T extends string | number>({ value, className }: { value: MotionValue<T>; className?: string }) {
@@ -174,11 +172,6 @@ export default function ScrollDriveHero() {
   // Live HUD values
   const speed = useTransform(scrollYProgress, [0, 0.2, 0.85, 1], [0, 68, 64, 0]);
   const speedText = useTransform(speed, (v) => Math.round(v).toString());
-  const miles = useTransform(scrollYProgress, [0, 1], [968, 0]);
-  const milesText = useTransform(miles, (v) => Math.round(v).toLocaleString());
-  const markerLeft = useTransform(scrollYProgress, [0, 1], ['0%', '100%']);
-  const routeScaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
-  const waypoint = useTransform(scrollYProgress, [0, 0.33, 0.66, 1], WAYPOINTS);
 
   return (
     <section ref={wrapRef} className="relative h-[240vh] bg-primary">
@@ -268,38 +261,6 @@ export default function ScrollDriveHero() {
               </p>
             </div>
 
-            <div className="absolute bottom-10 left-8 right-8">
-              <div className="rounded-2xl bg-black/45 border border-white/10 px-6 py-4">
-                <div className="flex items-center justify-between mb-3 text-[10px] font-black uppercase tracking-[0.2em]">
-                  <span className="inline-flex items-center gap-1.5 text-white/70">
-                    <Navigation className="w-3.5 h-3.5 text-secondary" />
-                    <Readout value={waypoint} className="text-white/80" />
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 text-emerald-400">
-                    <ShieldCheck className="w-3.5 h-3.5" /> HOS Clear
-                  </span>
-                </div>
-                <div className="relative h-1.5 rounded-full bg-white/10 overflow-visible">
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-secondary-fixed-dim to-secondary origin-left"
-                    style={{ scaleX: routeScaleX }}
-                  />
-                  <motion.div
-                    className="absolute top-1/2 w-5 h-5 rounded-full bg-white shadow-lg flex items-center justify-center"
-                    style={{ left: markerLeft, x: '-50%', y: '-50%' }}
-                  >
-                    <Truck className="w-3 h-3 text-primary" />
-                  </motion.div>
-                </div>
-                <div className="flex items-center justify-between mt-3 text-xs font-bold">
-                  <span className="text-white/50 uppercase tracking-widest">Chicago, IL</span>
-                  <span className="text-white/70 uppercase tracking-widest">
-                    <Readout value={milesText} className="text-secondary tabular-nums" /> mi remaining
-                  </span>
-                  <span className="text-white/50 uppercase tracking-widest">Dallas, TX</span>
-                </div>
-              </div>
-            </div>
           </div>
         </motion.div>
 
