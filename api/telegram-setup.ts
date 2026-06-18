@@ -35,6 +35,21 @@ export default async function handler(req: any, res: any) {
       });
     }
 
+    if (action === 'botstatus') {
+      const me = await (await fetch(api('getMe'))).json();
+      const botId = me.result?.id;
+      const data = await (
+        await fetch(api('getChatMember') + `?chat_id=${encodeURIComponent(GROUP_ID)}&user_id=${botId}`)
+      ).json();
+      return res.status(200).json({
+        ok: data.ok,
+        bot: me.result?.username,
+        status: data.result?.status,
+        can_manage_topics: data.result?.can_manage_topics ?? false,
+        error: data.description,
+      });
+    }
+
     if (action === 'updates') {
       const data = await (await fetch(api('getUpdates'))).json();
       const chats = new Map<number, { id: number; type: string; title: string }>();
