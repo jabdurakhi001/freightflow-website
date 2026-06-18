@@ -226,6 +226,10 @@ export default function ChatWidget() {
   };
 
   const isLive = mode === 'live';
+  // Require a first name + a usable contact (email or phone) before connecting.
+  const canConnect =
+    contactName.trim().length >= 2 &&
+    (/\S+@\S+\.\S+/.test(contactInfo.trim()) || contactInfo.replace(/\D/g, '').length >= 7);
 
   return (
     <>
@@ -357,26 +361,26 @@ export default function ChatWidget() {
                   className="bg-surface-container dark:bg-surface-container-high rounded-2xl rounded-bl-sm p-4 space-y-3"
                 >
                   <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Connect with our team</p>
-                  <p className="text-[11px] text-on-surface-variant/80 -mt-1">Optional — helps us follow up if we get disconnected.</p>
+                  <p className="text-[11px] text-on-surface-variant/80 -mt-1">Quick intro so we can help and follow up.</p>
                   <input
                     type="text"
                     value={contactName}
                     onChange={(e) => setContactName(e.target.value)}
-                    placeholder="Your name"
+                    placeholder="First name *"
                     className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
                   />
                   <input
                     type="text"
                     value={contactInfo}
                     onChange={(e) => setContactInfo(e.target.value)}
-                    placeholder="Email or phone (optional)"
+                    placeholder="Email or phone *"
                     className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
                   />
                   <div className="flex gap-2">
                     <button
                       type="button"
                       onClick={connectLive}
-                      disabled={connecting}
+                      disabled={connecting || !canConnect}
                       className="flex-1 bg-secondary text-white rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-40"
                     >
                       {connecting ? 'Connecting…' : 'Connect me'}
