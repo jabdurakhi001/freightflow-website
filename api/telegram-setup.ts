@@ -1,12 +1,12 @@
-import type { VercelRequest, VercelResponse } from '../server/http';
-import { webhookSecret } from '../server/config';
+import { createHash } from 'node:crypto';
 
 // One-time, secret-guarded helper to register the Telegram webhook from the browser
-// without handling the bot token or running curl. The required ?secret is the same
-// value derived from the bot token (sha256(token + ':ff-webhook')).
-//   • ?secret=…&action=updates  → list recent chats (find group id)
-//   • ?secret=…                  → register the webhook
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+// without handling the bot token or running curl. The required ?secret is derived
+// from the bot token: sha256(token + ':ff-webhook').
+const webhookSecret = () =>
+  createHash('sha256').update(`${process.env.TELEGRAM_BOT_TOKEN || ''}:ff-webhook`).digest('hex');
+
+export default async function handler(req: any, res: any) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
   if (!token) return res.status(500).json({ error: 'TELEGRAM_BOT_TOKEN is not set.' });
 
@@ -30,13 +30,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(200).json({ ok: data.ok, chats: [...chats.values()], note: data.description });
     }
 
-    const webhookUrl = 'https://freightflow.group/api/telegram-webhook';
     const set = await (
       await fetch(api('setWebhook'), {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          url: webhookUrl,
+          url: 'https://freightflow.group/api/telegram-webhook',
           secret_token: expected,
           allowed_updates: ['message'],
           drop_pending_updates: true,
