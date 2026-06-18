@@ -1,10 +1,11 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { MessageCircle, X, Send, Headset } from 'lucide-react';
+import { MessageCircle, X, Send, Headset, Paperclip } from 'lucide-react';
 import {
   liveChatEnabled,
   startLiveSession,
   sendLiveMessage,
+  endLiveSession,
   subscribeToSession,
   type Transcript,
   type LiveSession,
@@ -16,6 +17,8 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
   author?: Author; // assistant messages: 'ai' (default) or 'admin'; 'system' for notices
+  image?: string; // proxy URL for an admin-sent image
+  file?: { url: string; name: string }; // admin-sent file
 }
 
 type Mode = 'ai' | 'live';
@@ -65,6 +68,12 @@ export default function ChatWidget() {
     const unsubscribe = subscribeToSession(session.channel, {
       onAdminMessage: (content) => {
         if (content) setMessages((prev) => [...prev, { role: 'assistant', author: 'admin', content }]);
+      },
+      onAdminImage: (url) => {
+        setMessages((prev) => [...prev, { role: 'assistant', author: 'admin', content: '', image: url }]);
+      },
+      onAdminFile: (url, name) => {
+        setMessages((prev) => [...prev, { role: 'assistant', author: 'admin', content: '', file: { url, name } }]);
       },
       onClosed: () => {
         addSystem("A teammate has wrapped up this chat. I'm still here if you need anything else! 🤖");
@@ -127,6 +136,13 @@ export default function ChatWidget() {
       setContactName('');
       setContactInfo('');
     }
+  };
+
+  const endChat = () => {
+    if (session) void endLiveSession(session);
+    setSession(null);
+    setMode('ai');
+    addSystem("You ended the chat. I'm here if you need anything else! 🤖");
   };
 
   // ---- Sending messages ----
@@ -256,14 +272,25 @@ export default function ChatWidget() {
                   )}
                 </p>
               </div>
-              <button
-                type="button"
-                onClick={() => setIsOpen(false)}
-                className="text-white/60 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
-                aria-label="Close chat"
-              >
-                <X className="w-5 h-5" />
-              </button>
+              <div className="flex items-center gap-1.5">
+                {isLive && (
+                  <button
+                    type="button"
+                    onClick={endChat}
+                    className="text-[10px] font-bold uppercase tracking-widest text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full px-2.5 py-1 transition-colors"
+                  >
+                    End chat
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  className="text-white/60 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
+                  aria-label="Close chat"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
             </div>
 
             {/* Messages */}
@@ -296,7 +323,22 @@ export default function ChatWidget() {
                             : 'bg-surface-container dark:bg-surface-container-high text-on-surface rounded-2xl rounded-bl-sm'
                       }`}
                     >
-                      {msg.content || <LoadingDots />}
+                      {msg.image ? (
+                        <a href={msg.image} target="_blank" rel="noreferrer">
+                          <img src={msg.image} alt="Shared by team" className="rounded-lg max-w-full max-h-60 object-contain" />
+                        </a>
+                      ) : msg.file ? (
+                        <a
+                          href={msg.file.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-2 font-semibold underline break-all"
+                        >
+                          <Paperclip className="w-4 h-4 shrink-0" /> {msg.file.name}
+                        </a>
+                      ) : (
+                        msg.content || <LoadingDots />
+                      )}
                     </div>
                   </div>
                 );
