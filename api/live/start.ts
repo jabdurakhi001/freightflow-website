@@ -76,6 +76,6 @@ export default async function handler(req: any, res: any) {
     return res.status(200).json({ topicId, channel: channelFor(topicId) });
   } catch (err) {
     console.error('live/start error:', err);
-    return res.status(502).json({ error: 'Could not reach a live agent.' });
+    return res.status(502).json({ error: 'Could not reach a live agent.', detail: String(err) });
   }
 }
