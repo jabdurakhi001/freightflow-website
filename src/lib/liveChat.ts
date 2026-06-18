@@ -64,8 +64,19 @@ export async function sendLiveMessage(session: LiveSession, content: string): Pr
   }
 }
 
+/** Ends the live session (notifies + closes the Telegram topic). */
+export async function endLiveSession(session: LiveSession): Promise<void> {
+  await fetch('/api/live/end', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ topicId: session.topicId, channel: session.channel }),
+  }).catch(() => {});
+}
+
 export interface LiveHandlers {
   onAdminMessage: (content: string) => void;
+  onAdminImage: (url: string) => void;
+  onAdminFile: (url: string, name: string) => void;
   onClosed: () => void;
   onSubscribed?: () => void;
 }
@@ -91,8 +102,14 @@ export function subscribeToSession(channel: string, handlers: LiveHandlers): () 
         if (!error && Array.isArray(data)) {
           for (const row of data as Array<{ id: number; kind: string; content: string }>) {
             lastId = Math.max(lastId, row.id);
+            const fileUrl = (id: string) =>
+              `/api/live/file?channel=${encodeURIComponent(channel)}&id=${encodeURIComponent(id)}`;
             if (row.kind === 'closed') handlers.onClosed();
-            else if (row.content) handlers.onAdminMessage(row.content);
+            else if (row.kind === 'image') handlers.onAdminImage(fileUrl(row.content.split('|')[0]));
+            else if (row.kind === 'file') {
+              const [id, ...rest] = row.content.split('|');
+              handlers.onAdminFile(fileUrl(id), rest.join('|') || 'file');
+            } else if (row.content) handlers.onAdminMessage(row.content);
           }
         }
       } catch {
