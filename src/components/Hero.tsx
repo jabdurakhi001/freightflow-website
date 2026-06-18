@@ -5,7 +5,7 @@ import Aurora from './Aurora';
 import ScrollDriveHero from './ScrollDriveHero';
 import { useQuoteModal } from '../QuoteContext';
 
-const HERO_POSTER = '/hero-frames/frame-001.jpg';
+const HERO_POSTER = '/hero-frames/frame-050.jpg';
 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
