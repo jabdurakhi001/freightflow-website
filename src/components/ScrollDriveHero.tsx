@@ -175,7 +175,7 @@ export default function ScrollDriveHero() {
   const speedText = useTransform(speed, (v) => Math.round(v).toString());
 
   return (
-    <section ref={wrapRef} className="relative h-[240vh] bg-primary">
+    <section ref={wrapRef} className="relative h-[320vh] bg-primary">
       <div className="sticky top-0 h-screen w-full overflow-hidden grain">
         <img
           src={HERO_POSTER}
