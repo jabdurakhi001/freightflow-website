@@ -73,7 +73,9 @@ export default async function handler(req: any, res: any) {
         .join('\n'),
     });
 
-    return res.status(200).json({ topicId, channel: channelFor(topicId) });
+    const channel = channelFor(topicId);
+    console.log('FFLIVE_START', JSON.stringify({ topicId, channel }));
+    return res.status(200).json({ topicId, channel });
   } catch (err) {
     console.error('live/start error:', err);
     return res.status(502).json({ error: 'Could not reach a live agent.', detail: String(err) });

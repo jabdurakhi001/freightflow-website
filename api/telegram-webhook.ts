@@ -48,6 +48,7 @@ export default async function handler(req: any, res: any) {
 
   try {
     const channel = channelFor(threadId);
+    console.log('FFLIVE_HOOK', JSON.stringify({ threadId, channel, text: text.slice(0, 24) }));
     if (text.trim().toLowerCase() === '/close') {
       await broadcast(channel, 'closed', {});
       await tgSend(threadId, '🔴 Chat closed. The visitor has been disconnected.');
