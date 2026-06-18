@@ -70,24 +70,41 @@ export interface LiveHandlers {
   onSubscribed?: () => void;
 }
 
-/** Subscribe to a session's broadcast channel. Returns an unsubscribe function. */
+/**
+ * Poll for admin replies on a session's channel (the unguessable channel doubles as
+ * the access token). Plain HTTPS — works in any browser, no websocket. Returns a
+ * stop function.
+ */
 export function subscribeToSession(channel: string, handlers: LiveHandlers): () => void {
-  let cancelled = false;
-  let teardown: (() => void) | null = null;
+  let stopped = false;
+  let lastId = 0;
+  let timer: ReturnType<typeof setTimeout> | undefined;
 
   void getClient().then((supabase) => {
-    if (cancelled) return;
-    const ch = supabase.channel(channel, { config: { broadcast: { self: false } } });
-    ch.on('broadcast', { event: 'admin_msg' }, (m) => handlers.onAdminMessage((m.payload?.content as string) ?? ''))
-      .on('broadcast', { event: 'closed' }, () => handlers.onClosed())
-      .subscribe((status) => {
-        if (status === 'SUBSCRIBED') handlers.onSubscribed?.();
-      });
-    teardown = () => void supabase.removeChannel(ch);
+    if (stopped) return;
+    handlers.onSubscribed?.();
+
+    const tick = async () => {
+      if (stopped) return;
+      try {
+        const { data, error } = await supabase.rpc('ff_live_poll', { p_channel: channel, p_after: lastId });
+        if (!error && Array.isArray(data)) {
+          for (const row of data as Array<{ id: number; kind: string; content: string }>) {
+            lastId = Math.max(lastId, row.id);
+            if (row.kind === 'closed') handlers.onClosed();
+            else if (row.content) handlers.onAdminMessage(row.content);
+          }
+        }
+      } catch {
+        /* transient network error — keep polling */
+      }
+      if (!stopped) timer = setTimeout(tick, 2500);
+    };
+    void tick();
   });
 
   return () => {
-    cancelled = true;
-    teardown?.();
+    stopped = true;
+    if (timer) clearTimeout(timer);
   };
 }

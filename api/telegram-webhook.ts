@@ -1,8 +1,8 @@
 import { createHash, createHmac } from 'node:crypto';
 
-// Receives Telegram updates (admin replies inside per-visitor topics) and relays
-// them to the visitor's browser via a Realtime broadcast. Self-contained so Vercel
-// bundles it reliably.
+// Receives Telegram updates (admin replies inside per-visitor topics) and stores
+// them keyed by the visitor's channel; the browser polls for them. Self-contained
+// so Vercel bundles it reliably.
 const SUPABASE_URL = process.env.SUPABASE_URL || 'https://wzadveihdtlboymltjkh.supabase.co';
 const SUPABASE_ANON_KEY =
   process.env.SUPABASE_ANON_KEY ||
@@ -21,13 +21,13 @@ async function tgSend(threadId: number, text: string) {
   });
 }
 
-async function broadcast(channel: string, event: string, payload: Record<string, unknown>) {
-  const res = await fetch(`${SUPABASE_URL}/realtime/v1/api/broadcast`, {
+async function postLive(channel: string, kind: 'msg' | 'closed', content: string) {
+  const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/ff_live_post`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
-    body: JSON.stringify({ messages: [{ topic: channel, event, payload, private: false }] }),
+    body: JSON.stringify({ p_channel: channel, p_kind: kind, p_content: content }),
   });
-  if (!res.ok) throw new Error(`broadcast ${res.status}`);
+  if (!res.ok) throw new Error(`ff_live_post ${res.status} ${await res.text()}`);
 }
 
 export default async function handler(req: any, res: any) {
@@ -48,13 +48,12 @@ export default async function handler(req: any, res: any) {
 
   try {
     const channel = channelFor(threadId);
-    console.log('FFLIVE_HOOK', JSON.stringify({ threadId, channel, text: text.slice(0, 24) }));
     if (text.trim().toLowerCase() === '/close') {
-      await broadcast(channel, 'closed', {});
+      await postLive(channel, 'closed', '');
       await tgSend(threadId, '🔴 Chat closed. The visitor has been disconnected.');
       return res.status(200).json({ ok: true });
     }
-    await broadcast(channel, 'admin_msg', { content: text, at: Date.now() });
+    await postLive(channel, 'msg', text);
     return res.status(200).json({ ok: true });
   } catch (err) {
     console.error('telegram-webhook error:', err);
