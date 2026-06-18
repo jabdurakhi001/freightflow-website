@@ -1,6 +1,6 @@
 import { clientIp, rateLimited, type VercelRequest, type VercelResponse } from '../../server/http';
-import { admin, supabaseConfigured } from '../../server/supabaseAdmin';
-import { createTopic, sendToTopic, telegramConfigured } from '../../server/telegram';
+import { channelFor, telegramReady } from '../../server/config';
+import { createTopic, sendToTopic } from '../../server/telegram';
 
 interface Transcript {
   role: 'user' | 'assistant';
@@ -8,8 +8,9 @@ interface Transcript {
 }
 
 // Opens a live human-handoff session: creates a Telegram topic for the visitor,
-// records the session, and seeds the topic with the AI transcript so the admin
-// has full context before replying.
+// seeded with the AI transcript, and returns the topic id + the private broadcast
+// channel the browser should subscribe to. No database — the Telegram topic is the
+// conversation record.
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', 'POST');
@@ -18,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (rateLimited(`start:${clientIp(req)}`, 5)) {
     return res.status(429).json({ error: 'Too many requests. Please wait a moment.' });
   }
-  if (!supabaseConfigured() || !telegramConfigured()) {
+  if (!telegramReady()) {
     return res.status(503).json({ error: 'Live chat is not configured.' });
   }
 
@@ -29,42 +30,12 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     transcript?: Transcript[];
   };
 
-  const visitorName = (name || '').toString().slice(0, 80).trim() || 'Website visitor';
-  const visitorContact = (contact || '').toString().slice(0, 120).trim();
+  const visitorName = String(name || '').slice(0, 80).trim() || 'Website visitor';
+  const visitorContact = String(contact || '').slice(0, 120).trim();
   const history = Array.isArray(transcript) ? transcript.slice(-12) : [];
 
   try {
-    const db = admin();
-
-    const { data: session, error } = await db
-      .from('ff_chat_sessions')
-      .insert({
-        name: visitorName,
-        contact: visitorContact || null,
-        reason: (reason || '').toString().slice(0, 300) || null,
-      })
-      .select('id')
-      .single();
-    if (error || !session) throw new Error(error?.message || 'Failed to create session');
-
-    const shortId = session.id.slice(0, 8);
-    const topicId = await createTopic(`💬 ${visitorName} · ${shortId}`);
-
-    await db
-      .from('ff_chat_sessions')
-      .update({ topic_id: topicId, updated_at: new Date().toISOString() })
-      .eq('id', session.id);
-
-    // Persist the prior AI transcript for history/reconnect.
-    if (history.length) {
-      await db.from('ff_chat_messages').insert(
-        history.map((m) => ({
-          session_id: session.id,
-          sender: m.role === 'user' ? 'visitor' : 'ai',
-          content: (m.content || '').toString().slice(0, 2000),
-        }))
-      );
-    }
+    const topicId = await createTopic(`💬 ${visitorName}`);
 
     const transcriptText = history.length
       ? history.map((m) => `${m.role === 'user' ? '👤' : '🤖'} ${m.content}`).join('\n')
@@ -75,15 +46,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       [
         `🟢 New live chat — ${visitorName}`,
         visitorContact ? `📇 Contact: ${visitorContact}` : '📇 Contact: not provided',
+        reason ? `❓ ${String(reason).slice(0, 300)}` : '',
         '',
         '— Conversation so far —',
         transcriptText,
         '',
         'ℹ️ Reply in this topic to talk to the visitor. Send /close to end the chat.',
-      ].join('\n')
+      ]
+        .filter(Boolean)
+        .join('\n')
     );
 
-    return res.status(200).json({ sessionId: session.id });
+    return res.status(200).json({ topicId, channel: channelFor(topicId) });
   } catch (err) {
     console.error('live/start error:', err);
     return res.status(502).json({ error: 'Could not reach a live agent.' });

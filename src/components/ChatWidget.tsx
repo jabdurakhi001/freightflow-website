@@ -7,6 +7,7 @@ import {
   sendLiveMessage,
   subscribeToSession,
   type Transcript,
+  type LiveSession,
 } from '../lib/liveChat';
 
 type Author = 'ai' | 'admin' | 'system';
@@ -36,7 +37,7 @@ export default function ChatWidget() {
   const [error, setError] = useState<string | null>(null);
 
   const [mode, setMode] = useState<Mode>('ai');
-  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [session, setSession] = useState<LiveSession | null>(null);
   const [connecting, setConnecting] = useState(false);
 
   const [showHandoffForm, setShowHandoffForm] = useState(false);
@@ -60,19 +61,19 @@ export default function ChatWidget() {
 
   // ---- Live session subscription ----
   useEffect(() => {
-    if (!sessionId) return;
-    const unsubscribe = subscribeToSession(sessionId, {
+    if (!session) return;
+    const unsubscribe = subscribeToSession(session.channel, {
       onAdminMessage: (content) => {
         if (content) setMessages((prev) => [...prev, { role: 'assistant', author: 'admin', content }]);
       },
       onClosed: () => {
         addSystem("A teammate has wrapped up this chat. I'm still here if you need anything else! 🤖");
         setMode('ai');
-        setSessionId(null);
+        setSession(null);
       },
     });
     return unsubscribe;
-  }, [sessionId, addSystem]);
+  }, [session, addSystem]);
 
   const recentTranscript = (): Transcript[] =>
     messages
@@ -99,8 +100,8 @@ export default function ChatWidget() {
 
     try {
       if (!liveChatEnabled) throw new Error('live-disabled');
-      const id = await startLiveSession({ name, contact, reason, transcript: recentTranscript() });
-      setSessionId(id);
+      const s = await startLiveSession({ name, contact, reason, transcript: recentTranscript() });
+      setSession(s);
       setMode('live');
       addSystem("✅ You're connected. A FreightFlow specialist will reply right here — feel free to keep typing.");
     } catch {
@@ -137,9 +138,9 @@ export default function ChatWidget() {
     setInput('');
     setError(null);
 
-    if (mode === 'live' && sessionId) {
+    if (mode === 'live' && session) {
       try {
-        await sendLiveMessage(sessionId, text);
+        await sendLiveMessage(session, text);
       } catch (err) {
         setError(err instanceof Error ? err.message : 'Message could not be delivered.');
       }

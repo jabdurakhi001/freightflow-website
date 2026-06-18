@@ -1,17 +1,19 @@
 import type { VercelRequest, VercelResponse } from '../server/http';
+import { webhookSecret } from '../server/config';
 
-// One-time, secret-guarded helper so the site owner never has to handle the bot
-// token or run curl. Uses the TELEGRAM_BOT_TOKEN already in the environment.
-//   • /api/telegram-setup?secret=…&action=updates  → list recent chats (find group id)
-//   • /api/telegram-setup?secret=…                  → register the webhook
+// One-time, secret-guarded helper to register the Telegram webhook from the browser
+// without handling the bot token or running curl. The required ?secret is the same
+// value derived from the bot token (sha256(token + ':ff-webhook')).
+//   • ?secret=…&action=updates  → list recent chats (find group id)
+//   • ?secret=…                  → register the webhook
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   const token = process.env.TELEGRAM_BOT_TOKEN;
-  const secret = process.env.TELEGRAM_WEBHOOK_SECRET;
-  const provided = (req.query?.secret as string) || (req.body?.secret as string);
-
   if (!token) return res.status(500).json({ error: 'TELEGRAM_BOT_TOKEN is not set.' });
-  if (!secret || provided !== secret) {
-    return res.status(401).json({ error: 'Unauthorized — add ?secret=<TELEGRAM_WEBHOOK_SECRET>.' });
+
+  const expected = webhookSecret();
+  const provided = (req.query?.secret as string) || (req.body?.secret as string);
+  if (provided !== expected) {
+    return res.status(401).json({ error: 'Unauthorized — wrong or missing ?secret.' });
   }
 
   const api = (method: string) => `https://api.telegram.org/bot${token}/${method}`;
@@ -25,12 +27,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         const c = u.message?.chat || u.my_chat_member?.chat || u.channel_post?.chat;
         if (c) chats.set(c.id, { id: c.id, type: c.type, title: c.title || c.username || '' });
       }
-      return res.status(200).json({
-        ok: data.ok,
-        hint: 'Copy the negative -100… id of your group into the TELEGRAM_GROUP_ID env var. (If empty, send a message in the group first. If you see a 409 conflict, the webhook is already set — delete it to use this.)',
-        chats: [...chats.values()],
-        note: data.description,
-      });
+      return res.status(200).json({ ok: data.ok, chats: [...chats.values()], note: data.description });
     }
 
     const webhookUrl = 'https://freightflow.group/api/telegram-webhook';
@@ -40,7 +37,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           url: webhookUrl,
-          secret_token: secret,
+          secret_token: expected,
           allowed_updates: ['message'],
           drop_pending_updates: true,
         }),
@@ -52,9 +49,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(200).json({
       done: set.ok === true,
       message: set.ok
-        ? `Webhook registered for @${me.result?.username}. Live chat is ready — send a test from the website.`
+        ? `Webhook registered for @${me.result?.username}. Live chat is ready.`
         : `Telegram rejected the webhook: ${set.description}`,
-      setWebhook: set,
       webhookInfo: info.result,
       bot: me.result ? { id: me.result.id, username: me.result.username } : null,
     });
