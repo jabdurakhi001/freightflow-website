@@ -18,8 +18,23 @@ export default async function handler(req: any, res: any) {
 
   const api = (method: string) => `https://api.telegram.org/bot${token}/${method}`;
   const action = (req.query?.action as string) || 'webhook';
+  const GROUP_ID = process.env.TELEGRAM_GROUP_ID || '-1003961213794';
 
   try {
+    if (action === 'chatinfo') {
+      const chat = (req.query?.chat as string) || GROUP_ID;
+      const data = await (await fetch(api('getChat') + `?chat_id=${encodeURIComponent(chat)}`)).json();
+      return res.status(200).json({
+        ok: data.ok,
+        checked: chat,
+        id: data.result?.id,
+        title: data.result?.title,
+        type: data.result?.type,
+        is_forum: data.result?.is_forum ?? false,
+        error: data.description,
+      });
+    }
+
     if (action === 'updates') {
       const data = await (await fetch(api('getUpdates'))).json();
       const chats = new Map<number, { id: number; type: string; title: string }>();
