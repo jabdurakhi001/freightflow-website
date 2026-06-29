@@ -1,4 +1,4 @@
-import { Mail, MapPin, Linkedin, Twitter, Instagram, Youtube } from 'lucide-react';
+import { Mail, MapPin } from 'lucide-react';
 
 export default function Footer() {
   return (
@@ -25,20 +25,6 @@ export default function Footer() {
               <span>USDOT 4357973</span>
               <span>MC 1704871</span>
             </div>
-            <div className="flex gap-4 mt-8">
-              <a href="#" className="text-white/40 hover:text-secondary transition-colors" aria-label="LinkedIn">
-                <Linkedin className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-white/40 hover:text-secondary transition-colors" aria-label="X (Twitter)">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-white/40 hover:text-secondary transition-colors" aria-label="Instagram">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="text-white/40 hover:text-secondary transition-colors" aria-label="YouTube">
-                <Youtube className="w-5 h-5" />
-              </a>
-            </div>
           </div>
 
           <div>
@@ -64,10 +50,9 @@ export default function Footer() {
           <div>
             <h4 className="text-xs font-black uppercase tracking-widest text-white/40 mb-6">Legal</h4>
             <nav className="flex flex-col gap-4">
-              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="#">Privacy Policy</a>
-              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="#">Terms of Service</a>
+              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="/privacy.html">Privacy Policy</a>
+              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="/terms.html">Terms of Service</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="#compliance">FMCSA Compliance</a>
-              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors" href="#">Carrier Login</a>
             </nav>
           </div>
         </div>
