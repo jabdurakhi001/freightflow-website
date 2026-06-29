@@ -1,20 +1,42 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# FreightFlow Website
 
-# Run and deploy your AI Studio app
+Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, featuring a scroll-driven hero, live-style dispatch visuals, and quote/application capture.
 
-This contains everything you need to run your app locally.
+## Tech stack
 
-View your app in AI Studio: https://ai.studio/apps/69fd3ad8-016d-4f8c-9fff-6ec22c931367
+- **React 19** + **TypeScript**
+- **Vite 6** (dev server & build)
+- **Tailwind CSS 4**
+- **motion** (animations, scroll-driven hero)
+- **lucide-react** (icons)
+- **Supabase** / serverless API routes under `api/`
 
-## Run Locally
+## Run locally
 
-**Prerequisites:**  Node.js
+**Prerequisites:** Node.js 18+
 
+```bash
+npm install
+cp .env.example .env.local   # fill in the values below
+npm run dev                  # http://localhost:3000
+```
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+## Environment variables
+
+See [.env.example](.env.example). At minimum:
+
+- `GEMINI_API_KEY` — powers the AI chat widget
+- `APP_URL` — base URL used for self-referential links and API endpoints
+
+## Scripts
+
+| Command           | Description                          |
+| ----------------- | ------------------------------------ |
+| `npm run dev`     | Start the dev server on port 3000    |
+| `npm run build`   | Production build to `dist/`          |
+| `npm run preview` | Preview the production build         |
+| `npm run lint`    | Type-check with `tsc --noEmit`       |
+
+## Deployment
+
+Configured for Vercel (see [vercel.json](vercel.json)).

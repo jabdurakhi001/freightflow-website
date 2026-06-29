@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TrustStrip from './components/TrustStrip';
@@ -49,6 +50,7 @@ export default function App() {
 
   return (
     <QuoteModalProvider>
+    <MotionConfig reducedMotion="user">
     <div className="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container min-h-screen">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-secondary focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:font-bold focus:text-sm">
         Skip to main content
@@ -84,6 +86,7 @@ export default function App() {
       <QuoteModal />
       <ApplyModal />
     </div>
+    </MotionConfig>
     </QuoteModalProvider>
   );
 }
