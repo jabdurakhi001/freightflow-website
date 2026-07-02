@@ -18,7 +18,7 @@ export default function CTASection() {
                 <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] text-white mb-4">
                   Need Reliable Freight Movement?
                 </h2>
-                <p className="text-lg font-medium text-white/70">Join the shippers who have moved from guesswork to systems.</p>
+                <p className="text-lg font-medium text-white/70">Move your freight from guesswork to systems.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 shrink-0">
                 <motion.button

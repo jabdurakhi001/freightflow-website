@@ -12,7 +12,7 @@ const FAQS = [
   },
   {
     q: 'What equipment do you operate?',
-    a: 'Our fleet consists exclusively of 2025–2026 Freightliner Cascadia units — the newest equipment on the road, maintained on rigorous predictive schedules for a 99.2% uptime rate.',
+    a: 'Our fleet consists exclusively of 2025–2026 Freightliner Cascadia units — the newest equipment on the road, maintained on rigorous predictive schedules.',
   },
   {
     q: 'Do you provide real-time tracking?',

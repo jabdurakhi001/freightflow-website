@@ -42,7 +42,7 @@ export default function ComplianceSection() {
             <Reveal direction="left" delay={0.1} className="bg-surface-container-low p-8 kinetic-strip">
               <h4 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4">Structured Recruitment</h4>
               <p className="font-bold text-primary dark:text-white">Driver Qualification Process</p>
-              <p className="text-sm text-on-surface-variant mt-2">Only top 5% of applicants clear our technical and safety vetting protocols.</p>
+              <p className="text-sm text-on-surface-variant mt-2">Every driver clears our technical and safety vetting protocols before their first dispatch.</p>
             </Reveal>
             <Reveal direction="left" delay={0.2} className="bg-surface-container-highest p-8 kinetic-strip">
               <h4 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4">Centralized Command</h4>

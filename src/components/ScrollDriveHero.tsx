@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useCallback } from 'react';
 import {
   motion,
-  useScroll,
+  useMotionValue,
   useTransform,
   useMotionValueEvent,
   type MotionValue,
@@ -23,7 +23,7 @@ const frameSrc = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
   { icon: ShieldCheck, label: 'USDOT & MC Authorized' },
-  { icon: Activity, label: '99.2% Fleet Uptime' },
+  { icon: Activity, label: '2025–2026 Cascadia Fleet' },
 ];
 
 /** Renders a string/number MotionValue as live text in a type-safe way. */
@@ -44,10 +44,28 @@ export default function ScrollDriveHero() {
   const runningRef = useRef(false);
   const [ready, setReady] = useState(false);
 
-  const { scrollYProgress } = useScroll({
-    target: wrapRef,
-    offset: ['start start', 'end end'],
-  });
+  // Progress through the pinned section, measured directly from the wrapper's
+  // rect (0 = section top hits viewport top, 1 = sticky releases). Computed by
+  // hand because useScroll's target tracking silently fell back to whole-page
+  // progress here, which stretched the fade phases across the entire document.
+  const scrollYProgress = useMotionValue(0);
+  useEffect(() => {
+    const update = () => {
+      const wrap = wrapRef.current;
+      if (!wrap) return;
+      const rect = wrap.getBoundingClientRect();
+      const range = rect.height - window.innerHeight;
+      if (range <= 0) return;
+      scrollYProgress.set(Math.min(1, Math.max(0, -rect.top / range)));
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+    return () => {
+      window.removeEventListener('scroll', update);
+      window.removeEventListener('resize', update);
+    };
+  }, [scrollYProgress]);
 
   // Paint a given frame (cover-fit), falling back to the nearest decoded one.
   const renderFrame = useCallback((wanted: number) => {
@@ -199,7 +217,7 @@ export default function ScrollDriveHero() {
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>
               <p className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl short:hidden">
-                FreightFlow turns vision into motion — consistent, compliant freight across all 48 states.
+                Consistent, compliant freight across all 48 states — every load dispatched, tracked, and verified by one system.
               </p>
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <motion.button
