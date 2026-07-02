@@ -10,7 +10,7 @@ const HERO_POSTER = '/hero-frames/frame-050.jpg';
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },
   { icon: ShieldCheck, label: 'USDOT & MC Authorized' },
-  { icon: Activity, label: '99.2% Fleet Uptime' },
+  { icon: Activity, label: '2025–2026 Cascadia Fleet' },
 ];
 
 // Decide once, synchronously, to avoid a hero flash on load. The scroll
@@ -64,7 +64,7 @@ function StaticHero() {
             transition={{ duration: 0.6, delay: 0.3 }}
             className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-4 font-light leading-relaxed max-w-2xl short:hidden"
           >
-            FreightFlow turns vision into motion — consistent, compliant freight across all 48 states.
+            Consistent, compliant freight across all 48 states — every load dispatched, tracked, and verified by one system.
           </motion.p>
 
           <motion.p
