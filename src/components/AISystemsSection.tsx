@@ -4,7 +4,7 @@ import Aurora from './Aurora';
 import OpsConsole from './OpsConsole';
 
 const FEATURES = [
-  'Automated dispatch workflows for zero-latency communication.',
+  'Automated dispatch workflows — no phone tag, no waiting on callbacks.',
   'Real-time load tracking & visibility for every stakeholder.',
   'Dynamic routing optimization based on live traffic and weather.',
   'Predictive maintenance alerts for fleet uptime reliability.',
@@ -18,7 +18,7 @@ export default function AISystemsSection() {
       <div className="relative z-10 max-w-7xl mx-auto px-8 grid md:grid-cols-2 gap-16 items-center">
         <Reveal direction="right" className="relative z-10">
           <span className="eyebrow mb-4">Built On Systems</span>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] mb-6">Powered by Intelligent Logistics Systems</h2>
+          <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] mb-6">Run on Systems, Not Spreadsheets</h2>
           <p className="text-on-primary-container text-lg mb-10">
             We differentiate ourselves through <span className="text-white font-bold">structured workflows, automation, and real-time tracking</span>. We don't just drive; we compute the most efficient path.
           </p>

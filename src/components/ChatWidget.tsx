@@ -58,6 +58,13 @@ export default function ChatWidget() {
     if (isOpen) setTimeout(() => inputRef.current?.focus(), 200);
   }, [isOpen]);
 
+  // Lets CTAs elsewhere on the page ("Speak With Our Team") pop the widget open.
+  useEffect(() => {
+    const open = () => setIsOpen(true);
+    window.addEventListener('ff:open-chat', open);
+    return () => window.removeEventListener('ff:open-chat', open);
+  }, []);
+
   const addSystem = useCallback((content: string) => {
     setMessages((prev) => [...prev, { role: 'assistant', author: 'system', content }]);
   }, []);

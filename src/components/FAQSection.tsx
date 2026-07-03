@@ -96,7 +96,11 @@ export default function FAQSection() {
         <Reveal delay={0.2} className="text-center mt-10">
           <p className="text-sm text-on-surface-variant">
             Still have questions?{' '}
-            <button type="button" onClick={() => openQuote()} className="font-black text-secondary hover:underline">
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new Event('ff:open-chat'))}
+              className="font-black text-secondary hover:underline"
+            >
               Talk to our team →
             </button>
           </p>
