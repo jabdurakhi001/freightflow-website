@@ -222,7 +222,7 @@ export default function ScrollDriveHero() {
               <div className="flex flex-wrap gap-3 sm:gap-4">
                 <motion.button
                   type="button"
-                  onClick={openQuote}
+                  onClick={() => openQuote()}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   className="btn-premium group inline-flex items-center gap-2 text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest cursor-pointer"

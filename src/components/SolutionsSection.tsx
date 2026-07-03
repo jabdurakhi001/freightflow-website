@@ -53,7 +53,7 @@ export default function SolutionsSection() {
                 <TiltCard className="h-full">
                   <button
                     type="button"
-                    onClick={openQuote}
+                    onClick={() => openQuote()}
                     className="card-premium group flex h-full w-full flex-col p-7 text-left cursor-pointer"
                   >
                     <div className="mb-6 inline-flex w-fit items-center justify-center rounded-xl bg-gradient-to-br from-secondary to-secondary-fixed-dim p-3 glow-secondary">
