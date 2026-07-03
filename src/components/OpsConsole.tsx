@@ -65,9 +65,9 @@ export default function OpsConsole() {
         {/* KPI strip */}
         <div className="grid grid-cols-3 divide-x divide-white/8 border-b border-white/8">
           <div className="px-5 py-4">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Fleet Uptime</p>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">Active Loads</p>
             <div className="flex items-end gap-2">
-              <span className="text-xl font-black text-white tracking-tight">99.2%</span>
+              <span className="text-xl font-black text-white tracking-tight">4</span>
               <svg viewBox="0 0 120 30" className="w-14 h-6 mb-0.5" aria-hidden="true">
                 <motion.polyline
                   points={SPARK_POINTS}
@@ -85,8 +85,8 @@ export default function OpsConsole() {
             </div>
           </div>
           <div className="px-5 py-4">
-            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">On-Time</p>
-            <span className="text-xl font-black text-white tracking-tight">98.7%</span>
+            <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">On Schedule</p>
+            <span className="text-xl font-black text-white tracking-tight">4/4</span>
           </div>
           <div className="px-5 py-4">
             <p className="text-[9px] font-black uppercase tracking-[0.2em] text-white/40 mb-1">HOS Alerts</p>
