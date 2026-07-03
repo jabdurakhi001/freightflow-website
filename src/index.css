@@ -243,9 +243,26 @@ button:focus-visible {
   to { transform: translateX(-50%); }
 }
 
+/* Coverage-map corridors: dotted arcs whose dashes drift along the path.
+   The -lg variant matches the doubled dash period used on small screens. */
+.ff-lane-flow {
+  animation: ff-lane-flow 1.4s linear infinite;
+}
+@keyframes ff-lane-flow {
+  to { stroke-dashoffset: -10; }
+}
+.ff-lane-flow-lg {
+  animation: ff-lane-flow-lg 1.4s linear infinite;
+}
+@keyframes ff-lane-flow-lg {
+  to { stroke-dashoffset: -20; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .aurora-drift,
   .marquee-track,
+  .ff-lane-flow,
+  .ff-lane-flow-lg,
   .btn-premium::before { animation: none; transition: none; }
 }

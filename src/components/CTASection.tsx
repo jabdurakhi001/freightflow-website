@@ -23,7 +23,7 @@ export default function CTASection() {
               <div className="flex flex-col sm:flex-row gap-4 shrink-0">
                 <motion.button
                   type="button"
-                  onClick={openQuote}
+                  onClick={() => openQuote()}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   className="btn-premium group inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest cursor-pointer"
