@@ -3,7 +3,8 @@ import type { LucideIcon } from 'lucide-react';
 import { motion } from 'motion/react';
 import Reveal from './Reveal';
 import Aurora from './Aurora';
-import { useQuoteModal } from '../QuoteContext';
+
+const APPLY_URL = 'https://app.freightflow.group/apply';
 
 const PERKS: { icon: LucideIcon; label: string }[] = [
   { icon: Banknote, label: 'Premium Pay' },
@@ -12,7 +13,6 @@ const PERKS: { icon: LucideIcon; label: string }[] = [
 ];
 
 export default function RecruitmentSection() {
-  const { openApply } = useQuoteModal();
   return (
     <section id="recruitment" className="py-28 bg-primary text-white text-center relative overflow-hidden grain">
       <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary-container to-primary opacity-50"></div>
@@ -45,16 +45,17 @@ export default function RecruitmentSection() {
             </motion.div>
           ))}
         </motion.div>
-        <motion.button
-          type="button"
-          onClick={openApply}
+        <motion.a
+          href={APPLY_URL}
+          target="_blank"
+          rel="noopener noreferrer"
           whileHover={{ scale: 1.04 }}
           whileTap={{ scale: 0.96 }}
           className="btn-premium group inline-flex items-center gap-2 text-white px-12 py-5 rounded-full font-bold text-lg uppercase tracking-widest cursor-pointer"
         >
           Apply Now
           <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </motion.button>
+        </motion.a>
       </div>
     </section>
   );
