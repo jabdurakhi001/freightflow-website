@@ -11,18 +11,14 @@ interface SiteModalsContextValue {
   quotePrefill: QuotePrefill | null;
   openQuote: (prefill?: QuotePrefill) => void;
   closeQuote: () => void;
-  isApplyOpen: boolean;
-  openApply: () => void;
-  closeApply: () => void;
 }
 
 const SiteModalsContext = createContext<SiteModalsContextValue | null>(null);
 
-/** Provides global open/close state for the quote-request and driver-application modals. */
+/** Provides global open/close state for the quote-request modal. */
 export function QuoteModalProvider({ children }: { children: ReactNode }) {
   const [isQuoteOpen, setIsQuoteOpen] = useState(false);
   const [quotePrefill, setQuotePrefill] = useState<QuotePrefill | null>(null);
-  const [isApplyOpen, setIsApplyOpen] = useState(false);
   return (
     <SiteModalsContext.Provider
       value={{
@@ -33,9 +29,6 @@ export function QuoteModalProvider({ children }: { children: ReactNode }) {
           setIsQuoteOpen(true);
         },
         closeQuote: () => setIsQuoteOpen(false),
-        isApplyOpen,
-        openApply: () => setIsApplyOpen(true),
-        closeApply: () => setIsApplyOpen(false),
       }}
     >
       {children}
