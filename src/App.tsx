@@ -18,7 +18,6 @@ import LanesMarquee from './components/LanesMarquee';
 import CoverageSection from './components/CoverageSection';
 import FAQSection from './components/FAQSection';
 import QuoteModal from './components/QuoteModal';
-import ApplyModal from './components/ApplyModal';
 import { QuoteModalProvider } from './QuoteContext';
 
 export default function App() {
@@ -84,7 +83,6 @@ export default function App() {
       <ChatWidget />
       <BackToTop />
       <QuoteModal />
-      <ApplyModal />
     </div>
     </QuoteModalProvider>
   );
