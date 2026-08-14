@@ -10,6 +10,7 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
+  { href: '#coverage', label: 'Coverage' },
   { href: '#solutions', label: 'Solutions' },
   { href: '#compliance', label: 'Compliance' },
   { href: '#ai-systems', label: 'AI Systems' },
@@ -85,7 +86,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
           <button onClick={toggleTheme} className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle dark mode" type="button">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button type="button" onClick={openQuote} className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
+          <button type="button" onClick={() => openQuote()} className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
             Request a Quote
           </button>
           <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle menu" type="button">

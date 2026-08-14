@@ -18,12 +18,12 @@ export default function CTASection() {
                 <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] text-white mb-4">
                   Need Reliable Freight Movement?
                 </h2>
-                <p className="text-lg font-medium text-white/70">Join the shippers who have moved from guesswork to systems.</p>
+                <p className="text-lg font-medium text-white/70">Move your freight from guesswork to systems.</p>
               </div>
               <div className="flex flex-col sm:flex-row gap-4 shrink-0">
                 <motion.button
                   type="button"
-                  onClick={openQuote}
+                  onClick={() => openQuote()}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
                   className="btn-premium group inline-flex items-center justify-center gap-2 text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest cursor-pointer"
@@ -31,14 +31,15 @@ export default function CTASection() {
                   Request a Quote
                   <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </motion.button>
-                <motion.a
-                  href="mailto:info@freightflow.group?subject=Freight%20Inquiry"
+                <motion.button
+                  type="button"
+                  onClick={() => window.dispatchEvent(new Event('ff:open-chat'))}
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.96 }}
-                  className="border border-white/20 bg-white/5 backdrop-blur-sm text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-white/10 transition-all text-center"
+                  className="border border-white/20 bg-white/5 backdrop-blur-sm text-white px-9 py-4 rounded-full font-bold uppercase tracking-widest hover:bg-white/10 transition-all text-center cursor-pointer"
                 >
                   Speak With Our Team
-                </motion.a>
+                </motion.button>
               </div>
             </div>
           </div>

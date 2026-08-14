@@ -16,6 +16,7 @@ import ChatWidget from './components/ChatWidget';
 import ScrollProgress from './components/ScrollProgress';
 import BackToTop from './components/BackToTop';
 import LanesMarquee from './components/LanesMarquee';
+import CoverageSection from './components/CoverageSection';
 import FAQSection from './components/FAQSection';
 import QuoteModal from './components/QuoteModal';
 import { QuoteModalProvider } from './QuoteContext';
@@ -68,6 +69,7 @@ export default function App() {
         <Hero />
         <TrustStrip />
         <LanesMarquee />
+        <CoverageSection />
         <ComplianceSection />
         <SolutionsSection />
         <AISystemsSection />

@@ -9,7 +9,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="text-2xl font-black tracking-tighter mb-6">Freight<span className="gradient-text">Flow</span></div>
             <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-sm">
-              Executive logistics and heavy infrastructure for the modern era. We engineer reliability through systems-driven transport.
+              A systems-driven freight carrier running new Freightliner Cascadias across the lower 48 — dispatched, tracked, and verified end to end.
             </p>
             <div className="space-y-4 mb-8">
               <div className="flex items-center gap-3">
