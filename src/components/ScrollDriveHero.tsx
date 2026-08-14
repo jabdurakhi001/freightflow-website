@@ -291,7 +291,7 @@ export default function ScrollDriveHero() {
         </motion.div>
 
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/40 font-bold">Scroll to Drive</span>
+          <span className="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold">Scroll to Drive</span>
           <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
             <motion.span
               className="w-1 h-1.5 rounded-full bg-secondary"

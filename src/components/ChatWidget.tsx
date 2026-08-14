@@ -93,7 +93,8 @@ export default function ChatWidget() {
 
   const recentTranscript = (): Transcript[] =>
     messages
-      .filter((m) => m.author !== 'system')
+      // Skip system notices and image/file-only messages (empty content).
+      .filter((m) => m.author !== 'system' && m.content.trim().length > 0)
       .slice(-12)
       .map((m) => ({ role: m.role, content: m.content }));
 
@@ -176,7 +177,10 @@ export default function ChatWidget() {
   const sendToAI = async (text: string) => {
     setIsLoading(true);
     const history = [...messages, { role: 'user' as const, content: text }]
-      .filter((m) => m.author !== 'system')
+      // The AI history must exclude system notices, admin turns from a previous
+      // live session, and image/file-only messages (empty content) — the API
+      // rejects empty-content messages, which would brick the chat permanently.
+      .filter((m) => m.author !== 'system' && m.author !== 'admin' && m.content.trim().length > 0)
       .map((m) => ({ role: m.role, content: m.content }));
 
     try {
@@ -205,7 +209,12 @@ export default function ChatWidget() {
           const { done, value } = await reader.read();
           if (done) break;
           raw += decoder.decode(value, { stream: true });
-          const display = raw.replace(ESCALATE_TOKEN, '').trimEnd();
+          // Strip every complete control token, plus any partially-streamed one
+          // at the tail so "[[", "[[ESCAL", … never flash in the UI.
+          const display = raw
+            .replace(/\[\[ESCALATE\]\]/g, '')
+            .replace(/\[+\[?E?S?C?A?L?A?T?E?\]?\]*\s*$/, '')
+            .trimEnd();
           setMessages((prev) => {
             const updated = [...prev];
             updated[updated.length - 1] = { role: 'assistant', author: 'ai', content: display };
@@ -305,7 +314,12 @@ export default function ChatWidget() {
             </div>
 
             {/* Messages */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-container-low dark:bg-surface-container min-h-[300px] max-h-[420px] max-sm:max-h-none">
+            <div
+              role="log"
+              aria-live="polite"
+              aria-label="Chat messages"
+              className="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-container-low dark:bg-surface-container min-h-[300px] max-h-[420px] max-sm:max-h-none"
+            >
               {messages.map((msg, i) => {
                 if (msg.author === 'system') {
                   return (
@@ -357,7 +371,7 @@ export default function ChatWidget() {
 
               {error && (
                 <div className="flex justify-center">
-                  <p className="text-xs text-error bg-error/10 px-3 py-2 rounded-lg text-center">{error}</p>
+                  <p role="alert" className="text-xs text-error bg-error/10 px-3 py-2 rounded-lg text-center">{error}</p>
                 </div>
               )}
 
@@ -369,20 +383,41 @@ export default function ChatWidget() {
                 >
                   <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Connect with our team</p>
                   <p className="text-[11px] text-on-surface-variant/80 -mt-1">Quick intro so we can help and follow up.</p>
-                  <input
-                    type="text"
-                    value={contactName}
-                    onChange={(e) => setContactName(e.target.value)}
-                    placeholder="First name *"
-                    className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
-                  />
-                  <input
-                    type="text"
-                    value={contactInfo}
-                    onChange={(e) => setContactInfo(e.target.value)}
-                    placeholder="Email or phone *"
-                    className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary"
-                  />
+                  <div>
+                    <label htmlFor="ff-handoff-name" className="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
+                      First name <span aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id="ff-handoff-name"
+                      type="text"
+                      required
+                      autoComplete="given-name"
+                      value={contactName}
+                      onChange={(e) => setContactName(e.target.value)}
+                      placeholder="Jane"
+                      className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none focus:ring-2 focus:ring-secondary"
+                    />
+                  </div>
+                  <div>
+                    <label htmlFor="ff-handoff-contact" className="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
+                      Email or phone <span aria-hidden="true">*</span>
+                    </label>
+                    <input
+                      id="ff-handoff-contact"
+                      type="text"
+                      required
+                      aria-describedby="ff-handoff-hint"
+                      value={contactInfo}
+                      onChange={(e) => setContactInfo(e.target.value)}
+                      placeholder="jane@acme.com"
+                      className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none focus:ring-2 focus:ring-secondary"
+                    />
+                  </div>
+                  {!canConnect && (contactName.trim() !== '' || contactInfo.trim() !== '') && (
+                    <p id="ff-handoff-hint" className="text-[11px] text-on-surface-variant">
+                      Please enter your first name and a valid email address or phone number so we can follow up.
+                    </p>
+                  )}
                   <div className="flex gap-2">
                     <button
                       type="button"

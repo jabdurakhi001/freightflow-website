@@ -10,9 +10,9 @@ export default function CTASection() {
     <section className="py-24 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
         <Reveal>
-          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary-container to-primary p-10 md:p-16 grain shadow-2xl">
+          <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-primary via-primary-container to-primary p-10 lg:p-16 grain shadow-2xl">
             <Aurora className="opacity-60" />
-            <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-12">
+            <div className="relative z-10 flex flex-col lg:flex-row lg:flex-wrap justify-between items-start lg:items-center gap-12">
               <div className="max-w-xl">
                 <span className="eyebrow mb-4">Let's Move</span>
                 <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] text-white mb-4">
@@ -20,7 +20,7 @@ export default function CTASection() {
                 </h2>
                 <p className="text-lg font-medium text-white/70">Move your freight from guesswork to systems.</p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 shrink-0">
+              <div className="flex flex-col sm:flex-row flex-wrap gap-4">
                 <motion.button
                   type="button"
                   onClick={() => openQuote()}

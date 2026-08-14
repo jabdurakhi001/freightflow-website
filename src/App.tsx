@@ -22,18 +22,21 @@ import QuoteModal from './components/QuoteModal';
 import { QuoteModalProvider } from './QuoteContext';
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
+  // The inline script in index.html applies the 'dark' class before first paint;
+  // React just picks up whatever is already on <html>.
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Follow live system-theme changes while no explicit choice is stored.
   useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => {
+      if (localStorage.getItem('theme')) return;
+      document.documentElement.classList.toggle('dark', mq.matches);
+      setIsDark(mq.matches);
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
   }, []);
 
   const toggleTheme = () => {

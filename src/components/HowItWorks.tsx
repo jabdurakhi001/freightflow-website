@@ -30,8 +30,8 @@ export default function HowItWorks() {
           className="relative grid grid-cols-1 md:grid-cols-4 gap-8"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          transition={{ staggerChildren: 0.25 }}
+          viewport={{ once: true, amount: 0.2 }}
+          transition={{ staggerChildren: reduceMotion ? 0 : 0.25 }}
         >
           {/* Connecting track (desktop) */}
           <div className="hidden md:block absolute top-2 left-[12.5%] right-[12.5%] h-0.5 bg-surface-container-high overflow-hidden rounded-full">
@@ -62,13 +62,13 @@ export default function HowItWorks() {
                 hidden: { opacity: 0, y: 24 },
                 visible: { opacity: 1, y: 0 },
               }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: reduceMotion ? 0 : 0.5 }}
             >
               {/* Node dot aligned to the track */}
               <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary ring-4 ring-surface z-10" />
               <span className="text-7xl font-black text-surface-container-high absolute -top-8 -left-4 z-0">{step.num}</span>
               <div className="relative z-[5] pt-4 md:pt-8 md:text-center">
-                <h4 className="font-black text-primary dark:text-white mb-2">{step.title}</h4>
+                <h3 className="font-black text-primary dark:text-white mb-2 font-body text-base">{step.title}</h3>
                 <p className="text-sm text-on-surface-variant leading-relaxed">{step.desc}</p>
               </div>
             </motion.div>

@@ -11,6 +11,12 @@ const channelFor = (t: number | string) =>
 const buckets = new Map<string, { count: number; resetAt: number }>();
 function rateLimited(key: string, limit: number, windowMs = 60_000) {
   const now = Date.now();
+  // Opportunistically sweep expired entries so the map can't grow unbounded.
+  if (buckets.size > 500) {
+    for (const [k, v] of buckets) {
+      if (now > v.resetAt) buckets.delete(k);
+    }
+  }
   const e = buckets.get(key);
   if (!e || now > e.resetAt) {
     buckets.set(key, { count: 1, resetAt: now + windowMs });
@@ -74,10 +80,11 @@ export default async function handler(req: any, res: any) {
     });
 
     const channel = channelFor(topicId);
-    console.log('FFLIVE_START', JSON.stringify({ topicId, channel }));
+    // Never log `channel` — it is the session's capability token.
+    console.log('FFLIVE_START', JSON.stringify({ topicId }));
     return res.status(200).json({ topicId, channel });
   } catch (err) {
     console.error('live/start error:', err);
-    return res.status(502).json({ error: 'Could not reach a live agent.', detail: String(err) });
+    return res.status(502).json({ error: 'Could not reach a live agent.' });
   }
 }

@@ -15,21 +15,21 @@ export default function ComplianceSection() {
               <div className="flex items-start gap-4">
                 <ShieldCheck className="text-secondary w-6 h-6 shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-primary dark:text-white">Active USDOT & MC Registration</h4>
+                  <h3 className="font-bold text-primary dark:text-white font-body text-base">Active USDOT & MC Registration</h3>
                   <p className="text-sm text-on-surface-variant">Fully authorized for interstate commerce with transparent filings.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Shield className="text-secondary w-6 h-6 shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-primary dark:text-white">Fully Insured Operations</h4>
+                  <h3 className="font-bold text-primary dark:text-white font-body text-base">Fully Insured Operations</h3>
                   <p className="text-sm text-on-surface-variant">Comprehensive cargo and liability coverage for high-value protection.</p>
                 </div>
               </div>
               <div className="flex items-start gap-4">
                 <Settings className="text-secondary w-6 h-6 shrink-0 mt-1" />
                 <div>
-                  <h4 className="font-bold text-primary dark:text-white">Safety-Focused Fleet Management</h4>
+                  <h3 className="font-bold text-primary dark:text-white font-body text-base">Safety-Focused Fleet Management</h3>
                   <p className="text-sm text-on-surface-variant">Rigorous maintenance schedules using predictive analytics.</p>
                 </div>
               </div>
@@ -39,13 +39,13 @@ export default function ComplianceSection() {
             </p>
           </Reveal>
           <div className="grid grid-cols-1 gap-4">
-            <Reveal direction="left" delay={0.1} className="bg-surface-container-low p-8 kinetic-strip">
-              <h4 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4">Structured Recruitment</h4>
+            <Reveal direction="left" delay={0.1} className="bg-surface-container p-8 kinetic-strip">
+              <h3 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4 font-body">Structured Recruitment</h3>
               <p className="font-bold text-primary dark:text-white">Driver Qualification Process</p>
               <p className="text-sm text-on-surface-variant mt-2">Every driver clears our technical and safety vetting protocols before their first dispatch.</p>
             </Reveal>
-            <Reveal direction="left" delay={0.2} className="bg-surface-container-highest p-8 kinetic-strip">
-              <h4 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4">Centralized Command</h4>
+            <Reveal direction="left" delay={0.2} className="bg-surface-container p-8 kinetic-strip">
+              <h3 className="text-xs uppercase tracking-[0.2em] font-black text-on-surface-variant mb-4 font-body">Centralized Command</h3>
               <p className="font-bold text-primary dark:text-white">Compliance-Driven Dispatch</p>
               <p className="text-sm text-on-surface-variant mt-2">Automated HOS monitoring prevents violations before they occur.</p>
             </Reveal>

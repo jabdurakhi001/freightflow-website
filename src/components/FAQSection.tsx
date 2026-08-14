@@ -8,11 +8,11 @@ import { useQuoteModal } from '../QuoteContext';
 const FAQS = [
   {
     q: 'What areas do you cover?',
-    a: 'We run all 48 contiguous states from our Midwest operational hub, covering both high-frequency regional lanes and coast-to-coast long-haul.',
+    a: 'We cover all 48 contiguous states from our Chicago and Dallas hubs, spanning both high-frequency regional lanes and coast-to-coast long-haul.',
   },
   {
     q: 'What equipment do you operate?',
-    a: 'Our fleet consists exclusively of 2025–2026 Freightliner Cascadia units — the newest equipment on the road, maintained on rigorous predictive schedules.',
+    a: 'Our fleet consists exclusively of 2025–2026 Freightliner Cascadia units, maintained on rigorous predictive schedules.',
   },
   {
     q: 'Do you provide real-time tracking?',
@@ -24,7 +24,7 @@ const FAQS = [
   },
   {
     q: 'How fast can I get a quote?',
-    a: 'Submit your lane details through our quote form and our dispatch team will respond during business hours (Mon–Fri, 8AM–5PM CST). Dispatch support runs 24/7 for active loads.',
+    a: 'Submit your lane details through our quote form and our dispatch team will respond during business hours (Mon–Fri, 8AM–5PM CST). Our dispatch systems are built to support active loads around the clock.',
   },
   {
     q: 'Are you hiring drivers?',
@@ -47,7 +47,7 @@ export default function FAQSection() {
   const { openQuote } = useQuoteModal();
 
   return (
-    <section id="faq" className="py-24 bg-surface">
+    <section id="faq" className="py-24 bg-surface-container-low">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_SCHEMA }} />
       <div className="max-w-3xl mx-auto px-8">
         <SectionHeading

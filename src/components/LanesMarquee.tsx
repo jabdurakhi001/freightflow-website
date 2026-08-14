@@ -29,9 +29,9 @@ function LaneList() {
 /** Infinite scrolling strip of major corridors. Pauses on hover; static under reduced motion. */
 export default function LanesMarquee() {
   return (
-    <section className="py-10 bg-surface border-y border-outline-variant/20" aria-label="Major freight corridors we run">
+    <section className="py-10 bg-surface border-y border-outline-variant/20" aria-label="Major freight corridors we cover">
       <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/60 mb-6">
-        Corridors We Run · Coast to Coast
+        Corridors We Cover · Coast to Coast
       </p>
       <div className="marquee">
         <div className="marquee-track">
