@@ -29,6 +29,12 @@ export default function QuoteModal() {
   const [form, setForm] = useState(INITIAL_FORM);
   const [status, setStatus] = useState<Status>('idle');
   const firstFieldRef = useRef<HTMLInputElement>(null);
+  const successHeadingRef = useRef<HTMLHeadingElement>(null);
+
+  // Announce the success state by moving focus to its heading.
+  useEffect(() => {
+    if (status === 'success') successHeadingRef.current?.focus();
+  }, [status]);
 
   useEffect(() => {
     if (isQuoteOpen) {
@@ -47,7 +53,9 @@ export default function QuoteModal() {
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
   ) => setForm((f) => ({ ...f, [field]: e.target.value }));
 
-  const canSubmit = form.name.trim() && form.contact.trim() && status !== 'sending';
+  // The button stays enabled so submitting with empty required fields surfaces
+  // the native validation messages instead of failing silently.
+  const sending = status === 'sending';
 
   const handleClose = () => {
     closeQuote();
@@ -62,7 +70,7 @@ export default function QuoteModal() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!canSubmit) return;
+    if (sending || !form.name.trim() || !form.contact.trim()) return;
     setStatus('sending');
 
     const question = [
@@ -121,7 +129,7 @@ export default function QuoteModal() {
           >
             <CheckCircle2 className="w-8 h-8 text-secondary" />
           </motion.div>
-          <h4 className="text-xl font-black text-white tracking-tight mb-2">Request received</h4>
+          <h4 ref={successHeadingRef} tabIndex={-1} className="text-xl font-black text-white tracking-tight mb-2 outline-none">Request received</h4>
           <p className="text-sm text-white/60 max-w-sm mx-auto">
             Thanks, {form.name.trim()}. Your lane details are with our dispatch team — we'll get back to you shortly.
           </p>
@@ -138,11 +146,11 @@ export default function QuoteModal() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass} htmlFor="q-name">Name *</label>
-              <input ref={firstFieldRef} id="q-name" type="text" required value={form.name} onChange={set('name')} placeholder="Jane Smith" className={inputClass} />
+              <input ref={firstFieldRef} id="q-name" type="text" required autoComplete="name" value={form.name} onChange={set('name')} placeholder="Jane Smith" className={inputClass} />
             </div>
             <div>
               <label className={labelClass} htmlFor="q-company">Company</label>
-              <input id="q-company" type="text" value={form.company} onChange={set('company')} placeholder="Acme Manufacturing" className={inputClass} />
+              <input id="q-company" type="text" autoComplete="organization" value={form.company} onChange={set('company')} placeholder="Acme Manufacturing" className={inputClass} />
             </div>
           </div>
 
@@ -195,7 +203,7 @@ export default function QuoteModal() {
           </div>
 
           {status === 'error' && (
-            <p className="text-xs text-error bg-error/10 border border-error/20 px-4 py-3 rounded-lg">
+            <p role="alert" className="text-xs text-error bg-error/10 border border-error/20 px-4 py-3 rounded-lg">
               Couldn't send your request. Please try again, or email us directly at{' '}
               <a className="underline font-bold" href="mailto:info@freightflow.group?subject=Quote%20Request">info@freightflow.group</a>.
             </p>
@@ -203,13 +211,13 @@ export default function QuoteModal() {
 
           <button
             type="submit"
-            disabled={!canSubmit}
+            disabled={sending}
             className="btn-premium group w-full inline-flex items-center justify-center gap-2 text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest disabled:opacity-40 disabled:pointer-events-none"
           >
-            {status === 'sending' ? 'Sending…' : 'Send Quote Request'}
-            {status !== 'sending' && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
+            {sending ? 'Sending…' : 'Send Quote Request'}
+            {!sending && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
           </button>
-          <p className="text-[10px] text-white/30 text-center">No spam, no obligations — your details go straight to our dispatch team.</p>
+          <p className="text-[10px] text-white/60 text-center">No spam, no obligations — your details go straight to our dispatch team.</p>
         </form>
       )}
     </ModalShell>

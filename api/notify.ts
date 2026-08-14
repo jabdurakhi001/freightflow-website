@@ -17,6 +17,12 @@ const rateLimitMap = new Map<string, { count: number; resetAt: number }>();
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+  // Opportunistically sweep expired entries so the map can't grow unbounded.
+  if (rateLimitMap.size > 500) {
+    for (const [key, value] of rateLimitMap) {
+      if (now > value.resetAt) rateLimitMap.delete(key);
+    }
+  }
   const entry = rateLimitMap.get(ip);
   if (!entry || now > entry.resetAt) {
     rateLimitMap.set(ip, { count: 1, resetAt: now + 60_000 });
@@ -51,16 +57,18 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ error: 'Notification service unavailable.' });
   }
 
+  // Plain text (no parse_mode): user-supplied fields like "john_doe@acme.com"
+  // would otherwise fail Telegram's Markdown entity parsing and lose the lead.
   const message = [
-    '📩 *New FreightFlow Website Inquiry*',
+    '📩 New FreightFlow Website Inquiry',
     '',
-    `*From:* ${name || 'Not provided'}`,
-    `*Contact:* ${contact || 'Not provided'}`,
+    `From: ${name || 'Not provided'}`,
+    `Contact: ${contact || 'Not provided'}`,
     '',
-    `*Question:*`,
+    'Question:',
     question,
     '',
-    `_Sent from FreightFlow AI Chat_`,
+    'Sent from FreightFlow AI Chat',
   ].join('\n');
 
   try {
@@ -70,7 +78,6 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       body: JSON.stringify({
         chat_id: chatId,
         text: message,
-        parse_mode: 'Markdown',
       }),
     });
 

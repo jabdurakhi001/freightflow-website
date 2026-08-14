@@ -26,7 +26,10 @@ export default async function handler(req: any, res: any) {
       headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY, Authorization: `Bearer ${SUPABASE_ANON_KEY}` },
       body: JSON.stringify({ p_channel: channel, p_file: fileId }),
     });
-    if (!(await check.json())) return res.status(404).json({ error: 'Not found' });
+    // Fail closed: an RPC error body is truthy JSON, so it must never pass the gate.
+    if (!check.ok) return res.status(502).json({ error: 'Could not verify file' });
+    const allowed = await check.json();
+    if (allowed !== true) return res.status(404).json({ error: 'Not found' });
 
     const info = await (await fetch(`https://api.telegram.org/bot${token()}/getFile?file_id=${encodeURIComponent(fileId)}`)).json();
     const filePath: string | undefined = info?.result?.file_path;

@@ -101,6 +101,15 @@ button:focus-visible {
   border-radius: 4px;
 }
 
+/* Keyboard focus ring for the coverage-map city nodes (SVG <g> buttons) */
+.ff-city-node:focus {
+  outline: none;
+}
+.ff-city-node:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
 /* ============================================================
    Premium visual system
    ============================================================ */
@@ -265,4 +274,23 @@ button:focus-visible {
   .ff-lane-flow,
   .ff-lane-flow-lg,
   .btn-premium::before { animation: none; transition: none; }
+
+  /* Static marquee fallback: drop the edge fade, hide the duplicated loop copy,
+     and let the corridor list wrap so nothing is clipped mid-word. */
+  .marquee {
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+  .marquee-track {
+    width: auto;
+  }
+  .marquee-track > [aria-hidden="true"] {
+    display: none;
+  }
+  .marquee-track > div {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 0.875rem;
+    width: 100%;
+  }
 }

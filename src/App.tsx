@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
 import TrustStrip from './components/TrustStrip';
@@ -21,18 +22,21 @@ import QuoteModal from './components/QuoteModal';
 import { QuoteModalProvider } from './QuoteContext';
 
 export default function App() {
-  const [isDark, setIsDark] = useState(false);
+  // The inline script in index.html applies the 'dark' class before first paint;
+  // React just picks up whatever is already on <html>.
+  const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Follow live system-theme changes while no explicit choice is stored.
   useEffect(() => {
-    const stored = localStorage.getItem('theme');
-    if (stored === 'dark' || (!stored && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-      setIsDark(true);
-      document.documentElement.classList.add('dark');
-    } else {
-      setIsDark(false);
-      document.documentElement.classList.remove('dark');
-    }
+    const mq = window.matchMedia('(prefers-color-scheme: dark)');
+    const onChange = () => {
+      if (localStorage.getItem('theme')) return;
+      document.documentElement.classList.toggle('dark', mq.matches);
+      setIsDark(mq.matches);
+    };
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
   }, []);
 
   const toggleTheme = () => {
@@ -49,6 +53,7 @@ export default function App() {
 
   return (
     <QuoteModalProvider>
+    <MotionConfig reducedMotion="user">
     <div className="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container min-h-screen">
       <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-secondary focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:font-bold focus:text-sm">
         Skip to main content
@@ -84,6 +89,7 @@ export default function App() {
       <BackToTop />
       <QuoteModal />
     </div>
+    </MotionConfig>
     </QuoteModalProvider>
   );
 }

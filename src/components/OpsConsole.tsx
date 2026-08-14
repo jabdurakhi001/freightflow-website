@@ -148,7 +148,7 @@ export default function OpsConsole() {
         </div>
       </motion.div>
 
-      <p className="mt-3 text-center text-[10px] uppercase tracking-[0.2em] font-bold text-white/25">Illustrative dispatch view</p>
+      <p className="mt-3 text-center text-[10px] uppercase tracking-[0.2em] font-bold text-white/60">Illustrative dispatch view</p>
     </div>
   );
 }

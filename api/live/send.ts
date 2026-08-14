@@ -11,6 +11,12 @@ const channelFor = (t: number | string) =>
 const buckets = new Map<string, { count: number; resetAt: number }>();
 function rateLimited(key: string, limit: number, windowMs = 60_000) {
   const now = Date.now();
+  // Opportunistically sweep expired entries so the map can't grow unbounded.
+  if (buckets.size > 500) {
+    for (const [k, v] of buckets) {
+      if (now > v.resetAt) buckets.delete(k);
+    }
+  }
   const e = buckets.get(key);
   if (!e || now > e.resetAt) {
     buckets.set(key, { count: 1, resetAt: now + windowMs });

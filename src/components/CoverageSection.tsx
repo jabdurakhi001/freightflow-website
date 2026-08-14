@@ -155,6 +155,13 @@ export default function CoverageSection() {
     setDestination(origin);
   };
 
+  // Selecting a city routes to it; selecting the current destination swaps the lane.
+  const routeToCity = (name: string) => {
+    if (name === origin) return;
+    if (name === destination) swap();
+    else setDestination(name);
+  };
+
   const selectClass =
     'w-full appearance-none rounded-lg bg-white/[0.06] border border-white/15 px-3.5 py-3 text-sm font-bold text-white outline-none transition-colors focus:border-secondary focus:ring-2 focus:ring-secondary/40 cursor-pointer [&>option]:text-primary';
 
@@ -183,8 +190,8 @@ export default function CoverageSection() {
           <Reveal direction="right" className="lg:col-span-3">
             <svg
               viewBox={`0 0 ${W} ${H}`}
-              role="img"
-              aria-label="Map of FreightFlow's coverage network across the lower 48 states"
+              role="group"
+              aria-label="Map of FreightFlow's coverage network across the lower 48 states. City markers are buttons that route the lane estimator."
               className="w-full h-auto select-none"
             >
               <defs>
@@ -270,15 +277,21 @@ export default function CoverageSection() {
                 return (
                   <g
                     key={c.name}
+                    tabIndex={0}
+                    role="button"
+                    aria-label={`Route to ${c.name}, ${c.state}`}
                     onMouseEnter={() => setHovered(c.name)}
                     onMouseLeave={() => setHovered(null)}
-                    onClick={() => {
-                      // Tapping a city routes to it; tapping the current destination swaps the lane.
-                      if (c.name === origin) return;
-                      if (c.name === destination) swap();
-                      else setDestination(c.name);
+                    onFocus={() => setHovered(c.name)}
+                    onBlur={() => setHovered(null)}
+                    onClick={() => routeToCity(c.name)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        routeToCity(c.name);
+                      }
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer ff-city-node"
                   >
                     {c.hub && <circle cx={x} cy={y} r={26 * s} fill="url(#ff-hub-glow)" />}
                     <circle
@@ -324,7 +337,7 @@ export default function CoverageSection() {
                 );
               })}
             </svg>
-            <p className="mt-3 text-[11px] uppercase tracking-[0.2em] font-bold text-white/30 text-center">
+            <p className="mt-3 text-[11px] uppercase tracking-[0.2em] font-bold text-white/60 text-center">
               Tap any city to route it · Orange markers are dispatch hubs
             </p>
           </Reveal>
@@ -397,7 +410,7 @@ export default function CoverageSection() {
                   </p>
                 </div>
               </div>
-              <p className="mt-3 text-[11px] text-white/35 leading-relaxed">
+              <p className="mt-3 text-[11px] text-white/60 leading-relaxed">
                 {estimate
                   ? 'Planning estimate: interstate routing, solo driver under federal HOS limits. Your quote confirms the exact schedule.'
                   : 'Pick two different cities to see the lane.'}

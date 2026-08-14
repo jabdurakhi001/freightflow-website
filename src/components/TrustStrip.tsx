@@ -3,16 +3,16 @@ import Reveal from './Reveal';
 
 const STATS = [
   { value: 48, suffix: ' States', label: 'Nationwide Coverage', highlight: true },
-  { static: 'Midwest Hub', label: 'Operational Strength' },
+  { static: 'Dual Hubs', label: 'Chicago & Dallas' },
   { static: '2025–2026 Fleet', label: 'Modern Equipment' },
-  { static: 'ISO-Ready', label: 'Process-Driven' },
+  { static: 'Digital POD', label: 'On Every Load' },
 ] as const;
 
 export default function TrustStrip() {
   return (
     <section className="relative -mt-px bg-surface-container-low py-14">
       <div className="max-w-7xl mx-auto px-8">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {STATS.map((stat, i) => (
             <Reveal key={stat.label} direction="up" delay={i * 0.1}>
               <div className="card-premium h-full p-6">

@@ -10,7 +10,7 @@ const OTHERS = [
 ];
 
 const FREIGHTFLOW = [
-  'Structured, guaranteed capacity',
+  'Structured, committed capacity',
   'Real-time GPS communication',
   'Automated milestone reporting',
   '2025–2026 Freightliner Fleet',
@@ -20,8 +20,9 @@ export default function Comparison() {
   return (
     <section className="py-20 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
+        <h2 className="sr-only">FreightFlow Compared to Other Carriers</h2>
         <Reveal>
-          <div className="bg-surface-container-lowest overflow-hidden shadow-xl rounded-lg">
+          <div className="bg-surface-container-lowest dark:bg-surface-container overflow-hidden shadow-xl rounded-lg">
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="p-12 border-b md:border-b-0 md:border-r border-surface-container">
                 <h3 className="text-xs uppercase font-black tracking-widest text-on-surface-variant mb-8">Other Carriers</h3>
@@ -35,8 +36,8 @@ export default function Comparison() {
                   {OTHERS.map((item) => (
                     <motion.li
                       key={item}
-                      className="flex items-center gap-4 text-on-surface-variant opacity-50"
-                      variants={{ hidden: { opacity: 0, x: -12 }, visible: { opacity: 0.5, x: 0 } }}
+                      className="flex items-center gap-4 text-on-surface-variant opacity-70"
+                      variants={{ hidden: { opacity: 0, x: -12 }, visible: { opacity: 0.7, x: 0 } }}
                     >
                       <X className="text-error w-6 h-6 shrink-0" aria-hidden="true" />
                       <del>{item}</del>

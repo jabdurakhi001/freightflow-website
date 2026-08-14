@@ -34,14 +34,14 @@ export default function FleetSection() {
               src="/hero-frames/frame-030.jpg"
             />
             <motion.div
-              className="absolute -bottom-4 -right-4 md:-bottom-6 md:-right-6 bg-secondary text-white p-4 md:p-8 rounded-lg shadow-xl"
+              className="absolute -bottom-4 -right-4 lg:-bottom-6 lg:-right-6 bg-secondary text-white p-4 lg:p-8 rounded-lg shadow-xl"
               initial={{ opacity: 0, scale: 0.6, rotate: -8 }}
               whileInView={{ opacity: 1, scale: 1, rotate: 0 }}
               viewport={{ once: true, amount: 0.5 }}
               transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.3 }}
             >
-              <p className="text-sm font-black uppercase tracking-[0.2em]">Ready to Launch</p>
-              <p className="text-4xl font-black">2026 Ready</p>
+              <p className="text-xs lg:text-sm font-black uppercase tracking-[0.2em]">Ready to Launch</p>
+              <p className="text-2xl lg:text-4xl font-black">2026 Ready</p>
             </motion.div>
           </Reveal>
         </div>

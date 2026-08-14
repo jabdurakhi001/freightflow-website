@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, X, Menu } from 'lucide-react';
 import { useQuoteModal } from '../QuoteContext';
 
@@ -23,6 +23,22 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
   const [activeSection, setActiveSection] = useState('');
   const [scrolled, setScrolled] = useState(false);
   const { openQuote } = useQuoteModal();
+  const menuRef = useRef<HTMLDivElement>(null);
+
+  // Mobile menu: close on Escape, lock body scroll, and move focus to the first link.
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') setMobileMenuOpen(false);
+    };
+    document.addEventListener('keydown', onKey);
+    document.body.style.overflow = 'hidden';
+    menuRef.current?.querySelector('a')?.focus();
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      document.body.style.overflow = '';
+    };
+  }, [mobileMenuOpen, setMobileMenuOpen]);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -64,14 +80,14 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
           <span className="inline-block w-2.5 h-2.5 rounded-sm bg-secondary rotate-45 group-hover:rotate-[135deg] transition-transform duration-500" />
           <span><span>Freight</span><span className="gradient-text">Flow</span></span>
         </a>
-        <div className="hidden md:flex items-center space-x-8">
+        <div className="hidden lg:flex items-center gap-x-5 xl:gap-x-8">
           {NAV_LINKS.map((link) => {
             const isActive = activeSection === link.href.replace('#', '');
             return (
               <a
                 key={link.href}
                 href={link.href}
-                className={`font-body tracking-tight font-bold uppercase text-xs transition-colors ${
+                className={`font-body tracking-tight font-bold uppercase text-xs whitespace-nowrap transition-colors ${
                   isActive
                     ? 'text-secondary border-b-2 border-secondary pb-1'
                     : 'text-white/80 hover:text-white pb-1'
@@ -83,31 +99,33 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
           })}
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={toggleTheme} className="text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle dark mode" type="button">
+          <button onClick={toggleTheme} className="text-white/80 hover:text-white p-3 rounded-full hover:bg-white/10 transition-colors" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} type="button">
             {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
           </button>
-          <button type="button" onClick={() => openQuote()} className="btn-premium hidden md:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
+          <button type="button" onClick={() => openQuote()} className="btn-premium hidden lg:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
             Request a Quote
           </button>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="md:hidden text-white/80 hover:text-white p-2 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle menu" type="button">
+          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="lg:hidden text-white/80 hover:text-white p-2.5 rounded-full hover:bg-white/10 transition-colors" aria-label="Toggle menu" aria-expanded={mobileMenuOpen} type="button">
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </nav>
 
       {mobileMenuOpen && (
-        <div className="fixed inset-0 z-[45] pt-20 bg-primary backdrop-blur-lg flex flex-col items-center justify-center gap-8 md:hidden">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              className="text-2xl font-black uppercase tracking-widest text-white hover:text-secondary transition-colors"
-              href={link.href}
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              {link.label}
-            </a>
-          ))}
-          <button type="button" className="btn-premium mt-4 text-white px-10 py-4 rounded-full font-bold text-sm uppercase tracking-widest" onClick={() => { setMobileMenuOpen(false); openQuote(); }}>Request a Quote</button>
+        <div ref={menuRef} className="fixed inset-0 z-[45] bg-primary backdrop-blur-lg overflow-y-auto flex lg:hidden">
+          <div className="m-auto flex flex-col items-center gap-8 short:gap-3 py-24 short:py-16">
+            {NAV_LINKS.map((link) => (
+              <a
+                key={link.href}
+                className="text-2xl short:text-lg font-black uppercase tracking-widest text-white hover:text-secondary transition-colors"
+                href={link.href}
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                {link.label}
+              </a>
+            ))}
+            <button type="button" className="btn-premium mt-4 short:mt-2 text-white px-10 py-4 short:py-3 rounded-full font-bold text-sm uppercase tracking-widest" onClick={() => { setMobileMenuOpen(false); openQuote(); }}>Request a Quote</button>
+          </div>
         </div>
       )}
     </>

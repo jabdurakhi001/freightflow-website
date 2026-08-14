@@ -21,7 +21,7 @@ const SYSTEM_PROMPT = `You are the FreightFlow virtual assistant — a professio
 COMPANY OVERVIEW:
 - FreightFlow is a systems-driven freight carrier operating across all 48 contiguous US states.
 - USDOT: 4357973 | MC: 1704871
-- Based in the Midwest Operations Center
+- Operations hubs in Chicago and Dallas
 - Contact: info@freightflow.group
 - Website: freightflow.group
 
@@ -79,6 +79,12 @@ const RATE_WINDOW_MS = 60_000;
 
 function isRateLimited(ip: string): boolean {
   const now = Date.now();
+  // Opportunistically sweep expired entries so the map can't grow unbounded.
+  if (rateLimitMap.size > 500) {
+    for (const [key, value] of rateLimitMap) {
+      if (now > value.resetAt) rateLimitMap.delete(key);
+    }
+  }
   const entry = rateLimitMap.get(ip);
 
   if (!entry || now > entry.resetAt) {
@@ -121,7 +127,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
   // Validate each message
   for (const msg of messages) {
-    if (!msg.role || !msg.content || typeof msg.content !== 'string') {
+    // Tolerate empty strings (e.g. image-only turns) — only reject wrong types.
+    if (!msg.role || typeof msg.content !== 'string') {
       return res.status(400).json({ error: 'Invalid message format.' });
     }
     if (msg.content.length > 2000) {
