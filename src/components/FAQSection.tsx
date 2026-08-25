@@ -51,29 +51,35 @@ export default function FAQSection() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_SCHEMA }} />
       <div className="max-w-3xl mx-auto px-8">
         <SectionHeading
+          index="08"
           eyebrow="Straight Answers"
           title="Frequently Asked Questions"
-          className="mb-14"
+          className="mb-12"
         />
-        <div className="space-y-3">
+        <div className="border-b border-outline-variant/40">
           {FAQS.map((faq, i) => {
             const isOpen = openIndex === i;
             return (
-              <Reveal key={faq.q} delay={i * 0.06}>
-                <div className="card-premium overflow-hidden">
+              <Reveal key={faq.q} delay={i * 0.05}>
+                <div className="ledger-row">
                   <button
                     type="button"
                     onClick={() => setOpenIndex(isOpen ? null : i)}
                     aria-expanded={isOpen}
-                    className="w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                    className="group flex w-full items-baseline gap-5 py-6 text-left"
                   >
-                    <span className="font-bold text-primary dark:text-white tracking-tight">{faq.q}</span>
+                    <span className={`section-index shrink-0 transition-colors ${isOpen ? 'text-secondary' : 'text-on-surface-variant/50'}`}>
+                      Q{String(i + 1).padStart(2, '0')}
+                    </span>
+                    <span className="flex-1 font-headline text-lg font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white" style={{ fontStretch: '108%' }}>
+                      {faq.q}
+                    </span>
                     <motion.span
                       animate={{ rotate: isOpen ? 45 : 0 }}
                       transition={{ duration: 0.25 }}
-                      className={`shrink-0 rounded-full p-1.5 transition-colors ${isOpen ? 'bg-secondary text-white' : 'bg-surface-container text-on-surface-variant'}`}
+                      className={`shrink-0 self-center transition-colors ${isOpen ? 'text-secondary' : 'text-on-surface-variant'}`}
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-5 h-5" />
                     </motion.span>
                   </button>
                   <AnimatePresence initial={false}>
@@ -83,8 +89,9 @@ export default function FAQSection() {
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: [0.21, 0.47, 0.32, 0.98] }}
+                        className="overflow-hidden"
                       >
-                        <p className="px-6 pb-6 text-sm text-on-surface-variant leading-relaxed">{faq.a}</p>
+                        <p className="pb-7 pl-[3.4rem] pr-10 text-sm leading-relaxed text-on-surface-variant">{faq.a}</p>
                       </motion.div>
                     )}
                   </AnimatePresence>

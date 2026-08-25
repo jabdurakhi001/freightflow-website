@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;600;700;800;900&display=swap');
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
@@ -54,14 +54,19 @@ body {
   --color-outline: #94A3B8;
   --color-outline-variant: #CBD5E1;
 
-  --font-headline: "Space Grotesk", "Inter", sans-serif;
+  --font-headline: "Archivo", "Inter", sans-serif;
   --font-body: "Inter", sans-serif;
   --font-label: "Inter", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", monospace;
+
+  /* One easing for the whole site — motion reads as a single system */
+  --ease-brand: cubic-bezier(0.21, 0.47, 0.32, 0.98);
 }
 
-/* Display typography: distinctive technical voice for headings */
+/* Display typography: expanded industrial grotesk for headings */
 h1, h2, h3 {
   font-family: var(--font-headline);
+  font-stretch: 110%;
 }
 
 .dark {
@@ -123,14 +128,15 @@ button:focus-visible {
     color: transparent;
   }
 
-  /* Eyebrow label with leading accent line */
+  /* Eyebrow label — mono "manifest" voice with leading accent line */
   .eyebrow {
     display: inline-flex;
     align-items: center;
     gap: 0.75rem;
+    font-family: var(--font-mono);
     font-size: 0.6875rem;
-    font-weight: 800;
-    letter-spacing: 0.25em;
+    font-weight: 600;
+    letter-spacing: 0.22em;
     text-transform: uppercase;
     color: var(--color-secondary);
   }
@@ -139,6 +145,58 @@ button:focus-visible {
     width: 2rem;
     height: 1px;
     background-image: linear-gradient(90deg, transparent, var(--color-secondary));
+  }
+
+  /* Mono data label — the recurring "systems" voice for meta text */
+  .mono-label {
+    font-family: var(--font-mono);
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+  }
+
+  /* Big ghosted index numeral for numbered sections */
+  .section-index {
+    font-family: var(--font-mono);
+    font-weight: 500;
+    font-size: 0.8125rem;
+    letter-spacing: 0.1em;
+    color: var(--color-secondary);
+  }
+
+  /* Highway lane divider — dashed route motif */
+  .lane-dash {
+    height: 2px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      currentColor 0,
+      currentColor 14px,
+      transparent 14px,
+      transparent 24px
+    );
+    opacity: 0.25;
+  }
+
+  /* Editorial ledger row: hairline top, hover slide + accent */
+  .ledger-row {
+    position: relative;
+    border-top: 1px solid color-mix(in srgb, var(--color-outline) 30%, transparent);
+    transition: background-color 0.35s var(--ease-brand);
+  }
+  .ledger-row::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: -1px;
+    height: 1px;
+    width: 0%;
+    background: var(--color-secondary);
+    transition: width 0.5s var(--ease-brand);
+  }
+  .ledger-row:hover::before,
+  .ledger-row:focus-within::before {
+    width: 100%;
   }
 
   /* Film-grain overlay — adds subtle texture so flat fills read as "designed" */
@@ -273,6 +331,7 @@ button:focus-visible {
   .marquee-track,
   .ff-lane-flow,
   .ff-lane-flow-lg,
+  .ledger-row::before,
   .btn-premium::before { animation: none; transition: none; }
 
   /* Static marquee fallback: drop the edge fade, hide the duplicated loop copy,

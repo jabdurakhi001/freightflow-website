@@ -213,7 +213,7 @@ export default function ScrollDriveHero() {
         >
           <div className="max-w-7xl mx-auto px-8 w-full">
             <div className="max-w-3xl">
-              <h1 className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6 short:mb-3">
+              <h1 className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tight mb-4 sm:mb-6 short:mb-3">
                 Reliable Freight Capacity Backed by Systems, <span className="gradient-text">Not Guesswork</span>
               </h1>
               <p className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-6 sm:mb-8 font-light leading-relaxed max-w-2xl short:hidden">
@@ -241,7 +241,7 @@ export default function ScrollDriveHero() {
               </div>
               <div className="mt-8 sm:mt-12 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3">
                 {HIGHLIGHTS.map(({ icon: Icon, label }) => (
-                  <div key={label} className="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
+                  <div key={label} className="mono-label flex items-center gap-2 text-white/60">
                     <Icon className="w-4 h-4 text-secondary" />
                     {label}
                   </div>
@@ -259,20 +259,20 @@ export default function ScrollDriveHero() {
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
               </span>
-              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-white/80">Load FF-2481 · Live</span>
+              <span className="mono-label text-white/80">Load FF-2481 · Live</span>
             </div>
 
             <div className="absolute top-28 right-8 text-right">
               <div className="inline-flex items-baseline gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/10">
                 <Gauge className="w-4 h-4 text-secondary self-center" />
                 <Readout value={speedText} className="text-3xl font-black text-white tabular-nums tracking-tight" />
-                <span className="text-[10px] font-black uppercase tracking-widest text-white/50">mph</span>
+                <span className="mono-label text-white/50">mph</span>
               </div>
             </div>
 
             <div className="absolute top-1/2 left-8 -translate-y-1/2 max-w-md hidden sm:block short:!hidden">
               <span className="eyebrow mb-3">Keep Scrolling</span>
-              <p className="text-3xl md:text-4xl font-black text-white tracking-tighter leading-tight">
+              <p className="font-headline text-3xl md:text-4xl font-black text-white tracking-tight leading-tight" style={{ fontStretch: '110%' }}>
                 You're in the cab.<br />Watch the system work.
               </p>
               <p className="mt-3 text-white/60 text-sm leading-relaxed">
@@ -285,13 +285,13 @@ export default function ScrollDriveHero() {
 
         {/* ---------- Outro ---------- */}
         <motion.div style={{ opacity: outroOpacity }} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none will-change-[opacity]">
-          <p className="text-4xl md:text-6xl font-black text-white tracking-tighter text-center px-8">
+          <p className="font-headline text-4xl md:text-6xl font-black text-white tracking-tight text-center px-8" style={{ fontStretch: '112%' }}>
             Every mile, <span className="gradient-text">accounted for.</span>
           </p>
         </motion.div>
 
         <motion.div style={{ opacity: cueOpacity }} className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 hidden md:flex flex-col items-center gap-2">
-          <span className="text-[10px] uppercase tracking-[0.3em] text-white/70 font-bold">Scroll to Drive</span>
+          <span className="mono-label text-white/70">Scroll to Drive</span>
           <div className="w-5 h-9 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
             <motion.span
               className="w-1 h-1.5 rounded-full bg-secondary"

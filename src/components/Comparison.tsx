@@ -22,10 +22,10 @@ export default function Comparison() {
       <div className="max-w-7xl mx-auto px-8">
         <h2 className="sr-only">FreightFlow Compared to Other Carriers</h2>
         <Reveal>
-          <div className="bg-surface-container-lowest dark:bg-surface-container overflow-hidden shadow-xl rounded-lg">
+          <div className="bg-surface-container-lowest dark:bg-surface-container overflow-hidden shadow-xl border border-outline-variant/40">
             <div className="grid grid-cols-1 md:grid-cols-2">
               <div className="p-12 border-b md:border-b-0 md:border-r border-surface-container">
-                <h3 className="text-xs uppercase font-black tracking-widest text-on-surface-variant mb-8">Other Carriers</h3>
+                <h3 className="mono-label text-on-surface-variant mb-8">// Other Carriers</h3>
                 <motion.ul
                   className="space-y-6"
                   initial="hidden"
@@ -46,7 +46,7 @@ export default function Comparison() {
                 </motion.ul>
               </div>
               <div className="p-12 bg-primary text-white kinetic-strip">
-                <h3 className="text-xs uppercase font-black tracking-widest text-secondary mb-8">FreightFlow</h3>
+                <h3 className="mono-label text-secondary mb-8">// FreightFlow</h3>
                 <motion.ul
                   className="space-y-6"
                   initial="hidden"
@@ -69,8 +69,11 @@ export default function Comparison() {
             </div>
           </div>
         </Reveal>
-        <Reveal delay={0.2} className="text-center mt-12">
-          <p className="text-2xl font-black text-primary dark:text-white tracking-tight">"Reliability is not luck. It's engineered."</p>
+        <Reveal delay={0.2} className="mt-14 flex flex-col items-center gap-3 text-center">
+          <span className="lane-dash w-24 text-secondary !opacity-70" aria-hidden="true" />
+          <p className="font-headline text-2xl md:text-3xl font-black text-primary dark:text-white tracking-tight" style={{ fontStretch: '112%' }}>
+            Reliability is not luck. It's engineered.
+          </p>
         </Reveal>
       </div>
     </section>
