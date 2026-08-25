@@ -10,7 +10,6 @@ interface NavbarProps {
 }
 
 const NAV_LINKS = [
-  { href: '#coverage', label: 'Coverage' },
   { href: '#solutions', label: 'Solutions' },
   { href: '#compliance', label: 'Compliance' },
   { href: '#ai-systems', label: 'AI Systems' },

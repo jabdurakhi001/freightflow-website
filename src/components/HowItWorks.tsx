@@ -16,7 +16,7 @@ export default function HowItWorks() {
     <section className="py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-8">
         <SectionHeading
-          index="05"
+          index="04"
           eyebrow="The Process"
           meta="QUOTE → POD"
           title="How It Works"

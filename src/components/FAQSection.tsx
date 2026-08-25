@@ -51,7 +51,7 @@ export default function FAQSection() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: FAQ_SCHEMA }} />
       <div className="max-w-3xl mx-auto px-8">
         <SectionHeading
-          index="08"
+          index="07"
           eyebrow="Straight Answers"
           title="Frequently Asked Questions"
           className="mb-12"

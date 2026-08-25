@@ -47,7 +47,7 @@ export default function SolutionsSection() {
     <section id="solutions" className="py-24 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
         <SectionHeading
-          index="03"
+          index="02"
           eyebrow="What We Move"
           meta="4 SERVICE LINES · 1 STANDARD"
           title="Freight Solutions Designed for Execution"
