@@ -68,7 +68,7 @@ export default function HowItWorks() {
               <span className="relative z-10 mb-5 inline-flex items-center border border-outline-variant/60 bg-surface px-3 py-1.5">
                 <span className="section-index !text-[0.7rem]">STEP&nbsp;{step.num}</span>
               </span>
-              <h3 className="mb-2 font-headline text-lg font-black tracking-tight text-primary dark:text-white" style={{ fontStretch: '110%' }}>
+              <h3 className="mb-2 font-headline text-lg font-black tracking-tight text-primary dark:text-white">
                 {step.title}
               </h3>
               <p className="text-sm leading-relaxed text-on-surface-variant md:max-w-[15rem]">{step.desc}</p>

@@ -254,14 +254,6 @@ export default function ScrollDriveHero() {
         {/* ---------- Phase 2: Live telemetry HUD ---------- */}
         <motion.div style={{ opacity: hudOpacity }} className="absolute inset-0 z-10 pointer-events-none will-change-[opacity]">
           <div className="max-w-7xl mx-auto px-8 h-full relative">
-            <div className="absolute top-28 left-8 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-black/40 border border-white/10">
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              <span className="mono-label text-white/80">Load FF-2481 · Live</span>
-            </div>
-
             <div className="absolute top-28 right-8 text-right">
               <div className="inline-flex items-baseline gap-1.5 px-4 py-2 rounded-xl bg-black/40 border border-white/10">
                 <Gauge className="w-4 h-4 text-secondary self-center" />
@@ -272,7 +264,7 @@ export default function ScrollDriveHero() {
 
             <div className="absolute top-1/2 left-8 -translate-y-1/2 max-w-md hidden sm:block short:!hidden">
               <span className="eyebrow mb-3">Keep Scrolling</span>
-              <p className="font-headline text-3xl md:text-4xl font-black text-white tracking-tight leading-tight" style={{ fontStretch: '110%' }}>
+              <p className="font-headline text-3xl md:text-4xl font-black text-white tracking-tight leading-tight">
                 You're in the cab.<br />Watch the system work.
               </p>
               <p className="mt-3 text-white/60 text-sm leading-relaxed">
@@ -285,7 +277,7 @@ export default function ScrollDriveHero() {
 
         {/* ---------- Outro ---------- */}
         <motion.div style={{ opacity: outroOpacity }} className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none will-change-[opacity]">
-          <p className="font-headline text-4xl md:text-6xl font-black text-white tracking-tight text-center px-8" style={{ fontStretch: '112%' }}>
+          <p className="font-headline text-4xl md:text-6xl font-black text-white tracking-tight text-center px-8">
             Every mile, <span className="gradient-text">accounted for.</span>
           </p>
         </motion.div>

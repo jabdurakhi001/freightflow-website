@@ -71,7 +71,7 @@ export default function FAQSection() {
                     <span className={`section-index shrink-0 transition-colors ${isOpen ? 'text-secondary' : 'text-on-surface-variant/50'}`}>
                       Q{String(i + 1).padStart(2, '0')}
                     </span>
-                    <span className="flex-1 font-headline text-lg font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white" style={{ fontStretch: '108%' }}>
+                    <span className="flex-1 font-headline text-lg font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white">
                       {faq.q}
                     </span>
                     <motion.span

@@ -36,7 +36,7 @@ export default function ComplianceSection() {
                 <div key={title} className="flex items-start gap-4 border-t border-outline-variant/50 py-5">
                   <Icon className="text-secondary w-5 h-5 shrink-0 mt-1" />
                   <div>
-                    <h3 className="font-headline font-black text-primary dark:text-white text-base tracking-tight" style={{ fontStretch: '108%' }}>{title}</h3>
+                    <h3 className="font-headline font-black text-primary dark:text-white text-base tracking-tight">{title}</h3>
                     <p className="text-sm text-on-surface-variant mt-1">{desc}</p>
                   </div>
                 </div>
@@ -53,7 +53,7 @@ export default function ComplianceSection() {
                 <h3 className="mono-label text-on-surface-variant">Structured Recruitment</h3>
                 <span className="section-index text-on-surface-variant/40">A</span>
               </div>
-              <p className="font-headline font-black text-lg text-primary dark:text-white tracking-tight" style={{ fontStretch: '110%' }}>Driver Qualification Process</p>
+              <p className="font-headline font-black text-lg text-primary dark:text-white tracking-tight">Driver Qualification Process</p>
               <p className="text-sm text-on-surface-variant mt-2">Every driver clears our technical and safety vetting protocols before their first dispatch.</p>
             </Reveal>
             <Reveal direction="left" delay={0.2} className="bg-surface-container-low p-8">
@@ -61,7 +61,7 @@ export default function ComplianceSection() {
                 <h3 className="mono-label text-on-surface-variant">Centralized Command</h3>
                 <span className="section-index text-on-surface-variant/40">B</span>
               </div>
-              <p className="font-headline font-black text-lg text-primary dark:text-white tracking-tight" style={{ fontStretch: '110%' }}>Compliance-Driven Dispatch</p>
+              <p className="font-headline font-black text-lg text-primary dark:text-white tracking-tight">Compliance-Driven Dispatch</p>
               <p className="text-sm text-on-surface-variant mt-2">Automated HOS monitoring prevents violations before they occur.</p>
             </Reveal>
             <Reveal direction="left" delay={0.3} className="bg-primary p-8 text-white">
@@ -72,11 +72,11 @@ export default function ComplianceSection() {
               <div className="flex flex-wrap gap-x-10 gap-y-2">
                 <div>
                   <span className="mono-label block text-white/40 mb-1">USDOT</span>
-                  <span className="font-headline font-black text-2xl tracking-tight" style={{ fontStretch: '115%' }}>4357973</span>
+                  <span className="font-headline font-black text-2xl tracking-tight">4357973</span>
                 </div>
                 <div>
                   <span className="mono-label block text-white/40 mb-1">MC</span>
-                  <span className="font-headline font-black text-2xl tracking-tight" style={{ fontStretch: '115%' }}>1704871</span>
+                  <span className="font-headline font-black text-2xl tracking-tight">1704871</span>
                 </div>
               </div>
             </Reveal>
