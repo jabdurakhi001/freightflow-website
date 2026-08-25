@@ -52,7 +52,7 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tighter mb-4 sm:mb-6 short:mb-3"
+            className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tight mb-4 sm:mb-6 short:mb-3"
           >
             Reliable Freight Capacity Backed by Systems,{' '}
             <span className="gradient-text">Not Guesswork</span>
@@ -71,9 +71,9 @@ function StaticHero() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.45 }}
-            className="text-secondary-fixed-dim font-bold tracking-tight mb-8 sm:mb-10 border-l-2 border-secondary pl-4 text-sm sm:text-base short:hidden"
+            className="mono-label mb-8 sm:mb-10 text-secondary-fixed-dim short:hidden"
           >
-            We don't just move freight. We execute with precision.
+            // WE DON'T JUST MOVE FREIGHT. WE EXECUTE WITH PRECISION.
           </motion.p>
 
           <motion.div
@@ -109,7 +109,7 @@ function StaticHero() {
             className="mt-10 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3"
           >
             {HIGHLIGHTS.map(({ icon: Icon, label }) => (
-              <div key={label} className="flex items-center gap-2 text-white/60 text-xs font-bold uppercase tracking-widest">
+              <div key={label} className="mono-label flex items-center gap-2 text-white/60">
                 <Icon className="w-4 h-4 text-secondary" />
                 {label}
               </div>

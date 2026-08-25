@@ -1,61 +1,87 @@
-import { Banknote, Home, Headset, ArrowRight } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { motion } from 'motion/react';
 import Reveal from './Reveal';
 import Aurora from './Aurora';
+import SectionHeading from './SectionHeading';
 
 const APPLY_URL = 'https://app.freightflow.group/apply';
 
-const PERKS: { icon: LucideIcon; label: string }[] = [
-  { icon: Banknote, label: 'Premium Pay' },
-  { icon: Home, label: 'Home Time' },
-  { icon: Headset, label: 'Elite Dispatch' },
+const PERKS = [
+  {
+    code: 'P-01',
+    label: 'Premium Pay',
+    desc: 'Competitive per-mile rates that respect professional experience.',
+  },
+  {
+    code: 'P-02',
+    label: 'Home Time',
+    desc: 'Structured scheduling out of Chicago and Dallas — planned, not promised.',
+  },
+  {
+    code: 'P-03',
+    label: 'Elite Dispatch',
+    desc: 'One dedicated dispatcher who answers, plans ahead, and has your back.',
+  },
+  {
+    code: 'P-04',
+    label: 'New Equipment',
+    desc: 'Exclusively 2025–2026 Freightliner Cascadias. No worn-out trucks.',
+  },
 ];
 
 export default function RecruitmentSection() {
   return (
-    <section id="recruitment" className="py-28 bg-primary text-white text-center relative overflow-hidden grain">
+    <section id="recruitment" className="relative overflow-hidden bg-primary py-28 text-white grain">
       <div className="absolute inset-0 bg-gradient-to-b from-primary via-primary-container to-primary opacity-50"></div>
       <Aurora className="opacity-70" />
-      <div className="relative z-10 max-w-4xl mx-auto px-8">
-        <Reveal>
-          <span className="eyebrow justify-center mb-4">Now Hiring · Chicago & Dallas</span>
-          <h2 className="text-4xl md:text-5xl font-black tracking-tighter leading-[1.05] mb-4">Drive With a Carrier That Runs Like a Business</h2>
-          <p className="text-xl text-on-primary-container mb-12">Consistent loads. Structured operations. Professional support. We respect your time and your expertise.</p>
+      <div className="relative z-10 mx-auto grid max-w-7xl gap-14 px-8 lg:grid-cols-2 lg:gap-20">
+        <Reveal direction="right">
+          <SectionHeading
+            index="07"
+            eyebrow="Now Hiring"
+            meta="CHICAGO & DALLAS"
+            title="Drive With a Carrier That Runs Like a Business"
+            subtitle="Consistent loads. Structured operations. Professional support. We respect your time and your expertise."
+            light
+          />
+          <motion.a
+            href={APPLY_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="btn-premium group mt-10 inline-flex cursor-pointer items-center gap-2 rounded-full px-10 py-4 text-sm font-bold uppercase tracking-widest text-white"
+          >
+            Apply Now
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </motion.a>
+          <p className="mono-label mt-5 text-white/40">CDL-A · OTR & REGIONAL</p>
         </Reveal>
+
         <motion.div
-          className="flex justify-center gap-8 mb-16"
+          className="self-center border-b border-white/10"
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ staggerChildren: 0.15 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ staggerChildren: 0.12 }}
         >
-          {PERKS.map(({ icon: Icon, label }) => (
+          {PERKS.map((perk) => (
             <motion.div
-              key={label}
-              className="flex flex-col items-center"
-              variants={{
-                hidden: { opacity: 0, scale: 0.5, y: 20 },
-                visible: { opacity: 1, scale: 1, y: 0 },
-              }}
-              transition={{ type: 'spring', stiffness: 200, damping: 14 }}
+              key={perk.code}
+              className="group grid grid-cols-[4rem_1fr] items-baseline gap-x-4 border-t border-white/10 py-6 transition-colors hover:bg-white/[0.03] sm:grid-cols-[5rem_11rem_1fr]"
+              variants={{ hidden: { opacity: 0, x: 24 }, visible: { opacity: 1, x: 0 } }}
+              transition={{ duration: 0.45 }}
             >
-              <Icon className="text-secondary w-10 h-10 mb-2" />
-              <span className="text-xs font-bold uppercase tracking-widest">{label}</span>
+              <span className="section-index text-white/35 transition-colors group-hover:text-secondary">{perk.code}</span>
+              <span className="font-headline text-xl font-black tracking-tight" style={{ fontStretch: '110%' }}>
+                {perk.label}
+              </span>
+              <span className="col-span-2 col-start-2 mt-1 text-sm leading-relaxed text-white/55 sm:col-span-1 sm:col-start-3 sm:mt-0">
+                {perk.desc}
+              </span>
             </motion.div>
           ))}
         </motion.div>
-        <motion.a
-          href={APPLY_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          whileHover={{ scale: 1.04 }}
-          whileTap={{ scale: 0.96 }}
-          className="btn-premium group inline-flex items-center gap-2 text-white px-12 py-5 rounded-full font-bold text-lg uppercase tracking-widest cursor-pointer"
-        >
-          Apply Now
-          <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-        </motion.a>
       </div>
     </section>
   );

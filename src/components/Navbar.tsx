@@ -87,10 +87,10 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
               <a
                 key={link.href}
                 href={link.href}
-                className={`font-body tracking-tight font-bold uppercase text-xs whitespace-nowrap transition-colors ${
+                className={`font-mono text-[11px] font-medium uppercase tracking-[0.14em] whitespace-nowrap transition-colors ${
                   isActive
-                    ? 'text-secondary border-b-2 border-secondary pb-1'
-                    : 'text-white/80 hover:text-white pb-1'
+                    ? 'text-secondary border-b border-secondary pb-1'
+                    : 'text-white/75 hover:text-white pb-1'
                 }`}
               >
                 {link.label}
@@ -113,14 +113,17 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
 
       {mobileMenuOpen && (
         <div ref={menuRef} className="fixed inset-0 z-[45] bg-primary backdrop-blur-lg overflow-y-auto flex lg:hidden">
-          <div className="m-auto flex flex-col items-center gap-8 short:gap-3 py-24 short:py-16">
-            {NAV_LINKS.map((link) => (
+          <div className="m-auto flex flex-col items-start gap-8 short:gap-3 py-24 short:py-16">
+            {NAV_LINKS.map((link, i) => (
               <a
                 key={link.href}
-                className="text-2xl short:text-lg font-black uppercase tracking-widest text-white hover:text-secondary transition-colors"
+                className="group flex items-baseline gap-4 text-2xl short:text-lg font-black uppercase tracking-widest text-white hover:text-secondary transition-colors"
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
               >
+                <span className="section-index !text-[0.7rem] text-white/30 group-hover:text-secondary transition-colors">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
                 {link.label}
               </a>
             ))}

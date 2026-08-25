@@ -1,75 +1,86 @@
-import { Truck, Calendar, Map as MapIcon, Network, ArrowUpRight } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { ArrowUpRight } from 'lucide-react';
 import Reveal from './Reveal';
 import SectionHeading from './SectionHeading';
-import TiltCard from './TiltCard';
 import { useQuoteModal } from '../QuoteContext';
 
 interface Solution {
-  icon: LucideIcon;
+  code: string;
   title: string;
   description: string;
+  tag: string;
 }
 
 const SOLUTIONS: Solution[] = [
   {
-    icon: Truck,
-    title: 'Full Truckload (FTL)',
+    code: '01',
+    title: 'Full Truckload',
     description: 'High-capacity equipment for massive volumes across the continental US.',
+    tag: 'FTL · 53FT DRY VAN',
   },
   {
-    icon: Calendar,
+    code: '02',
     title: 'Dedicated Freight',
     description: 'Predictable capacity for recurring lanes and complex supply chains.',
+    tag: 'COMMITTED CAPACITY',
   },
   {
-    icon: MapIcon,
+    code: '03',
     title: 'Regional & Long-Haul',
     description: 'Optimized routing for both high-frequency regional and coast-to-coast hauls.',
+    tag: 'COAST TO COAST',
   },
   {
-    icon: Network,
+    code: '04',
     title: 'Logistics Coordination',
     description: 'Comprehensive oversight of multimodal touchpoints and cargo transitions.',
+    tag: 'MULTIMODAL',
   },
 ];
 
+/**
+ * Service ledger — numbered editorial rows instead of a card grid. Each row is
+ * a full-width button that opens the quote modal.
+ */
 export default function SolutionsSection() {
   const { openQuote } = useQuoteModal();
   return (
     <section id="solutions" className="py-24 bg-surface-container-low">
       <div className="max-w-7xl mx-auto px-8">
         <SectionHeading
+          index="03"
           eyebrow="What We Move"
+          meta="4 SERVICE LINES · 1 STANDARD"
           title="Freight Solutions Designed for Execution"
           subtitle="Four service lines, one operating standard — engineered capacity that scales with your supply chain."
-          className="mb-16"
+          className="mb-14"
         />
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-          {SOLUTIONS.map((solution, i) => {
-            const Icon = solution.icon;
-            return (
-              <Reveal key={solution.title} direction="up" delay={i * 0.1} className="h-full">
-                <TiltCard className="h-full">
-                  <button
-                    type="button"
-                    onClick={() => openQuote()}
-                    className="card-premium group flex h-full w-full flex-col p-7 text-left cursor-pointer"
-                  >
-                    <div className="mb-6 inline-flex w-fit items-center justify-center rounded-xl bg-gradient-to-br from-secondary to-secondary-fixed-dim p-3 glow-secondary">
-                      <Icon className="w-6 h-6 text-white" />
-                    </div>
-                    <h3 className="font-black text-xl mb-3 tracking-tight text-primary dark:text-white">{solution.title}</h3>
-                    <p className="text-sm text-on-surface-variant leading-relaxed mb-6">{solution.description}</p>
-                    <span className="mt-auto inline-flex items-center gap-1 text-xs font-black uppercase tracking-widest text-primary dark:text-white group-hover:text-secondary transition-colors">
-                      Get a Quote
-                      <ArrowUpRight className="w-4 h-4 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
-                    </span>
-                  </button>
-                </TiltCard>
-              </Reveal>
-            );
-          })}
+        <div className="border-b border-outline-variant/40">
+          {SOLUTIONS.map((solution, i) => (
+            <Reveal key={solution.code} delay={i * 0.07}>
+              <button
+                type="button"
+                onClick={() => openQuote()}
+                className="ledger-row group grid w-full cursor-pointer grid-cols-[auto_1fr] items-baseline gap-x-5 gap-y-2 py-7 text-left md:grid-cols-[4rem_minmax(0,1.15fr)_minmax(0,1fr)_auto] md:items-center md:gap-x-10 md:py-8"
+              >
+                <span className="section-index text-on-surface-variant/50 transition-colors group-hover:text-secondary">
+                  {solution.code}
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-headline text-2xl font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white md:text-3xl" style={{ fontStretch: '110%' }}>
+                    {solution.title}
+                  </span>
+                  <span className="mono-label mt-1.5 block text-on-surface-variant/50">{solution.tag}</span>
+                </span>
+                <span className="col-start-2 text-sm leading-relaxed text-on-surface-variant md:col-start-3 md:max-w-md">
+                  {solution.description}
+                </span>
+                <span className="col-start-2 mt-1 inline-flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-primary transition-colors group-hover:text-secondary dark:text-white md:col-start-4 md:mt-0">
+                  Get a Quote
+                  <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </button>
+            </Reveal>
+          ))}
         </div>
       </div>
     </section>

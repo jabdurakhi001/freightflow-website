@@ -179,7 +179,9 @@ export default function CoverageSection() {
       <div className="max-w-7xl mx-auto px-8 relative">
         <SectionHeading
           light
+          index="01"
           eyebrow="Coverage Network"
+          meta="48 STATES · 2 HUBS · 8 CORRIDORS"
           title="One Network. Forty-Eight States."
           subtitle="Anchored in Chicago and Dallas, running high-frequency corridors coast to coast. Pick a lane to see it on the network."
           className="mb-14"

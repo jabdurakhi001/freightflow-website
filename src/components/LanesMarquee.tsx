@@ -15,11 +15,11 @@ function LaneList() {
   return (
     <>
       {LANES.map(([from, to]) => (
-        <span key={`${from}-${to}`} className="inline-flex items-center gap-3 px-8 text-sm font-bold uppercase tracking-[0.2em] whitespace-nowrap">
+        <span key={`${from}-${to}`} className="inline-flex items-center gap-3 px-8 font-mono text-[13px] font-medium uppercase tracking-[0.18em] whitespace-nowrap">
           <span className="text-on-surface-variant">{from}</span>
           <ArrowRight className="w-4 h-4 text-secondary shrink-0" aria-hidden="true" />
           <span className="text-on-surface-variant">{to}</span>
-          <span className="ml-8 w-1.5 h-1.5 rounded-full bg-secondary/40 shrink-0" aria-hidden="true" />
+          <span className="ml-8 lane-dash w-10 text-secondary shrink-0" aria-hidden="true" />
         </span>
       ))}
     </>
@@ -30,7 +30,7 @@ function LaneList() {
 export default function LanesMarquee() {
   return (
     <section className="py-10 bg-surface border-y border-outline-variant/20" aria-label="Major freight corridors we cover">
-      <p className="text-center text-[10px] font-black uppercase tracking-[0.3em] text-on-surface-variant/60 mb-6">
+      <p className="mono-label text-center text-on-surface-variant/60 mb-6">
         Corridors We Cover · Coast to Coast
       </p>
       <div className="marquee">

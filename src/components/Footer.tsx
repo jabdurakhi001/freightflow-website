@@ -21,14 +21,14 @@ export default function Footer() {
                 <span className="text-sm text-white/80">Operations Hubs: Chicago &amp; Dallas</span>
               </div>
             </div>
-            <div className="flex flex-col gap-2 text-xs font-bold tracking-widest text-secondary">
+            <div className="mono-label flex flex-col gap-2 !text-[0.6875rem] text-secondary">
               <span>USDOT 4357973</span>
               <span>MC 1704871</span>
             </div>
           </div>
 
           <div>
-            <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 font-body">Company</h3>
+            <h3 className="mono-label text-white/50 mb-6">Company</h3>
             <nav className="flex flex-col">
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#compliance">About Us</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#fleet">Our Fleet</a>
@@ -38,7 +38,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 font-body">Services</h3>
+            <h3 className="mono-label text-white/50 mb-6">Services</h3>
             <nav className="flex flex-col">
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#solutions">Full Truckload</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#solutions">Dedicated Freight</a>
@@ -48,7 +48,7 @@ export default function Footer() {
           </div>
 
           <div>
-            <h3 className="text-xs font-black uppercase tracking-widest text-white/60 mb-6 font-body">Legal</h3>
+            <h3 className="mono-label text-white/50 mb-6">Legal</h3>
             <nav className="flex flex-col">
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="/privacy.html">Privacy Policy</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="/terms.html">Terms of Service</a>
@@ -56,7 +56,7 @@ export default function Footer() {
             </nav>
           </div>
         </div>
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/60 text-[10px] font-bold uppercase tracking-widest">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/50 mono-label">
           <span>© {new Date().getFullYear()} FreightFlow Logistics. All Rights Reserved.</span>
           <div className="flex gap-8">
             <span>Engineered for Reliability</span>

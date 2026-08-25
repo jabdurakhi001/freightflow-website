@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'motion/react';
 import { Truck } from 'lucide-react';
+import SectionHeading from './SectionHeading';
 
 const STEPS = [
   { num: '01', title: 'Request a Quote', desc: 'Provide lane details via our rapid response portal.' },
@@ -12,43 +13,42 @@ export default function HowItWorks() {
   const reduceMotion = useReducedMotion();
 
   return (
-    <section className="py-20 bg-surface">
+    <section className="py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-8">
-        <motion.div
-          className="flex flex-col items-center text-center mb-20"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{ duration: 0.6 }}
-        >
-          <span className="eyebrow mb-4">The Process</span>
-          <h2 className="text-4xl md:text-5xl font-black text-primary dark:text-white tracking-tighter leading-[1.05] mb-4">How It Works</h2>
-          <p className="text-on-surface-variant font-medium text-lg">Clear process. No confusion. No surprises.</p>
-        </motion.div>
+        <SectionHeading
+          index="05"
+          eyebrow="The Process"
+          meta="QUOTE → POD"
+          title="How It Works"
+          subtitle="Clear process. No confusion. No surprises."
+          className="mb-16"
+        />
 
         <motion.div
-          className="relative grid grid-cols-1 md:grid-cols-4 gap-8"
+          className="relative grid grid-cols-1 gap-10 md:grid-cols-4 md:gap-8"
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true, amount: 0.2 }}
-          transition={{ staggerChildren: reduceMotion ? 0 : 0.25 }}
+          transition={{ staggerChildren: reduceMotion ? 0 : 0.22 }}
         >
-          {/* Connecting track (desktop) */}
-          <div className="hidden md:block absolute top-2 left-[12.5%] right-[12.5%] h-0.5 bg-surface-container-high overflow-hidden rounded-full">
+          {/* Dashed highway lane the truck rides (desktop) */}
+          <div className="pointer-events-none absolute top-[1.4rem] left-0 right-0 hidden md:block">
+            <div className="lane-dash text-on-surface-variant" />
             <motion.div
-              className="h-full bg-secondary origin-left"
-              variants={{ hidden: { scaleX: 0 }, visible: { scaleX: 1 } }}
-              transition={{ duration: reduceMotion ? 0 : 2, ease: 'easeInOut' }}
-            />
-            {/* Truck riding the line */}
+              className="absolute inset-y-0 left-0 overflow-hidden"
+              variants={{ hidden: { width: '0%' }, visible: { width: '100%' } }}
+              transition={{ duration: reduceMotion ? 0 : 2.2, ease: 'easeInOut' }}
+            >
+              <div className="lane-dash w-[100vw] max-w-7xl text-secondary !opacity-90" />
+            </motion.div>
             {!reduceMotion && (
               <motion.div
-                className="absolute -top-[11px]"
-                variants={{ hidden: { left: '0%' }, visible: { left: '100%' } }}
-                transition={{ duration: 2, ease: 'easeInOut' }}
+                className="absolute -top-[13px]"
+                variants={{ hidden: { left: '0%' }, visible: { left: '99%' } }}
+                transition={{ duration: 2.2, ease: 'easeInOut' }}
               >
-                <div className="-translate-x-1/2 bg-surface px-1">
-                  <Truck className="w-5 h-5 text-secondary" />
+                <div className="-translate-x-1/2 bg-surface px-1.5">
+                  <Truck className="h-6 w-6 text-secondary" />
                 </div>
               </motion.div>
             )}
@@ -57,20 +57,21 @@ export default function HowItWorks() {
           {STEPS.map((step) => (
             <motion.div
               key={step.num}
-              className="relative"
+              className="relative border-l border-outline-variant/50 pl-6 md:border-l-0 md:pl-0"
               variants={{
                 hidden: { opacity: 0, y: 24 },
                 visible: { opacity: 1, y: 0 },
               }}
               transition={{ duration: reduceMotion ? 0 : 0.5 }}
             >
-              {/* Node dot aligned to the track */}
-              <div className="hidden md:block absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-secondary ring-4 ring-surface z-10" />
-              <span className="text-7xl font-black text-surface-container-high absolute -top-8 -left-4 z-0">{step.num}</span>
-              <div className="relative z-[5] pt-4 md:pt-8 md:text-center">
-                <h3 className="font-black text-primary dark:text-white mb-2 font-body text-base">{step.title}</h3>
-                <p className="text-sm text-on-surface-variant leading-relaxed">{step.desc}</p>
-              </div>
+              {/* Mile-marker chip sitting on the lane */}
+              <span className="relative z-10 mb-5 inline-flex items-center border border-outline-variant/60 bg-surface px-3 py-1.5">
+                <span className="section-index !text-[0.7rem]">STEP&nbsp;{step.num}</span>
+              </span>
+              <h3 className="mb-2 font-headline text-lg font-black tracking-tight text-primary dark:text-white" style={{ fontStretch: '110%' }}>
+                {step.title}
+              </h3>
+              <p className="text-sm leading-relaxed text-on-surface-variant md:max-w-[15rem]">{step.desc}</p>
             </motion.div>
           ))}
         </motion.div>
