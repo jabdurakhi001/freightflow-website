@@ -66,7 +66,7 @@ export default function SolutionsSection() {
                   {solution.code}
                 </span>
                 <span className="min-w-0">
-                  <span className="block font-headline text-2xl font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white md:text-3xl" style={{ fontStretch: '110%' }}>
+                  <span className="block font-headline text-2xl font-black tracking-tight text-primary transition-colors group-hover:text-secondary dark:text-white md:text-3xl">
                     {solution.title}
                   </span>
                   <span className="mono-label mt-1.5 block text-on-surface-variant/50">{solution.tag}</span>

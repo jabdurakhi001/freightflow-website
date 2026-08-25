@@ -73,7 +73,7 @@ export default function RecruitmentSection() {
               transition={{ duration: 0.45 }}
             >
               <span className="section-index text-white/35 transition-colors group-hover:text-secondary">{perk.code}</span>
-              <span className="font-headline text-xl font-black tracking-tight" style={{ fontStretch: '110%' }}>
+              <span className="font-headline text-xl font-black tracking-tight">
                 {perk.label}
               </span>
               <span className="col-span-2 col-start-2 mt-1 text-sm leading-relaxed text-white/55 sm:col-span-1 sm:col-start-3 sm:mt-0">

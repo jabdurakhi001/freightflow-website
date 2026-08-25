@@ -55,7 +55,7 @@ export default function CTASection() {
                     <div className="flex items-baseline gap-5 py-2">
                       <span className="mono-label w-10 text-secondary">{stop.code}</span>
                       <div>
-                        <p className="font-headline text-2xl font-black tracking-tight text-white" style={{ fontStretch: '115%' }}>
+                        <p className="font-headline text-2xl font-black tracking-tight text-white">
                           {stop.city}
                         </p>
                         <p className="mono-label mt-1 text-white/35">{stop.coord}</p>

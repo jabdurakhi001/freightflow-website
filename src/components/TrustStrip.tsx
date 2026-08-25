@@ -36,7 +36,6 @@ export default function TrustStrip() {
                   className={`font-headline font-black text-2xl sm:text-3xl lg:text-4xl tracking-tight whitespace-nowrap ${
                     'highlight' in stat && stat.highlight ? 'gradient-text' : 'text-primary dark:text-white'
                   }`}
-                  style={{ fontStretch: '110%' }}
                 >
                   {'value' in stat ? <CountUp value={stat.value} suffix={stat.suffix} /> : stat.static}
                 </span>

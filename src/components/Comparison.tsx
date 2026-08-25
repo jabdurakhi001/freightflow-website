@@ -71,7 +71,7 @@ export default function Comparison() {
         </Reveal>
         <Reveal delay={0.2} className="mt-14 flex flex-col items-center gap-3 text-center">
           <span className="lane-dash w-24 text-secondary !opacity-70" aria-hidden="true" />
-          <p className="font-headline text-2xl md:text-3xl font-black text-primary dark:text-white tracking-tight" style={{ fontStretch: '112%' }}>
+          <p className="font-headline text-2xl md:text-3xl font-black text-primary dark:text-white tracking-tight">
             Reliability is not luck. It's engineered.
           </p>
         </Reveal>
