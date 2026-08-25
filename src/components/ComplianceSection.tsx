@@ -27,7 +27,7 @@ export default function ComplianceSection() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <Reveal direction="right">
             <SectionHeading
-              index="02"
+              index="01"
               eyebrow="Compliance First"
               title={<>Built for Compliance. <br />Operated for Reliability.</>}
             />

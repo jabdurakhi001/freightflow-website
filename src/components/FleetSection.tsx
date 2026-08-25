@@ -10,7 +10,7 @@ export default function FleetSection() {
         <div className="flex flex-col md:flex-row items-center gap-16">
           <Reveal direction="right" className="md:w-1/2">
             <SectionHeading
-              index="06"
+              index="05"
               eyebrow="The Fleet"
               title={<>Modern Equipment. <br />Operational Readiness.</>}
             />

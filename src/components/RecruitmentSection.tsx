@@ -37,7 +37,7 @@ export default function RecruitmentSection() {
       <div className="relative z-10 mx-auto grid max-w-7xl gap-14 px-8 lg:grid-cols-2 lg:gap-20">
         <Reveal direction="right">
           <SectionHeading
-            index="07"
+            index="06"
             eyebrow="Now Hiring"
             meta="CHICAGO & DALLAS"
             title="Drive With a Carrier That Runs Like a Business"

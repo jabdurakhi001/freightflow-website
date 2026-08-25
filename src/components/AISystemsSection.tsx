@@ -17,7 +17,7 @@ export default function AISystemsSection() {
       <div className="relative z-10 max-w-5xl mx-auto px-8">
         <Reveal>
           <div className="flex items-baseline gap-4 border-t border-white/15 pb-6 pt-4">
-            <span className="section-index">04</span>
+            <span className="section-index">03</span>
             <span className="eyebrow">Built On Systems</span>
           </div>
           <h2 className="text-4xl md:text-[3.4rem] font-black tracking-tight leading-[1.02] mb-6 max-w-3xl">Run on Systems, Not Spreadsheets</h2>
