@@ -18,7 +18,16 @@ const HERO_POSTER = '/hero-frames/frame-001.jpg';
 // position — so scrubbing is both scroll-aligned and free of decode jank or
 // frame-stepping.
 const FRAME_COUNT = 64;
-const frameSrc = (i: number) => `/hero-frames/frame-${String(i + 1).padStart(3, '0')}.jpg`;
+// WebP sets: 640w for phones, 1280w for everything else. Chosen once at mount
+// from the CSS viewport width so phones download ~1.4 MB instead of ~3.2 MB;
+// the hero's text and gradient overlays make the softer frames unnoticeable
+// at phone sizes.
+function pickFrameSet(): 'w640' | 'w1280' {
+  if (typeof window === 'undefined') return 'w1280';
+  return window.innerWidth <= 480 ? 'w640' : 'w1280';
+}
+const FRAME_SET = pickFrameSet();
+const frameSrc = (i: number) => `/hero-frames/${FRAME_SET}/frame-${String(i + 1).padStart(3, '0')}.webp`;
 
 const HIGHLIGHTS = [
   { icon: Truck, label: '48-State Coverage' },

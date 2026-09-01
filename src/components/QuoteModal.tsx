@@ -25,7 +25,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
  * mailto link if the request fails.
  */
 export default function QuoteModal() {
-  const { isQuoteOpen, closeQuote, quotePrefill } = useQuoteModal();
+  const { isQuoteOpen, closeQuote } = useQuoteModal();
   const [form, setForm] = useState(INITIAL_FORM);
   const [status, setStatus] = useState<Status>('idle');
   const firstFieldRef = useRef<HTMLInputElement>(null);
@@ -38,16 +38,9 @@ export default function QuoteModal() {
 
   useEffect(() => {
     if (isQuoteOpen) {
-      if (quotePrefill) {
-        setForm((f) => ({
-          ...f,
-          origin: quotePrefill.origin ?? f.origin,
-          destination: quotePrefill.destination ?? f.destination,
-        }));
-      }
       setTimeout(() => firstFieldRef.current?.focus(), 150);
     }
-  }, [isQuoteOpen, quotePrefill]);
+  }, [isQuoteOpen]);
 
   const set = (field: keyof typeof INITIAL_FORM) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>

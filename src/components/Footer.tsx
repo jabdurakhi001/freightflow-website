@@ -5,8 +5,8 @@ export default function Footer() {
     <footer className="relative bg-primary pt-20 pb-12 max-xl:pb-28 text-white grain overflow-hidden">
       <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-secondary to-transparent" />
       <div className="relative z-10 max-w-7xl mx-auto px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-12 mb-16">
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-x-8 gap-y-12 mb-16">
+          <div className="col-span-2 md:col-span-3 lg:col-span-2">
             <div className="text-2xl font-black tracking-tighter mb-6">Freight<span className="gradient-text">Flow</span></div>
             <p className="text-white/60 text-sm leading-relaxed mb-8 max-w-sm">
               A systems-driven freight carrier running new Freightliner Cascadias across the lower 48 — dispatched, tracked, and verified end to end.
@@ -30,7 +30,7 @@ export default function Footer() {
           <div>
             <h3 className="mono-label text-white/50 mb-6">Company</h3>
             <nav className="flex flex-col">
-              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#compliance">About Us</a>
+              <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#compliance">Compliance</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#fleet">Our Fleet</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="#recruitment">Careers</a>
               <a className="text-sm font-medium text-white/60 hover:text-secondary transition-colors py-2" href="mailto:info@freightflow.group">Contact</a>
@@ -56,12 +56,9 @@ export default function Footer() {
             </nav>
           </div>
         </div>
-        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-white/50 mono-label">
+        <div className="border-t border-white/10 pt-8 flex flex-col md:flex-row justify-between md:items-center gap-4 text-white/50 mono-label">
           <span>© {new Date().getFullYear()} FreightFlow Logistics. All Rights Reserved.</span>
-          <div className="flex gap-8">
-            <span>Engineered for Reliability</span>
-            <span>Systems First Infrastructure</span>
-          </div>
+          <span className="hidden md:inline">Engineered for Reliability · Systems First</span>
         </div>
       </div>
     </footer>

@@ -71,8 +71,8 @@ export default function App() {
         <Hero />
         <TrustStrip />
         <LanesMarquee />
-        <ComplianceSection />
         <SolutionsSection />
+        <ComplianceSection />
         <AISystemsSection />
         <HowItWorks />
         <Comparison />
