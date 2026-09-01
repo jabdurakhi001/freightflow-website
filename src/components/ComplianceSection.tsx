@@ -27,7 +27,7 @@ export default function ComplianceSection() {
         <div className="grid md:grid-cols-2 gap-16 items-start">
           <Reveal direction="right">
             <SectionHeading
-              index="01"
+              index="02"
               eyebrow="Compliance First"
               title={<>Built for Compliance. <br />Operated for Reliability.</>}
             />
@@ -43,8 +43,7 @@ export default function ComplianceSection() {
               ))}
             </div>
             <p className="mono-label mt-8 text-on-surface-variant/70 leading-loose">
-              // WE DON'T CUT CORNERS. WE BUILD SYSTEMS<br />
-              // THAT HOLD UP UNDER SCRUTINY.
+              // WE DON'T CUT CORNERS. WE BUILD SYSTEMS THAT HOLD UP UNDER SCRUTINY.
             </p>
           </Reveal>
           <div className="grid grid-cols-1 gap-px bg-outline-variant/40 border border-outline-variant/40 md:mt-[3.75rem]">
