@@ -167,6 +167,12 @@ button:focus-visible {
     opacity: 0.25;
   }
 
+  /* Restrained route accent: the lane-dash pattern drifts one full period,
+     so the loop is seamless. Disabled under prefers-reduced-motion below. */
+  .route-flow {
+    animation: route-flow 1.8s linear infinite;
+  }
+
   /* Editorial ledger row: hairline top, hover slide + accent */
   .ledger-row {
     position: relative;
@@ -253,6 +259,10 @@ button:focus-visible {
   }
 }
 
+@keyframes route-flow {
+  to { background-position-x: 24px; }
+}
+
 @keyframes aurora-drift {
   0%   { transform: translate3d(0, 0, 0) scale(1); }
   50%  { transform: translate3d(40px, -30px, 0) scale(1.15); }
@@ -281,6 +291,7 @@ button:focus-visible {
   html { scroll-behavior: auto; }
   .aurora-drift,
   .marquee-track,
+  .route-flow,
   .ledger-row::before,
   .btn-premium::before { animation: none; transition: none; }
 

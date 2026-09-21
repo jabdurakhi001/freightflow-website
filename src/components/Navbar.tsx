@@ -71,7 +71,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
   return (
     <>
       <nav
-        className={`fixed top-0 w-full flex justify-between items-center px-8 z-50 transition-all duration-300 ${
+        className={`fixed top-0 w-full flex justify-between items-center px-5 sm:px-8 z-50 transition-all duration-300 ${
           scrolled ? 'py-3 glass shadow-[0_8px_30px_-12px_rgba(0,0,0,0.5)]' : 'py-5 bg-transparent'
         }`}
       >
@@ -111,7 +111,7 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
       </nav>
 
       {mobileMenuOpen && (
-        <div ref={menuRef} className="fixed inset-0 z-[45] bg-primary backdrop-blur-lg overflow-y-auto flex lg:hidden">
+        <div ref={menuRef} role="navigation" aria-label="Mobile site menu" className="fixed inset-0 z-[45] bg-primary backdrop-blur-lg overflow-y-auto flex lg:hidden">
           <div className="m-auto flex flex-col items-start gap-8 short:gap-3 py-24 short:py-16">
             {NAV_LINKS.map((link, i) => (
               <a

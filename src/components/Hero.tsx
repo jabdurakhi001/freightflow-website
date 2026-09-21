@@ -1,10 +1,9 @@
-import { useState } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity } from 'lucide-react';
-import Aurora from './Aurora';
-import ScrollDriveHero from './ScrollDriveHero';
 import { useQuoteModal } from '../QuoteContext';
 
+// Existing hero image, also used as the frame the
+// site already publishes as its Open Graph image.
 const HERO_POSTER = '/hero-frames/frame-050.jpg';
 
 const HIGHLIGHTS = [
@@ -13,109 +12,73 @@ const HIGHLIGHTS = [
   { icon: Activity, label: '2025–2026 Cascadia Fleet' },
 ];
 
-// Decide once, synchronously, to avoid a hero flash on load. The scroll
-// scrubber (truck advances only as you scroll) runs on every device that
-// allows motion; reduced-motion users get a static poster.
-function prefersReducedMotion(): boolean {
-  if (typeof window === 'undefined') return false;
-  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-}
-
 export default function Hero() {
-  const [reduced] = useState<boolean>(prefersReducedMotion);
-
-  if (reduced) return <StaticHero />;
-  return <ScrollDriveHero />;
-}
-
-/** Static poster hero shown when the user prefers reduced motion. */
-function StaticHero() {
   const { openQuote } = useQuoteModal();
 
   return (
-    <section className="relative min-h-screen md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain pt-24 pb-12 md:py-0 short:pt-20">
+    <section className="relative min-h-[88svh] md:min-h-[92vh] flex items-center overflow-hidden bg-primary grain pt-28 pb-14 md:pt-32 md:pb-20 short:pt-20 short:pb-10">
       <div className="absolute inset-0 z-0">
         <img
-          className="w-full h-full object-cover opacity-60"
-          alt="Freight truck on the open highway"
+          className="w-full h-full object-cover"
+          alt="Truck on an open highway"
           src={HERO_POSTER}
+          fetchPriority="high"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/70 to-primary/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-primary/40" />
       </div>
 
-      <Aurora className="z-0 opacity-70" />
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 w-full">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, ease: [0.21, 0.47, 0.32, 0.98] }}
+          className="max-w-3xl"
+        >
+          <p className="eyebrow mb-5 short:mb-3">Interstate FTL Carrier</p>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-8 w-full">
-        <div className="max-w-3xl">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-            className="text-[clamp(1.875rem,5.5vw,4.5rem)] font-black text-white leading-[1.05] md:leading-[1.02] tracking-tight mb-4 sm:mb-6 short:mb-3"
-          >
-            Reliable Freight Capacity Backed by Systems,{' '}
-            <span className="gradient-text">Not Guesswork</span>
-          </motion.h1>
+          <h1 className="text-[clamp(2rem,5vw,4rem)] font-black text-white leading-[1.06] md:leading-[1.03] tracking-tight mb-5 sm:mb-6 short:mb-3">
+            Freight that keeps your business moving.
+          </h1>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            className="text-[clamp(0.95rem,1.6vw,1.25rem)] text-white/70 mb-4 font-light leading-relaxed max-w-2xl short:hidden"
-          >
-            Consistent, compliant freight across all 48 states — every load dispatched, tracked, and verified by one system.
-          </motion.p>
+          <p className="text-[clamp(1rem,1.5vw,1.2rem)] text-white/85 mb-8 sm:mb-10 short:mb-5 leading-relaxed max-w-xl">
+            Full-truckload capacity across the 48 contiguous states — dispatched
+            from Chicago and Dallas, tracked from pickup to proof of delivery.
+          </p>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.45 }}
-            className="mono-label mb-8 sm:mb-10 text-secondary-fixed-dim short:hidden"
-          >
-            // WE DON'T JUST MOVE FREIGHT. WE EXECUTE WITH PRECISION.
-          </motion.p>
-
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="flex flex-wrap gap-4"
-          >
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4">
             <motion.button
               type="button"
               onClick={() => openQuote()}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="btn-premium group inline-flex items-center gap-2 text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest cursor-pointer"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="btn-premium group inline-flex items-center gap-2 text-white px-5 sm:px-8 py-4 rounded-full font-bold text-sm uppercase tracking-wide cursor-pointer"
             >
               Request a Quote
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </motion.button>
             <motion.a
               href="#recruitment"
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              className="border border-white/40 bg-black/40 backdrop-blur-md text-white px-9 py-4 rounded-full font-bold text-sm uppercase tracking-widest hover:bg-black/60 hover:border-white/60 transition-all"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.97 }}
+              className="inline-flex items-center border border-white/60 bg-primary/70 backdrop-blur-md text-white px-5 sm:px-8 py-4 rounded-full font-bold text-sm uppercase tracking-wide hover:bg-primary/90 hover:border-white transition-colors"
             >
-              Work With Us
+              Drive with FreightFlow
             </motion.a>
-          </motion.div>
+          </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.8 }}
-            className="mt-10 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3"
-          >
+          {/* Route accent — lane markings drifting past, like the shoulder line at speed */}
+          <div className="lane-dash route-flow text-secondary mt-10 short:mt-6 max-w-md" aria-hidden="true" />
+
+          <div className="mt-6 hidden sm:flex short:!hidden flex-wrap gap-x-8 gap-y-3">
             {HIGHLIGHTS.map(({ icon: Icon, label }) => (
-              <div key={label} className="mono-label flex items-center gap-2 text-white/60">
+              <div key={label} className="mono-label flex items-center gap-2 text-white/75">
                 <Icon className="w-4 h-4 text-secondary" />
                 {label}
               </div>
             ))}
-          </motion.div>
-        </div>
+          </div>
+        </motion.div>
       </div>
     </section>
   );
