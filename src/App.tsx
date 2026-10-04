@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { flushSync } from 'react-dom';
 import { MotionConfig } from 'motion/react';
 import Navbar from './components/Navbar';
 import Hero from './components/Hero';
@@ -38,16 +39,41 @@ export default function App() {
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  const toggleTheme = () => {
-    if (isDark) {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('theme', 'light');
-      setIsDark(false);
-    } else {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('theme', 'dark');
-      setIsDark(true);
+  const applyTheme = (dark: boolean) => {
+    document.documentElement.classList.toggle('dark', dark);
+    try {
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+    } catch {
+      /* storage unavailable */
     }
+    setIsDark(dark);
+  };
+
+  // Theme switch: where supported, wipe the new theme in as a circle growing
+  // from the toggle button; otherwise (or with reduced motion) swap instantly.
+  const toggleTheme = (origin?: { x: number; y: number }) => {
+    const next = !isDark;
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!document.startViewTransition || reduce) {
+      applyTheme(next);
+      return;
+    }
+    const x = origin?.x ?? window.innerWidth - 40;
+    const y = origin?.y ?? 40;
+    const radius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const transition = document.startViewTransition(() => {
+      flushSync(() => applyTheme(next));
+    });
+    transition.ready
+      .then(() => {
+        document.documentElement.animate(
+          { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${radius}px at ${x}px ${y}px)`] },
+          { duration: 550, easing: 'cubic-bezier(0.16, 1, 0.3, 1)', pseudoElement: '::view-transition-new(root)' },
+        );
+      })
+      .catch(() => {
+        /* transition skipped — theme is already applied */
+      });
   };
 
   return (

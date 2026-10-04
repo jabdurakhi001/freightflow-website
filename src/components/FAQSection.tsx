@@ -4,6 +4,7 @@ import { Plus } from 'lucide-react';
 import SectionHeading from './SectionHeading';
 import Reveal from './Reveal';
 import { useQuoteModal } from '../QuoteContext';
+import { EASE_BRAND } from '../lib/motion';
 
 const FAQS = [
   {
@@ -88,7 +89,7 @@ export default function FAQSection() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: [0.21, 0.47, 0.32, 0.98] }}
+                        transition={{ duration: 0.35, ease: EASE_BRAND }}
                         className="overflow-hidden"
                       >
                         <p className="pb-7 pl-[3.4rem] pr-10 text-sm leading-relaxed text-on-surface-variant">{faq.a}</p>

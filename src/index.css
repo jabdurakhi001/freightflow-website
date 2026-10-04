@@ -224,7 +224,9 @@ button:focus-visible {
     overflow: hidden;
     background-image: linear-gradient(120deg, #FF7A3C, #FF5A1F);
     box-shadow: 0 12px 30px -10px color-mix(in srgb, var(--color-secondary) 70%, transparent);
-    transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+    /* No `transform` here: motion drives scale via whileHover/whileTap, and a CSS
+       transform transition on top of it makes the press feel laggy. */
+    transition: box-shadow 0.25s var(--ease-brand), filter 0.25s var(--ease-brand);
   }
   .btn-premium:hover {
     filter: brightness(1.06);
@@ -259,6 +261,23 @@ button:focus-visible {
   }
 }
 
+/* Scroll cue: a short accent segment travelling down a hairline track */
+.scroll-cue {
+  animation: scroll-cue 2s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+@keyframes scroll-cue {
+  0%   { transform: translateY(-100%); }
+  100% { transform: translateY(200%); }
+}
+
+/* Theme switch: a circular wipe from the toggle button (View Transitions API,
+   driven from App.tsx). Disable the default cross-fade so only the wipe shows. */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
 @keyframes route-flow {
   to { background-position-x: 24px; }
 }
@@ -290,6 +309,7 @@ button:focus-visible {
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .aurora-drift,
+  .scroll-cue,
   .marquee-track,
   .route-flow,
   .ledger-row::before,

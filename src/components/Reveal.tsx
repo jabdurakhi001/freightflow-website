@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
+import { EASE_BRAND } from '../lib/motion';
 
 type Direction = 'up' | 'down' | 'left' | 'right' | 'none';
 
@@ -46,7 +47,7 @@ export default function Reveal({
       initial={{ opacity: 0, x: offset.x * distance, y: offset.y * distance }}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
       viewport={{ once: true, amount: 0.25 }}
-      transition={{ duration: 0.6, delay, ease: [0.21, 0.47, 0.32, 0.98] }}
+      transition={{ duration: 0.6, delay, ease: EASE_BRAND }}
     >
       {children}
     </motion.div>

@@ -25,27 +25,31 @@ export default function ComplianceSection() {
     <section id="compliance" className="py-24 bg-surface">
       <div className="max-w-7xl mx-auto px-8">
         <div className="grid md:grid-cols-2 gap-16 items-start">
-          <Reveal direction="right">
+          <div>
             <SectionHeading
               index="02"
               eyebrow="Compliance First"
               title={<>Built for Compliance. <br />Operated for Reliability.</>}
             />
             <div className="mt-8 border-b border-outline-variant/50">
-              {CREDENTIALS.map(({ icon: Icon, title, desc }) => (
-                <div key={title} className="flex items-start gap-4 border-t border-outline-variant/50 py-5">
-                  <Icon className="text-secondary w-5 h-5 shrink-0 mt-1" />
-                  <div>
-                    <h3 className="font-headline font-black text-primary dark:text-white text-base tracking-tight">{title}</h3>
-                    <p className="text-sm text-on-surface-variant mt-1">{desc}</p>
+              {CREDENTIALS.map(({ icon: Icon, title, desc }, i) => (
+                <Reveal key={title} delay={i * 0.08}>
+                  <div className="ledger-row group flex items-start gap-4 py-5">
+                    <Icon className="text-secondary w-5 h-5 shrink-0 mt-1 transition-transform duration-300 group-hover:scale-110" />
+                    <div>
+                      <h3 className="font-headline font-black text-primary dark:text-white text-base tracking-tight">{title}</h3>
+                      <p className="text-sm text-on-surface-variant mt-1">{desc}</p>
+                    </div>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
-            <p className="mono-label mt-8 text-on-surface-variant/70 leading-loose">
-              // WE DON'T CUT CORNERS. WE BUILD SYSTEMS THAT HOLD UP UNDER SCRUTINY.
-            </p>
-          </Reveal>
+            <Reveal delay={0.2}>
+              <p className="mono-label mt-8 text-on-surface-variant/70 leading-loose">
+                // WE DON'T CUT CORNERS. WE BUILD SYSTEMS THAT HOLD UP UNDER SCRUTINY.
+              </p>
+            </Reveal>
+          </div>
           <div className="grid grid-cols-1 gap-px bg-outline-variant/40 border border-outline-variant/40 md:mt-[3.75rem]">
             <Reveal direction="left" delay={0.1} className="bg-surface-container-low p-8">
               <div className="flex items-baseline justify-between mb-4">
