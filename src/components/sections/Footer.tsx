@@ -28,7 +28,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3">
                 <MapPin className="h-4 w-4 text-cone" />
-                Dispatch hubs: {COMPANY.hubs.join(' & ')}
+                Dispatch hub: {COMPANY.hub}
               </li>
             </ul>
           </div>

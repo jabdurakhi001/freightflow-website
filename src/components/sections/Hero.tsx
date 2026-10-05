@@ -152,19 +152,24 @@ export default function Hero() {
               </motion.h1>
 
               <motion.p variants={rise} className="mt-5 max-w-xl text-[1.08rem] leading-relaxed text-white/88 sm:text-lg short:hidden">
-                Full-truckload freight across the contiguous US, dispatched from Chicago and Dallas — new Freightliner
+                Full-truckload freight across the contiguous US, dispatched from our Chicago hub — new Freightliner
                 Cascadias, GPS on every load, and proof of delivery the moment it lands.
               </motion.p>
 
-              {/* Hub rows: tablet and up, so the phone card stays compact. */}
+              {/* Hub and coverage rows: tablet and up, so the phone card stays compact. */}
               <motion.div variants={rise} className="mt-7 hidden border-t-[3px] border-white pt-5 sm:block short:!hidden">
                 <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                  {COMPANY.hubs.map((hub, i) => (
-                    <li key={hub} className="flex items-center gap-3">
-                      <SignArrow dir={i === 0 ? 'up' : 'up-right'} className="h-8 w-7 shrink-0" />
+                  {(
+                    [
+                      { name: COMPANY.hub, label: 'Dispatch hub', dir: 'up' },
+                      { name: 'Lower 48', label: 'Coverage', dir: 'up-right' },
+                    ] as const
+                  ).map((row) => (
+                    <li key={row.name} className="flex items-center gap-3">
+                      <SignArrow dir={row.dir} className="h-8 w-7 shrink-0" />
                       <span>
-                        <span className="block text-2xl font-black leading-none tracking-tight">{hub}</span>
-                        <span className="legend text-[0.62rem] text-white/70">Dispatch hub</span>
+                        <span className="block text-2xl font-black leading-none tracking-tight">{row.name}</span>
+                        <span className="legend text-[0.62rem] text-white/70">{row.label}</span>
                       </span>
                     </li>
                   ))}

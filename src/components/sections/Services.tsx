@@ -21,7 +21,7 @@ const EXITS = [
     n: 3,
     title: 'Regional & long-haul',
     plate: 'Coast to coast',
-    body: 'High-frequency regional runs and cross-country hauls, routed out of Chicago and Dallas.',
+    body: 'High-frequency regional runs and cross-country hauls, routed out of our Chicago hub.',
   },
   {
     n: 4,

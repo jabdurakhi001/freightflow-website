@@ -9,10 +9,11 @@ const MESSAGES: [string, string][] = [
   ['LIVE ROUTING', 'TRAFFIC+WEATHER'],
   ['HOS MONITORED', 'BY DISPATCH'],
   ['MAINTENANCE', 'ON SCHEDULE'],
+  ['AUTOMATED', 'HUMAN IN LOOP'],
 ];
 
 const FEATURES = [
-  { title: 'Automated dispatch', body: 'Loads are assigned and confirmed in the system — no phone tag, no waiting on callbacks.' },
+  { title: 'Automated dispatch', body: 'Loads are matched and confirmed in the system, and a dispatcher signs off on every assignment — no phone tag, no waiting on callbacks.' },
   { title: 'Real-time tracking', body: 'Live GPS and milestone updates for everyone who needs to know where the freight is.' },
   { title: 'Routing for conditions', body: 'Routes planned around live traffic and weather, not last year’s map.' },
   { title: 'Scheduled maintenance', body: 'Data-driven service intervals that protect uptime on every truck.' },
@@ -114,8 +115,8 @@ export default function SystemsBoard() {
           <SectionTitle
             marker="MM 04"
             kicker="Systems"
-            title="Run on systems, not spreadsheets."
-            lede="Structured workflows, automation and real-time data sit behind every load. The result: more control, fewer delays, and execution you can predict."
+            title="Automated systems. A human in every loop."
+            lede="Dispatch, tracking, routing, maintenance and paperwork all run on automated systems, and every one keeps a person in the loop who reviews the decisions that matter. Automation for speed, people for judgment: execution you can predict."
             onDark
           />
           <Board />

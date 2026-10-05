@@ -31,7 +31,7 @@ export function OgCard() {
             {(
               [
                 ['Chicago', 0],
-                ['Dallas', 45],
+                ['All 48 states', 45],
               ] as const
             ).map(([name, rot]) => (
               <div key={name} style={{ display: 'flex', alignItems: 'center', gap: 12 }}>

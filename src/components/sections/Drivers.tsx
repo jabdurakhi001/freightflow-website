@@ -5,7 +5,7 @@ import { rise, SIGN_SPRING, stagger } from '../../lib/motion';
 
 const PERKS = [
   { title: 'Premium pay', body: 'Competitive per-mile rates that respect professional experience.' },
-  { title: 'Planned home time', body: 'Structured scheduling out of Chicago and Dallas — planned, not promised.' },
+  { title: 'Planned home time', body: 'Structured scheduling out of Chicago — planned, not promised.' },
   { title: 'One dispatcher', body: 'A dedicated dispatcher who answers, plans ahead and has your back.' },
   { title: 'New equipment', body: '2025–2027 Freightliner Cascadias only. No worn-out trucks.' },
 ];
@@ -25,19 +25,21 @@ export default function Drivers() {
     <section id="drivers" className="bg-asphalt text-white">
       <Barricade />
       <div className="relative isolate">
-        {/* The road the job is on: a darkened photo of one of the trucks behind the sign */}
-        <img
-          src="/photos/drivers.jpg"
-          alt=""
-          aria-hidden="true"
-          width={1600}
-          height={900}
-          loading="lazy"
-          decoding="async"
-          className="absolute inset-0 -z-10 h-full w-full object-cover object-[60%_50%]"
-        />
-        <div aria-hidden="true" className="absolute inset-0 -z-10 bg-gradient-to-b from-asphalt/85 via-asphalt/55 to-asphalt/90" />
-        <div className="mx-auto max-w-7xl px-5 py-24 sm:px-8 sm:py-28">
+        {/* The road the job is on: a wide photo band of one of the trucks at a truck stop,
+            with the sign hung over the empty lot below it */}
+        <div aria-hidden="true" className="relative h-[16rem] overflow-hidden sm:h-[24rem] lg:h-[32rem]">
+          <img
+            src="/photos/drivers.jpg"
+            alt=""
+            width={1600}
+            height={900}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover object-[78%_50%] sm:object-[70%_52%]"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-asphalt/30 via-transparent via-40% to-asphalt" />
+        </div>
+        <div className="relative mx-auto -mt-12 max-w-7xl px-5 pb-24 sm:-mt-16 sm:px-8 sm:pb-28">
           <motion.div
             className="zone-sign px-6 py-10 sm:px-12 sm:py-14"
             style={{ transformPerspective: 1100, transformOrigin: 'top center' }}
@@ -77,7 +79,7 @@ export default function Drivers() {
                     Apply now
                     <ArrowUpRight className="h-5 w-5 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
                   </a>
-                  <span className="text-sm font-bold">Hiring around Chicago & Dallas</span>
+                  <span className="text-sm font-bold">Hiring around Chicago</span>
                 </motion.div>
               </div>
 

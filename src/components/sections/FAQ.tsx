@@ -9,7 +9,7 @@ import SectionTitle from '../ui/SectionTitle';
 const FAQS = [
   {
     q: 'Where do you run?',
-    a: 'All 48 contiguous states. Trucks are dispatched from our Chicago and Dallas hubs, covering high-frequency regional lanes and coast-to-coast long-haul.',
+    a: 'All 48 contiguous states. Trucks are dispatched from our Chicago hub, covering high-frequency regional lanes and coast-to-coast long-haul.',
   },
   {
     q: 'What equipment do you operate?',
@@ -29,7 +29,7 @@ const FAQS = [
   },
   {
     q: 'Are you hiring drivers?',
-    a: 'Yes — CDL-A drivers around Chicago and Dallas. We offer competitive per-mile pay, planned home time, a dedicated dispatcher and new equipment.',
+    a: 'Yes — CDL-A drivers around Chicago. We offer competitive per-mile pay, planned home time, a dedicated dispatcher and new equipment.',
   },
 ];
 

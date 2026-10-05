@@ -8,7 +8,7 @@ export const COMPANY = {
   email: 'info@freightflow.group',
   usdot: '4357973',
   mc: '1704871',
-  hubs: ['Chicago', 'Dallas'] as const,
+  hub: 'Chicago',
   hours: 'Mon–Fri, 8 AM–5 PM CST',
   applyUrl: 'https://app.freightflow.group/apply',
   /** FMCSA SAFER company snapshot, so visitors can verify the authority themselves. */
