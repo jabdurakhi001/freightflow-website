@@ -6,19 +6,45 @@ import { EASE_BRAND, rise, SIGN_SPRING, stagger } from '../../lib/motion';
 import { ExitTab, RouteShield, SignArrow } from '../ui/Signs';
 
 /*
- * Background: a 5 s photo-real clip of a FreightFlow Cascadia, rendered with
- * Remotion from the company's own footage (source in video/). It plays once
- * and rests on its last frame — no loop, so no pause control is needed
- * (WCAG 2.2.2). Reduced-motion and Data Saver visitors get that last frame as
- * a still. On phones and tablets it's a band above the sign instead of a cover crop,
- * keeping the truck in view.
+ * Background: a 5 s aerial clip of a Cascadia crossing Midwest farmland at
+ * sunrise (source and encode step in video/). It plays once and rests on its
+ * last frame — no loop, so no pause control is needed (WCAG 2.2.2).
+ * Reduced-motion and Data Saver visitors get that last frame as a still.
+ *
+ * The truck sits mid-frame, so a full-bleed crop would hide the cab behind the
+ * sign. Desktop instead shows the whole 16:9 frame as a feathered window on
+ * the right, over a blurred backdrop of the same scene; phones and tablets
+ * show it as a band above the sign.
  */
 const REVEAL = {
   mp4: '/hero/truck-reveal.mp4',
   webm: '/hero/truck-reveal.webm',
   poster: '/hero/truck-reveal-first.jpg',
   still: '/hero/truck-reveal-last.jpg',
+  backdrop: '/hero/truck-reveal-backdrop.jpg',
 };
+
+// Desktop window edge: fade in from the left, soften top and bottom.
+const WINDOW_MASK = {
+  WebkitMaskImage:
+    'linear-gradient(90deg, transparent 0%, #000 26%), linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%)',
+  WebkitMaskComposite: 'source-in',
+  maskImage:
+    'linear-gradient(90deg, transparent 0%, #000 26%), linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%)',
+  maskComposite: 'intersect',
+} as const;
+
+function useIsDesktop() {
+  const query = '(min-width: 1024px)';
+  const [desktop, setDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+  useEffect(() => {
+    const mq = window.matchMedia(query);
+    const on = () => setDesktop(mq.matches);
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return desktop;
+}
 
 function allowsVideo() {
   if (typeof window === 'undefined') return false;
@@ -32,6 +58,7 @@ export default function Hero() {
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [useVideo, setUseVideo] = useState(allowsVideo);
+  const desktop = useIsDesktop();
 
   // Scroll-out: the sign lifts away a little faster than the page.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
@@ -55,37 +82,52 @@ export default function Hero() {
         className="relative aspect-[4/3] w-full shrink-0 sm:aspect-video lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto"
         style={{ scale: reduceMotion ? 1 : bgScale }}
       >
-        {useVideo ? (
-          <video
-            ref={videoRef}
-            className="h-full w-full object-cover object-[72%_50%] sm:object-center lg:object-[72%_50%]"
-            poster={REVEAL.poster}
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            aria-hidden="true"
-          >
-            {/* MP4 first: it's the smaller encode and plays everywhere. A failed <source>
-                doesn't fire the video's onError, so watch the last one. */}
-            <source src={REVEAL.mp4} type="video/mp4" />
-            <source src={REVEAL.webm} type="video/webm" onError={() => setUseVideo(false)} />
-          </video>
-        ) : (
-          <img
-            src={REVEAL.still}
-            alt=""
-            aria-hidden="true"
-            className="h-full w-full object-cover object-[72%_50%] sm:object-center lg:object-[72%_50%]"
-            fetchPriority="high"
-          />
-        )}
+        {/* Desktop backdrop: the same scene, blurred and dimmed */}
+        <img
+          src={REVEAL.backdrop}
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 hidden h-full w-full scale-110 object-cover lg:block"
+        />
+        <div aria-hidden="true" className="absolute inset-0 hidden bg-black/40 lg:block" />
+
+        {/* The clip: fills the band on phones/tablets, a feathered 16:9 window on desktop */}
+        <div
+          className="absolute inset-0 lg:inset-auto lg:right-0 lg:top-[53%] lg:aspect-video lg:w-[74%] lg:-translate-y-1/2"
+          style={desktop ? WINDOW_MASK : undefined}
+        >
+          {useVideo ? (
+            <video
+              ref={videoRef}
+              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
+              poster={REVEAL.poster}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+            >
+              {/* WebM first: it's the smaller encode. A failed <source> doesn't fire the
+                  video's onError, so watch the last one. */}
+              <source src={REVEAL.webm} type="video/webm" />
+              <source src={REVEAL.mp4} type="video/mp4" onError={() => setUseVideo(false)} />
+            </video>
+          ) : (
+            <img
+              src={REVEAL.still}
+              alt=""
+              aria-hidden="true"
+              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
+              fetchPriority="high"
+            />
+          )}
+        </div>
         {/* Phones: fade the band into the asphalt below. Desktop: shade the side the sign sits on. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-asphalt via-transparent via-30% to-black/30 lg:bg-gradient-to-r lg:from-sign-ink/90 lg:via-sign-ink/35 lg:via-45% lg:to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-asphalt via-transparent via-30% to-black/30 lg:bg-gradient-to-r lg:from-sign-ink/80 lg:via-sign-ink/25 lg:via-40% lg:to-transparent lg:to-60%" />
       </motion.div>
 
       <div className="relative mx-auto -mt-3 w-full max-w-7xl px-5 pb-10 sm:-mt-14 sm:px-8 sm:pb-14 lg:mt-0 lg:pb-0 lg:pt-24 short:lg:pt-20">
-        <motion.div style={{ y: reduceMotion ? 0 : signY }} className="max-w-[44rem]">
+        <motion.div style={{ y: reduceMotion ? 0 : signY }} className="max-w-[44rem] lg:max-w-[38rem] xl:max-w-[40rem]">
           {/* The sign drops onto its mount and swings to rest */}
           <motion.div
             className="guide-sign px-6 pb-7 pt-8 sm:px-10 sm:pb-9 sm:pt-10"
@@ -104,7 +146,7 @@ export default function Hero() {
 
               <motion.h1
                 variants={rise}
-                className="mt-5 text-[clamp(2.5rem,6.2vw,4.9rem)] font-black leading-[0.98] tracking-[-0.035em] short:text-[2.4rem]"
+                className="mt-5 text-[clamp(2.5rem,6.2vw,4.9rem)] lg:text-[clamp(2.5rem,4.4vw,4.6rem)] font-black leading-[0.98] tracking-[-0.035em] short:text-[2.4rem]"
               >
                 Capacity you can plan around.
               </motion.h1>

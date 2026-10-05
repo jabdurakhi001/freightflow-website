@@ -39,20 +39,24 @@ See [.env.example](.env.example). At minimum:
 
 ## Motion assets (Remotion)
 
-The hero clip, the section photos and the social share image are rendered with [Remotion](https://www.remotion.dev) from FreightFlow's own truck footage in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
+The hero clip, the section photos and the social share image are built from the scripts in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
 
 ```bash
 cd video
 npm install
-npm run studio   # preview and tweak the compositions
+npm run studio   # preview and tweak the Remotion stills
 npm run render   # writes public/hero/truck-reveal*, public/photos/*.jpg and public/og-image.jpg
 ```
 
-Rendering needs a system `ffmpeg` with the `removelogo` and `minterpolate` filters and WebP decoding (any distro build has them). `prepare-footage.mjs` runs first: it inpaints a smear in the source frames (`video/public/footage/`) and builds motion-interpolated slow motion into `video/public/footage-smooth/` (gitignored, rebuilt on demand).
+Rendering needs a system `ffmpeg` with libx264, libvpx-vp9, the `removelogo` filter and WebP decoding (any distro build has them).
 
-- `TruckReveal`: a 5 s camera pull-back from a FreightFlow Cascadia on the interstate. It plays once and rests on its last frame, so it needs no pause control. Phones see it as a 16:9 band above the sign; reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
-- `PhotoFleet`, `PhotoDrivers`, `PhotoFinal`: graded stills from the same footage for the Fleet, Drivers and closing sections.
-- `OgCard`: the 1200×630 Open Graph / Twitter image.
+- **Hero clip** (`encode-hero.mjs`): `video/public/footage/hero-source.mp4` is an 8 s aerial shot of a Cascadia at sunrise. It's cut to the first 6.25 s at 1.25× speed (5 s), lightly graded, and encoded to MP4 and WebM, plus first-frame, last-frame and blurred-backdrop stills.
+  - It plays once and rests on its last frame, so it needs no pause control.
+  - Desktop shows the full frame as a feathered window on the right, so the sign never covers the truck; phones and tablets show it as a band above the sign.
+  - Reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
+- **Photos** (`PhotoFleet`, `PhotoDrivers`, `PhotoFinal`): graded Remotion stills from the truck footage frames in `video/public/footage/`. `prepare-footage.mjs` first inpaints a road smear in those frames (output in `video/public/footage-smooth/`, gitignored, rebuilt on demand).
+- **`OgCard`**: the 1200×630 Open Graph / Twitter image.
+- **`generate-trucks.mjs`**: optional. Generates new truck stills and a hero clip with the Gemini API into `video/public/generated/` for review (needs `GEMINI_API_KEY` with billing enabled).
 
 Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
 

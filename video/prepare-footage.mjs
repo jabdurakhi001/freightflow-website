@@ -1,14 +1,12 @@
-// Builds public/footage-smooth/ (gitignored) from the committed source frames
-// (public/footage/frame-34…64.webp):
-//   1. clean-<n>.jpg: each frame with the grey smear on the road right of the
-//      bumper (x 1110–1280, y 546–664, fixed across frames) inpainted. The
-//      frame is mirrored first so the fill has clean pixels on every side,
-//      then the fill is softened with a feathered blur so it reads as road
-//      motion blur rather than a hard-edged patch.
-//   2. s001…s109.jpg: motion-compensated slow motion of the cleaned frames, so
-//      the hero clip doesn't ghost the way plain frame-blending does.
-// Uses the system ffmpeg (needs removelogo, minterpolate and a WebP decoder,
-// which Remotion's bundled ffmpeg lacks). Run automatically by render.mjs.
+// Builds public/footage-smooth/clean-<n>.jpg (gitignored) from the committed
+// source frames (public/footage/frame-34…64.webp): each frame with the grey
+// smear on the road right of the bumper (x 1110–1280, y 546–664, fixed across
+// frames) inpainted. The frame is mirrored first so the fill has clean pixels
+// on every side, then the fill is softened with a feathered blur so it reads
+// as road motion blur rather than a hard-edged patch. The photo stills and the
+// OG card are cut from these frames.
+// Uses the system ffmpeg (needs removelogo and a WebP decoder, which
+// Remotion's bundled ffmpeg lacks). Run automatically by render.mjs.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import path from 'node:path';
@@ -18,7 +16,7 @@ const here = path.dirname(fileURLToPath(import.meta.url));
 const out = path.join(here, 'public', 'footage-smooth');
 
 export function prepareFootage({ force = false } = {}) {
-  if (!force && existsSync(out) && existsSync(path.join(out, 's109.jpg'))) return;
+  if (!force && existsSync(out) && existsSync(path.join(out, 'clean-64.jpg'))) return;
   mkdirSync(out, { recursive: true });
   const ff = (args) => execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', ...args], { stdio: 'inherit' });
   const mask = path.join(out, 'smear-mask.png');
@@ -33,13 +31,6 @@ export function prepareFootage({ force = false } = {}) {
       `[s]gblur=sigma=16[bl];[1]format=gray[f];[bl][f]alphamerge[soft];[c][soft]overlay,format=yuvj444p`,
     '-q:v', '1', '-start_number', '34', path.join(out, 'clean-%d.jpg'),
   ]);
-  ff(
-    [
-      '-framerate', '8', '-start_number', '34', '-i', path.join(out, 'clean-%d.jpg'),
-      '-vf', 'minterpolate=fps=30:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1',
-      '-q:v', '2', path.join(out, 's%03d.jpg'),
-    ],
-  );
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
