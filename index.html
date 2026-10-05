@@ -2,16 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="theme-color" content="#0A1128" />
+    <meta name="theme-color" content="#00653e" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;600;700;800;900&display=swap" />
-    <!-- Hero: wide screens with motion get the Remotion reveal (poster = its first frame); others the static photo. Mirrors canPlayHeroVideo() in Hero.tsx. -->
-    <link rel="preload" as="image" href="/hero/hero-reveal-poster.jpg" fetchpriority="high" media="(min-width: 768px) and (prefers-reduced-motion: no-preference)" />
-    <link rel="preload" as="image" href="/hero-frames/frame-050.jpg" fetchpriority="high" media="(max-width: 767px), (prefers-reduced-motion: reduce)" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800;900&family=Overpass+Mono:wght@500;600&family=Doto:wght@700;900&display=swap" />
+    <!-- Hero poster: portrait cut for tall screens, landscape otherwise. Mirrors pickCut() in Hero.tsx. -->
+    <link rel="preload" as="image" href="/hero/drive-landscape.jpg" fetchpriority="high" media="(min-aspect-ratio: 4/5)" />
+    <link rel="preload" as="image" href="/hero/drive-portrait.jpg" fetchpriority="high" media="(max-aspect-ratio: 4/5)" />
     <!-- Apply the saved/system theme before first paint to avoid a light flash for dark-mode users -->
     <script>
       (function () {
@@ -23,29 +23,29 @@
         } catch (e) { /* storage unavailable */ }
       })();
     </script>
-    <title>FreightFlow | Systems-Driven Trucking Carrier — 48-State FTL Capacity</title>
-    <meta name="description" content="FreightFlow delivers consistent, compliant, and scalable full-truckload freight transportation across all 48 contiguous states — powered by structured operations, real-time tracking, and a modern 2025–2026 Freightliner fleet.">
+    <title>FreightFlow | Full-Truckload Carrier — 48 States from Chicago & Dallas</title>
+    <meta name="description" content="FreightFlow is a full-truckload carrier serving all 48 contiguous states from dispatch hubs in Chicago and Dallas — 2025–2026 Freightliner Cascadias, GPS tracking on every load, and digital proof of delivery. USDOT 4357973 · MC 1704871.">
     <link rel="canonical" href="https://freightflow.group/">
 
     <!-- Open Graph -->
     <meta property="og:type" content="website">
-    <meta property="og:title" content="FreightFlow | Systems-Driven Trucking Carrier — 48-State FTL Capacity">
-    <meta property="og:description" content="Consistent, compliant, and scalable full-truckload freight transportation across 48 states — powered by structured operations and real-time visibility.">
+    <meta property="og:title" content="FreightFlow | Full-Truckload Carrier — 48 States">
+    <meta property="og:description" content="Capacity you can plan around: full-truckload freight across the lower 48, dispatched from Chicago and Dallas, tracked on every load.">
     <meta property="og:url" content="https://freightflow.group/">
     <meta property="og:site_name" content="FreightFlow Logistics">
-    <meta property="og:image" content="https://freightflow.group/hero-frames/frame-050.jpg">
-    <meta property="og:image:width" content="1280">
-    <meta property="og:image:height" content="720">
-    <meta property="og:image:alt" content="A modern FreightFlow Freightliner Cascadia on the open highway.">
+    <meta property="og:image" content="https://freightflow.group/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:image:alt" content="FreightFlow highway guide sign: full truckload, all 48 states, Chicago and Dallas dispatch hubs.">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="FreightFlow | Systems-Driven Trucking Carrier — 48-State FTL Capacity">
-    <meta name="twitter:description" content="Consistent, compliant, and scalable full-truckload freight transportation across 48 states — powered by structured operations and real-time visibility.">
-    <meta name="twitter:image" content="https://freightflow.group/hero-frames/frame-050.jpg">
-    <meta name="twitter:image:alt" content="A modern FreightFlow Freightliner Cascadia on the open highway.">
+    <meta name="twitter:title" content="FreightFlow | Full-Truckload Carrier — 48 States">
+    <meta name="twitter:description" content="Capacity you can plan around: full-truckload freight across the lower 48, dispatched from Chicago and Dallas, tracked on every load.">
+    <meta name="twitter:image" content="https://freightflow.group/og-image.jpg">
+    <meta name="twitter:image:alt" content="FreightFlow highway guide sign: full truckload, all 48 states, Chicago and Dallas dispatch hubs.">
 
-    <!-- Schema.org Organization -->
+    <!-- Schema.org -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -53,9 +53,9 @@
       "name": "FreightFlow Logistics",
       "url": "https://freightflow.group/",
       "logo": "https://freightflow.group/favicon.svg",
-      "image": "https://freightflow.group/hero-frames/frame-050.jpg",
+      "image": "https://freightflow.group/og-image.jpg",
       "email": "info@freightflow.group",
-      "description": "Systems-driven interstate freight carrier providing full-truckload capacity across the 48 contiguous states with a 2025–2026 Freightliner Cascadia fleet.",
+      "description": "Full-truckload carrier serving the 48 contiguous states from dispatch hubs in Chicago and Dallas, operating a 2025–2026 Freightliner Cascadia fleet.",
       "sameAs": []
     }
     </script>
@@ -65,4 +65,3 @@
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
-

@@ -1,6 +1,6 @@
 # FreightFlow Website
 
-Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, featuring a scroll-driven hero, live-style dispatch visuals, and quote/application capture.
+Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, built on an Interstate-signage design system (Overpass type, guide-sign green, work-zone orange), with a Remotion-rendered hero, quote capture and live chat.
 
 ## Tech stack
 
@@ -37,18 +37,21 @@ See [.env.example](.env.example). At minimum:
 | `npm run preview` | Preview the production build         |
 | `npm run lint`    | Type-check with `tsc --noEmit`       |
 
-## Hero video (Remotion)
+## Motion assets (Remotion)
 
-The 5-second sketch-to-photo clip behind the hero is rendered with [Remotion](https://www.remotion.dev) from the source in [`video/`](video/). It's a separate package, so the site build doesn't depend on it. The rendered files are committed in `public/hero/`.
+The hero's highway-drive loop and the social share image are rendered with [Remotion](https://www.remotion.dev) from the source in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
 
 ```bash
 cd video
 npm install
-npm run studio   # preview and tweak the composition
-npm run render   # writes public/hero/hero-reveal.{webm,mp4} and the poster
+npm run studio   # preview and tweak the compositions
+npm run render   # writes public/hero/drive-{landscape,portrait}.{mp4,webm,jpg} and public/og-image.jpg
 ```
 
-The clip is built from the frames in `public/hero-frames/w1280`. Wide screens play it once; phones, reduced-motion users and Data Saver users get the static `frame-050.jpg` instead (see `src/components/Hero.tsx`). Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
+- `HighwayDrive`: an 8 s seamless loop (landscape 1600×900 and portrait 900×1600 cuts) of a dusk interstate with FreightFlow gantry signs. Tall screens get the portrait cut. Reduced-motion and Data Saver visitors get the still poster, and a pause button sits on the hero (see `src/components/sections/Hero.tsx`).
+- `OgCard`: the 1200×630 Open Graph / Twitter image.
+
+Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
 
 ## Deployment
 

@@ -98,14 +98,15 @@ export default function ModalShell({ open, onClose, label, children }: ModalShel
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="absolute inset-0 bg-primary/80 backdrop-blur-sm cursor-default"
+            className="absolute inset-0 bg-sign-ink/80 backdrop-blur-sm cursor-default"
           />
           <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 24, scale: 0.97 }}
+            style={{ transformPerspective: 1000, transformOrigin: 'top center' }}
+            initial={{ opacity: 0, y: -24, rotateX: -14 }}
+            animate={{ opacity: 1, y: 0, rotateX: 0 }}
+            exit={{ opacity: 0, y: 16, rotateX: 6 }}
             transition={{ duration: 0.25, ease: EASE_BRAND }}
-            className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-gradient-to-b from-primary-container to-primary border border-white/10 shadow-2xl grain"
+            className="guide-sign relative w-full max-w-lg max-h-[90vh] overflow-y-auto"
           >
             {children}
           </motion.div>

@@ -92,16 +92,16 @@ export default function QuoteModal() {
   return (
     <ModalShell open={isQuoteOpen} onClose={handleClose} label="Request a quote">
       {/* Header */}
-      <div className="relative z-10 flex items-start justify-between px-7 pt-7 pb-2">
+      <div className="relative z-10 flex items-start justify-between px-8 pt-9 pb-2">
         <div>
-          <span className="eyebrow mb-2">Rapid Response</span>
-          <h3 className="text-2xl font-black text-white tracking-tighter">Request a Quote</h3>
-          <p className="text-sm text-white/50 mt-1">Tell us about your lane — our team responds during business hours (Mon–Fri, 8AM–5PM CST).</p>
+          <span className="legend text-white/80">Dispatch desk</span>
+          <h3 className="mt-1 text-3xl font-black text-white tracking-tight">Get a quote</h3>
+          <p className="text-sm text-white/80 mt-1.5">Tell us about your lane — our team responds during business hours (Mon–Fri, 8AM–5PM CST).</p>
         </div>
         <button
           type="button"
           onClick={handleClose}
-          className="text-white/50 hover:text-white p-1.5 rounded-full hover:bg-white/10 transition-colors shrink-0"
+          className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors shrink-0"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -112,30 +112,30 @@ export default function QuoteModal() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 px-7 pb-10 pt-6 text-center"
+          className="relative z-10 px-8 pb-10 pt-6 text-center"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }}
-            className="mx-auto mb-4 w-16 h-16 rounded-full bg-secondary/15 flex items-center justify-center"
+            className="mx-auto mb-4 w-16 h-16 rounded-full bg-white flex items-center justify-center"
           >
-            <CheckCircle2 className="w-8 h-8 text-secondary" />
+            <CheckCircle2 className="w-8 h-8 text-sign" />
           </motion.div>
           <h4 ref={successHeadingRef} tabIndex={-1} className="text-xl font-black text-white tracking-tight mb-2 outline-none">Request received</h4>
-          <p className="text-sm text-white/60 max-w-sm mx-auto">
+          <p className="text-sm text-white/85 max-w-sm mx-auto">
             Thanks, {form.name.trim()}. Your lane details are with our dispatch team — we'll get back to you shortly.
           </p>
           <button
             type="button"
             onClick={handleClose}
-            className="btn-premium mt-7 inline-flex items-center gap-2 text-white px-8 py-3 rounded-full font-bold text-xs uppercase tracking-widest"
+            className="btn-cone mt-7 px-8 py-3"
           >
             Done
           </button>
         </motion.div>
       ) : (
-        <form onSubmit={submit} className="relative z-10 px-7 pb-7 pt-4 space-y-4">
+        <form onSubmit={submit} className="relative z-10 px-8 pb-9 pt-4 space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass} htmlFor="q-name">Name *</label>
@@ -156,14 +156,14 @@ export default function QuoteModal() {
             <div>
               <label className={labelClass} htmlFor="q-origin">Origin</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-secondary/70 pointer-events-none" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cone pointer-events-none" />
                 <input id="q-origin" type="text" value={form.origin} onChange={set('origin')} placeholder="Chicago, IL" className={`${inputClass} pl-9`} />
               </div>
             </div>
             <div>
               <label className={labelClass} htmlFor="q-destination">Destination</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-tertiary/70 pointer-events-none" />
+                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-caution pointer-events-none" />
                 <input id="q-destination" type="text" value={form.destination} onChange={set('destination')} placeholder="Dallas, TX" className={`${inputClass} pl-9`} />
               </div>
             </div>
@@ -178,10 +178,10 @@ export default function QuoteModal() {
                   type="button"
                   onClick={() => setForm((f) => ({ ...f, equipment: option }))}
                   aria-pressed={form.equipment === option}
-                  className={`px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider border transition-all ${
+                  className={`px-3.5 py-2 rounded-lg text-sm font-bold border transition-colors ${
                     form.equipment === option
-                      ? 'bg-secondary border-secondary text-white glow-secondary'
-                      : 'border-white/15 text-white/60 hover:border-white/40 hover:text-white'
+                      ? 'bg-cone border-[#0f1512] text-[#0f1512]'
+                      : 'border-white/35 text-white/85 hover:border-white hover:text-white'
                   }`}
                 >
                   {option}
@@ -196,7 +196,7 @@ export default function QuoteModal() {
           </div>
 
           {status === 'error' && (
-            <p role="alert" className="text-xs text-error bg-error/10 border border-error/20 px-4 py-3 rounded-lg">
+            <p role="alert" className="text-sm text-white bg-[#7f1d1d]/70 border border-white/30 px-4 py-3 rounded-lg">
               Couldn't send your request. Please try again, or email us directly at{' '}
               <a className="underline font-bold" href="mailto:info@freightflow.group?subject=Quote%20Request">info@freightflow.group</a>.
             </p>
@@ -205,12 +205,12 @@ export default function QuoteModal() {
           <button
             type="submit"
             disabled={sending}
-            className="btn-premium group w-full inline-flex items-center justify-center gap-2 text-white px-8 py-4 rounded-full font-bold text-sm uppercase tracking-widest disabled:opacity-40 disabled:pointer-events-none"
+            className="btn-cone group w-full px-8 py-4 text-lg disabled:opacity-50 disabled:pointer-events-none"
           >
-            {sending ? 'Sending…' : 'Send Quote Request'}
+            {sending ? 'Sending…' : 'Send quote request'}
             {!sending && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
           </button>
-          <p className="text-[10px] text-white/60 text-center">No spam, no obligations — your details go straight to our dispatch team.</p>
+          <p className="text-xs text-white/75 text-center">No spam, no obligations — your details go straight to our dispatch team.</p>
         </form>
       )}
     </ModalShell>
