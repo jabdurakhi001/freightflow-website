@@ -5,7 +5,8 @@
 // Sources: truck footage in video/public/footage (frames cleaned by prepare-footage.mjs).
 // Set REMOTION_BROWSER to a Chromium / headless-shell binary to skip Remotion's
 // own browser download (e.g. where that host is blocked).
-import { mkdirSync } from 'node:fs';
+import { execFileSync } from 'node:child_process';
+import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
@@ -29,12 +30,23 @@ const still = async (id, output, extra = {}) =>
 encodeHero();
 console.log('hero done');
 
-for (const [id, name] of [
-  ['PhotoFleet', 'fleet'],
-  ['PhotoDrivers', 'drivers'],
-  ['PhotoFinal', 'final'],
-]) {
-  await still(id, path.join(site, 'photos', `${name}.jpg`));
+// Photos: an owner-supplied shot in public/photos-source/<name>.* wins;
+// otherwise the graded Remotion still from the truck footage frames.
+const SOURCES = path.join(here, 'public', 'photos-source');
+const PHOTOS = [
+  ['PhotoFleet', 'fleet', [1200, 900]],
+  ['PhotoDrivers', 'drivers', [1600, 900]],
+  ['PhotoFinal', 'final', [1600, 900]],
+];
+for (const [id, name, [w, h]] of PHOTOS) {
+  const output = path.join(site, 'photos', `${name}.jpg`);
+  const source = existsSync(SOURCES) && readdirSync(SOURCES).find((f) => f.startsWith(`${name}.`));
+  if (source) {
+    execFileSync('ffmpeg', ['-hide_banner', '-loglevel', 'error', '-y', '-i', path.join(SOURCES, source),
+      '-vf', `scale=${w}:${h}:force_original_aspect_ratio=increase:flags=lanczos,crop=${w}:${h}`, '-q:v', '3', output], { stdio: 'inherit' });
+  } else {
+    await still(id, output);
+  }
 }
 console.log('photos done');
 

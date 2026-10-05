@@ -33,9 +33,9 @@ export default function Fleet() {
   return (
     <section id="fleet" className="overflow-hidden bg-surface py-24 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
-        {/* One of the trucks, with the truck-crossing diamond bolted on as a marker */}
+        {/* One of the trucks, with the truck-crossing diamond bolted on as a marker (bottom right, clear of the cab) */}
         <motion.figure
-          className="relative mx-auto w-full max-w-[38rem] pb-10 pl-6 sm:pl-10"
+          className="relative mx-auto w-full max-w-[38rem] pb-10 pr-6 sm:pr-10"
           initial={{ opacity: 0, y: 28 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, amount: 0.3 }}
@@ -44,7 +44,7 @@ export default function Fleet() {
           <div className="overflow-hidden rounded-2xl bg-asphalt shadow-[0_0_0_1px_var(--color-outline-variant),0_40px_80px_-40px_rgba(6,42,28,0.55)]">
             <motion.img
               src="/photos/fleet.jpg"
-              alt="A white FreightFlow Freightliner Cascadia pulling a 53-foot dry van down the interstate"
+              alt="A black Freightliner Cascadia with a 53-foot dry van at a distribution center loading dock"
               width={1200}
               height={900}
               loading="lazy"
@@ -56,12 +56,12 @@ export default function Fleet() {
               transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
             />
           </div>
-          <figcaption className="legend absolute right-4 top-4 rounded-md bg-black/55 px-2.5 py-1.5 text-white backdrop-blur-sm">
+          <figcaption className="legend absolute left-4 top-4 rounded-md bg-black/55 px-2.5 py-1.5 text-white backdrop-blur-sm">
             Cascadia · 53′ dry van
           </figcaption>
           <motion.div
-            className="absolute bottom-0 left-0 w-28 sm:w-36"
-            initial={{ opacity: 0, rotate: -14, scale: 0.7 }}
+            className="absolute bottom-0 right-0 w-28 sm:w-36"
+            initial={{ opacity: 0, rotate: 14, scale: 0.7 }}
             whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
             viewport={{ once: true, amount: 0.6 }}
             transition={{ ...SIGN_SPRING, delay: 0.35 }}
