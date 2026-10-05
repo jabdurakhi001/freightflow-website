@@ -5,7 +5,7 @@ import { WarningDiamond } from '../ui/Signs';
 
 const SPECS = [
   { k: 'Tractor', v: 'Freightliner Cascadia' },
-  { k: 'Model years', v: '2025–2026 only' },
+  { k: 'Model years', v: '2025–2027 only' },
   { k: 'Trailer', v: '53′ dry van' },
   { k: 'Telematics', v: 'GPS + ELD on every unit' },
   { k: 'Maintenance', v: 'Preventive, on a data-driven schedule' },
@@ -77,7 +77,7 @@ export default function Fleet() {
             marker="MM 05"
             kicker="The fleet"
             title="New trucks. No exceptions."
-            lede="Every FreightFlow tractor is a 2025 or 2026 Freightliner Cascadia. Newer equipment means better fuel economy, fewer roadside breakdowns, and freight that shows up when it should."
+            lede="Every FreightFlow tractor is a 2025–2027 Freightliner Cascadia. Newer equipment means better fuel economy, fewer roadside breakdowns, and freight that shows up when it should."
           />
           <motion.dl
             className="mt-10 overflow-hidden rounded-xl bg-surface-container-lowest shadow-[0_0_0_1px_var(--color-outline-variant)]"

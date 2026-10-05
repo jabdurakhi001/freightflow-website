@@ -13,7 +13,7 @@ const FAQS = [
   },
   {
     q: 'What equipment do you operate?',
-    a: "2025–2026 Freightliner Cascadia tractors pulling 53′ dry vans, maintained on a preventive, data-driven schedule.",
+    a: "2025–2027 Freightliner Cascadia tractors pulling 53′ dry vans, maintained on a preventive, data-driven schedule.",
   },
   {
     q: 'Can I track my load?',

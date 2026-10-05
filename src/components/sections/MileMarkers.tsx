@@ -5,7 +5,7 @@ import { stagger, swingIn } from '../../lib/motion';
 const MARKERS = [
   { top: 'States', value: <CountUp value={48} />, caption: 'Contiguous US coverage' },
   { top: 'Hubs', value: <CountUp value={2} />, caption: 'Dispatch in Chicago & Dallas' },
-  { top: 'Model yr', value: '25–26', caption: 'Freightliner Cascadia fleet' },
+  { top: 'Model yr', value: '25–27', caption: 'Freightliner Cascadia fleet' },
   { top: 'Tracking', value: 'GPS', caption: 'Live on every load' },
   { top: 'Delivery', value: 'POD', caption: 'Digital, at drop-off' },
 ];

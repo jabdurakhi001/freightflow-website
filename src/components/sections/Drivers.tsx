@@ -7,7 +7,7 @@ const PERKS = [
   { title: 'Premium pay', body: 'Competitive per-mile rates that respect professional experience.' },
   { title: 'Planned home time', body: 'Structured scheduling out of Chicago and Dallas — planned, not promised.' },
   { title: 'One dispatcher', body: 'A dedicated dispatcher who answers, plans ahead and has your back.' },
-  { title: 'New equipment', body: '2025–2026 Freightliner Cascadias only. No worn-out trucks.' },
+  { title: 'New equipment', body: '2025–2027 Freightliner Cascadias only. No worn-out trucks.' },
 ];
 
 /** Barricade stripe band (orange/black chevrons). */
