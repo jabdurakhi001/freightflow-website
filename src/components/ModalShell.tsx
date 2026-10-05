@@ -1,5 +1,6 @@
 import { useEffect, useRef, type ReactNode } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
+import { EASE_BRAND } from '../lib/motion';
 
 interface ModalShellProps {
   open: boolean;
@@ -103,7 +104,7 @@ export default function ModalShell({ open, onClose, label, children }: ModalShel
             initial={{ opacity: 0, y: 24, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 24, scale: 0.97 }}
-            transition={{ duration: 0.25, ease: [0.21, 0.47, 0.32, 0.98] }}
+            transition={{ duration: 0.25, ease: EASE_BRAND }}
             className="relative w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-2xl bg-gradient-to-b from-primary-container to-primary border border-white/10 shadow-2xl grain"
           >
             {children}

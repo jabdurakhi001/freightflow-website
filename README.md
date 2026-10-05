@@ -37,6 +37,19 @@ See [.env.example](.env.example). At minimum:
 | `npm run preview` | Preview the production build         |
 | `npm run lint`    | Type-check with `tsc --noEmit`       |
 
+## Hero video (Remotion)
+
+The 5-second sketch-to-photo clip behind the hero is rendered with [Remotion](https://www.remotion.dev) from the source in [`video/`](video/). It's a separate package, so the site build doesn't depend on it. The rendered files are committed in `public/hero/`.
+
+```bash
+cd video
+npm install
+npm run studio   # preview and tweak the composition
+npm run render   # writes public/hero/hero-reveal.{webm,mp4} and the poster
+```
+
+The clip is built from the frames in `public/hero-frames/w1280`. Wide screens play it once; phones, reduced-motion users and Data Saver users get the static `frame-050.jpg` instead (see `src/components/Hero.tsx`). Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
+
 ## Deployment
 
 Configured for Vercel (see [vercel.json](vercel.json)).

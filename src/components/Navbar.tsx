@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { Sun, Moon, X, Menu } from 'lucide-react';
+import { motion, AnimatePresence } from 'motion/react';
 import { useQuoteModal } from '../QuoteContext';
+import { EASE_BRAND } from '../lib/motion';
 
 interface NavbarProps {
   isDark: boolean;
-  toggleTheme: () => void;
+  toggleTheme: (origin?: { x: number; y: number }) => void;
   mobileMenuOpen: boolean;
   setMobileMenuOpen: (open: boolean) => void;
 }
@@ -86,20 +88,42 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
               <a
                 key={link.href}
                 href={link.href}
-                className={`font-mono text-[11px] font-medium uppercase tracking-[0.14em] whitespace-nowrap transition-colors ${
-                  isActive
-                    ? 'text-secondary border-b border-secondary pb-1'
-                    : 'text-white/75 hover:text-white pb-1'
+                aria-current={isActive ? 'location' : undefined}
+                className={`relative font-mono text-[11px] font-medium uppercase tracking-[0.14em] whitespace-nowrap pb-1 transition-colors ${
+                  isActive ? 'text-secondary' : 'text-white/75 hover:text-white'
                 }`}
               >
                 {link.label}
+                {/* One shared underline that glides between links as sections change */}
+                {isActive && (
+                  <motion.span
+                    layoutId="nav-active"
+                    className="absolute inset-x-0 -bottom-px h-px bg-secondary"
+                    transition={{ type: 'spring', stiffness: 380, damping: 34 }}
+                  />
+                )}
               </a>
             );
           })}
         </div>
         <div className="flex items-center gap-4">
-          <button onClick={toggleTheme} className="text-white/80 hover:text-white p-3 rounded-full hover:bg-white/10 transition-colors" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} type="button">
-            {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+          <button onClick={(e) => {
+            // Wipe origin = button centre (also correct for keyboard activation, where clientX/Y are 0)
+            const r = e.currentTarget.getBoundingClientRect();
+            toggleTheme({ x: r.left + r.width / 2, y: r.top + r.height / 2 });
+          }} className="text-white/80 hover:text-white p-3 rounded-full hover:bg-white/10 transition-colors" aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'} type="button">
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.span
+                key={isDark ? 'sun' : 'moon'}
+                className="block"
+                initial={{ rotate: -90, opacity: 0, scale: 0.6 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.6 }}
+                transition={{ duration: 0.25, ease: EASE_BRAND }}
+              >
+                {isDark ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
+              </motion.span>
+            </AnimatePresence>
           </button>
           <button type="button" onClick={() => openQuote()} className="btn-premium hidden lg:inline-flex text-white px-6 py-2.5 rounded-full font-bold text-xs uppercase tracking-widest active:scale-95">
             Request a Quote
@@ -110,11 +134,34 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
         </div>
       </nav>
 
+      <AnimatePresence>
       {mobileMenuOpen && (
-        <div ref={menuRef} role="navigation" aria-label="Mobile site menu" className="fixed inset-0 z-[45] bg-primary backdrop-blur-lg overflow-y-auto flex lg:hidden">
-          <div className="m-auto flex flex-col items-start gap-8 short:gap-3 py-24 short:py-16">
+        <motion.div
+          ref={menuRef}
+          role="navigation"
+          aria-label="Mobile site menu"
+          className="fixed inset-0 z-[45] bg-primary overflow-y-auto flex lg:hidden grain"
+          initial={{ clipPath: 'inset(0 0 100% 0)' }}
+          animate={{ clipPath: 'inset(0 0 0% 0)' }}
+          exit={{ clipPath: 'inset(0 0 100% 0)', transition: { duration: 0.35, ease: EASE_BRAND, delay: 0.05 } }}
+          transition={{ duration: 0.45, ease: EASE_BRAND }}
+        >
+          <motion.div
+            className="relative z-10 m-auto flex flex-col items-start gap-8 short:gap-3 py-24 short:py-16"
+            initial="hidden"
+            animate="visible"
+            exit="hidden"
+            variants={{
+              hidden: { transition: { staggerChildren: 0.03, staggerDirection: -1 } },
+              visible: { transition: { staggerChildren: 0.05, delayChildren: 0.15 } },
+            }}
+          >
             {NAV_LINKS.map((link, i) => (
-              <a
+              <motion.a
+                variants={{
+                  hidden: { opacity: 0, y: 16 },
+                  visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE_BRAND } },
+                }}
                 key={link.href}
                 className="group flex items-baseline gap-4 text-2xl short:text-lg font-black uppercase tracking-widest text-white hover:text-secondary transition-colors"
                 href={link.href}
@@ -124,12 +171,23 @@ export default function Navbar({ isDark, toggleTheme, mobileMenuOpen, setMobileM
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 {link.label}
-              </a>
+              </motion.a>
             ))}
-            <button type="button" className="btn-premium mt-4 short:mt-2 text-white px-10 py-4 short:py-3 rounded-full font-bold text-sm uppercase tracking-widest" onClick={() => { setMobileMenuOpen(false); openQuote(); }}>Request a Quote</button>
-          </div>
-        </div>
+            <motion.button
+              variants={{
+                hidden: { opacity: 0, y: 16 },
+                visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: EASE_BRAND } },
+              }}
+              type="button"
+              className="btn-premium mt-4 short:mt-2 text-white px-10 py-4 short:py-3 rounded-full font-bold text-sm uppercase tracking-widest"
+              onClick={() => { setMobileMenuOpen(false); openQuote(); }}
+            >
+              Request a Quote
+            </motion.button>
+          </motion.div>
+        </motion.div>
       )}
+      </AnimatePresence>
     </>
   );
 }

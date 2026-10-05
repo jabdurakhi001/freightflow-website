@@ -1,6 +1,7 @@
 import { X, CheckCircle2 } from 'lucide-react';
 import { motion } from 'motion/react';
 import Reveal from './Reveal';
+import { EASE_BRAND } from '../lib/motion';
 
 const OTHERS = [
   'Inconsistent capacity availability',
@@ -24,7 +25,7 @@ export default function Comparison() {
         <Reveal>
           <div className="bg-surface-container-lowest dark:bg-surface-container overflow-hidden shadow-xl border border-outline-variant/40">
             <div className="grid grid-cols-1 md:grid-cols-2">
-              <div className="p-12 border-b md:border-b-0 md:border-r border-surface-container">
+              <div className="p-8 sm:p-12 border-b md:border-b-0 md:border-r border-surface-container">
                 <h3 className="mono-label text-on-surface-variant mb-8">// Other Carriers</h3>
                 <motion.ul
                   className="space-y-6"
@@ -36,8 +37,9 @@ export default function Comparison() {
                   {OTHERS.map((item) => (
                     <motion.li
                       key={item}
-                      className="flex items-center gap-4 text-on-surface-variant opacity-70"
-                      variants={{ hidden: { opacity: 0, x: -12 }, visible: { opacity: 0.7, x: 0 } }}
+                      className="flex items-center gap-4 text-on-surface-variant"
+                      variants={{ hidden: { opacity: 0, x: -12 }, visible: { opacity: 0.85, x: 0 } }}
+                      transition={{ duration: 0.5, ease: EASE_BRAND }}
                     >
                       <X className="text-error w-6 h-6 shrink-0" aria-hidden="true" />
                       <del>{item}</del>
@@ -45,7 +47,7 @@ export default function Comparison() {
                   ))}
                 </motion.ul>
               </div>
-              <div className="p-12 bg-primary text-white kinetic-strip">
+              <div className="p-8 sm:p-12 bg-primary dark:bg-gradient-to-br dark:from-primary-container dark:to-primary text-white kinetic-strip">
                 <h3 className="mono-label text-secondary mb-8">// FreightFlow</h3>
                 <motion.ul
                   className="space-y-6"
@@ -59,8 +61,15 @@ export default function Comparison() {
                       key={item}
                       className="flex items-center gap-4"
                       variants={{ hidden: { opacity: 0, x: 12 }, visible: { opacity: 1, x: 0 } }}
+                      transition={{ duration: 0.5, ease: EASE_BRAND }}
                     >
-                      <CheckCircle2 className="text-secondary w-6 h-6 shrink-0" />
+                      <motion.span
+                        className="shrink-0"
+                        variants={{ hidden: { scale: 0.4 }, visible: { scale: 1 } }}
+                        transition={{ type: 'spring', stiffness: 420, damping: 18 }}
+                      >
+                        <CheckCircle2 className="text-secondary w-6 h-6" aria-hidden="true" />
+                      </motion.span>
                       {item}
                     </motion.li>
                   ))}
