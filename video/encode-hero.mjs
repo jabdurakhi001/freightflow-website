@@ -7,6 +7,8 @@
 //   truck-reveal-last.jpg     still for reduced motion / Data Saver (last frame)
 //   truck-reveal-backdrop.jpg small, blurred last frame the desktop hero sits
 //                             the sharp video window on
+// and, for the Remotion OG card, into public/og: frame.jpg (graded frame at
+// 3 s of the source) and backdrop.jpg (the same frame, small and blurred).
 // Uses the system ffmpeg (libx264 + libvpx-vp9). Run by render.mjs.
 import { execFileSync } from 'node:child_process';
 import { mkdirSync } from 'node:fs';
@@ -16,6 +18,7 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const src = path.join(here, 'public', 'footage', 'hero-source.mp4');
 const out = path.join(here, '..', 'public', 'hero');
+const ogOut = path.join(here, 'public', 'og');
 
 const SPEED = 1.25;
 const SECONDS = 5;
@@ -36,6 +39,11 @@ export function encodeHero() {
   still(0, 'truck-reveal-first.jpg');
   still(lastAt, 'truck-reveal-last.jpg');
   still(lastAt, 'truck-reveal-backdrop.jpg', ',scale=640:-2,gblur=sigma=14');
+
+  mkdirSync(ogOut, { recursive: true });
+  const OG_AT = 3;
+  ff(['-ss', String(OG_AT), '-i', src, '-frames:v', '1', '-vf', GRADE, '-q:v', '2', path.join(ogOut, 'frame.jpg')]);
+  ff(['-ss', String(OG_AT), '-i', src, '-frames:v', '1', '-vf', `${GRADE},scale=640:-2,gblur=sigma=16`, '-q:v', '3', path.join(ogOut, 'backdrop.jpg')]);
 }
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

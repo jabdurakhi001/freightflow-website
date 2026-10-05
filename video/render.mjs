@@ -21,13 +21,15 @@ for (const d of [path.join(site, 'hero'), path.join(site, 'photos'), workDir]) m
 const browserExecutable = process.env.REMOTION_BROWSER || null;
 
 prepareFootage();
+// Hero clip (the owner's aerial footage, trimmed, retimed and graded by
+// ffmpeg). Runs before bundling: it also writes the OG card's frames into
+// public/og, which the bundle copies.
+encodeHero();
 const serveUrl = await bundle({ entryPoint: path.join(here, 'src', 'index.tsx'), publicDir: path.join(here, 'public') });
 const pick = (id) => selectComposition({ serveUrl, id, browserExecutable });
 const still = async (id, output, extra = {}) =>
   renderStill({ composition: await pick(id), serveUrl, browserExecutable, imageFormat: 'jpeg', jpegQuality: 84, output, ...extra });
 
-// Hero clip: the owner's aerial footage, trimmed, retimed and graded by ffmpeg
-encodeHero();
 console.log('hero done');
 
 // Photos: an owner-supplied shot in public/photos-source/<name>.* wins;

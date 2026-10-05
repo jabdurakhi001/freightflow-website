@@ -55,7 +55,7 @@ Rendering needs a system `ffmpeg` with libx264, libvpx-vp9, the `removelogo` fil
   - Desktop shows the full frame as a feathered window on the right, so the sign never covers the truck; phones and tablets show it as a band above the sign.
   - Reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
 - **Photos** (`fleet`, `drivers`, `final`): an owner-supplied shot in `video/public/photos-source/<name>.*` is cropped and encoded as is (the Fleet photo uses one); otherwise the graded Remotion still (`PhotoFleet`, `PhotoDrivers`, `PhotoFinal`) from the truck footage frames in `video/public/footage/` is used. `prepare-footage.mjs` first inpaints a road smear in those frames (output in `video/public/footage-smooth/`, gitignored, rebuilt on demand).
-- **`OgCard`**: the 1200×630 Open Graph / Twitter image.
+- **`OgCard`**: the 1200×630 Open Graph / Twitter image, a guide sign beside the hero truck (frames written to `video/public/og/` by `encode-hero.mjs`).
 - **`generate-trucks.mjs`**: optional. Generates new truck stills and a hero clip with the Gemini API into `video/public/generated/` for review (needs `GEMINI_API_KEY` with billing enabled).
 
 Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
