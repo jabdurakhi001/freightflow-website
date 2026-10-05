@@ -1,25 +1,24 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
-import { Pause, Play } from 'lucide-react';
 import { useQuoteModal } from '../../QuoteContext';
 import { COMPANY } from '../../content';
 import { EASE_BRAND, rise, SIGN_SPRING, stagger } from '../../lib/motion';
 import { ExitTab, RouteShield, SignArrow } from '../ui/Signs';
 
 /*
- * Background: an 8s seamless highway-drive loop rendered with Remotion
- * (source in video/). Landscape and portrait cuts; reduced-motion and
- * Data Saver visitors get the still poster instead.
+ * Background: a 5 s photo-real clip of a FreightFlow Cascadia, rendered with
+ * Remotion from the company's own footage (source in video/). It plays once
+ * and rests on its last frame — no loop, so no pause control is needed
+ * (WCAG 2.2.2). Reduced-motion and Data Saver visitors get that last frame as
+ * a still. On phones and tablets it's a band above the sign instead of a cover crop,
+ * keeping the truck in view.
  */
-const DRIVE = {
-  landscape: { webm: '/hero/drive-landscape.webm', mp4: '/hero/drive-landscape.mp4', poster: '/hero/drive-landscape.jpg' },
-  portrait: { webm: '/hero/drive-portrait.webm', mp4: '/hero/drive-portrait.mp4', poster: '/hero/drive-portrait.jpg' },
+const REVEAL = {
+  mp4: '/hero/truck-reveal.mp4',
+  webm: '/hero/truck-reveal.webm',
+  poster: '/hero/truck-reveal-first.jpg',
+  still: '/hero/truck-reveal-last.jpg',
 };
-
-function pickCut() {
-  if (typeof window === 'undefined') return DRIVE.landscape;
-  return window.matchMedia('(max-aspect-ratio: 4/5)').matches ? DRIVE.portrait : DRIVE.landscape;
-}
 
 function allowsVideo() {
   if (typeof window === 'undefined') return false;
@@ -32,9 +31,7 @@ export default function Hero() {
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [cut] = useState(pickCut);
   const [useVideo, setUseVideo] = useState(allowsVideo);
-  const [playing, setPlaying] = useState(true);
 
   // Scroll-out: the sign lifts away a little faster than the page.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
@@ -48,46 +45,46 @@ export default function Hero() {
     el.play().catch(() => setUseVideo(false));
   }, [useVideo]);
 
-  const togglePlayback = () => {
-    const el = videoRef.current;
-    if (!el) return;
-    if (el.paused) {
-      void el.play();
-      setPlaying(true);
-    } else {
-      el.pause();
-      setPlaying(false);
-    }
-  };
-
   return (
-    <section ref={sectionRef} id="top" className="relative isolate flex min-h-[100svh] items-end overflow-hidden bg-asphalt text-white lg:items-center">
-      <motion.div className="absolute inset-0 -z-10" style={{ scale: reduceMotion ? 1 : bgScale }}>
+    <section
+      ref={sectionRef}
+      id="top"
+      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-asphalt text-white lg:flex-row lg:items-center"
+    >
+      <motion.div
+        className="relative aspect-[4/3] w-full shrink-0 sm:aspect-video lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto"
+        style={{ scale: reduceMotion ? 1 : bgScale }}
+      >
         {useVideo ? (
           <video
             ref={videoRef}
-            className="h-full w-full object-cover"
-            poster={cut.poster}
+            className="h-full w-full object-cover object-[72%_50%] sm:object-center lg:object-[72%_50%]"
+            poster={REVEAL.poster}
             autoPlay
             muted
-            loop
             playsInline
             preload="auto"
             aria-hidden="true"
           >
             {/* MP4 first: it's the smaller encode and plays everywhere. A failed <source>
                 doesn't fire the video's onError, so watch the last one. */}
-            <source src={cut.mp4} type="video/mp4" />
-            <source src={cut.webm} type="video/webm" onError={() => setUseVideo(false)} />
+            <source src={REVEAL.mp4} type="video/mp4" />
+            <source src={REVEAL.webm} type="video/webm" onError={() => setUseVideo(false)} />
           </video>
         ) : (
-          <img src={cut.poster} alt="" aria-hidden="true" className="h-full w-full object-cover" fetchPriority="high" />
+          <img
+            src={REVEAL.still}
+            alt=""
+            aria-hidden="true"
+            className="h-full w-full object-cover object-[72%_50%] sm:object-center lg:object-[72%_50%]"
+            fetchPriority="high"
+          />
         )}
-        {/* Legibility: shade the side the sign sits on */}
-        <div className="absolute inset-0 bg-gradient-to-t from-sign-ink via-sign-ink/40 to-transparent lg:bg-gradient-to-r lg:from-sign-ink/90 lg:via-sign-ink/35 lg:to-transparent" />
+        {/* Phones: fade the band into the asphalt below. Desktop: shade the side the sign sits on. */}
+        <div className="absolute inset-0 bg-gradient-to-t from-asphalt via-transparent via-30% to-black/30 lg:bg-gradient-to-r lg:from-sign-ink/90 lg:via-sign-ink/35 lg:via-45% lg:to-transparent" />
       </motion.div>
 
-      <div className="mx-auto w-full max-w-7xl px-5 pb-10 pt-28 sm:px-8 sm:pb-14 lg:pb-0 lg:pt-24 short:pt-20">
+      <div className="relative mx-auto -mt-3 w-full max-w-7xl px-5 pb-10 sm:-mt-14 sm:px-8 sm:pb-14 lg:mt-0 lg:pb-0 lg:pt-24 short:lg:pt-20">
         <motion.div style={{ y: reduceMotion ? 0 : signY }} className="max-w-[44rem]">
           {/* The sign drops onto its mount and swings to rest */}
           <motion.div
@@ -117,7 +114,7 @@ export default function Hero() {
                 Cascadias, GPS on every load, and proof of delivery the moment it lands.
               </motion.p>
 
-              {/* Hub rows: tablet and up — on phones the video's gantry signs carry them, and the card stays short enough to leave the road visible. */}
+              {/* Hub rows: tablet and up, so the phone card stays compact. */}
               <motion.div variants={rise} className="mt-7 hidden border-t-[3px] border-white pt-5 sm:block short:!hidden">
                 <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
                   {COMPANY.hubs.map((hub, i) => (
@@ -151,16 +148,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {useVideo && (
-        <button
-          type="button"
-          onClick={togglePlayback}
-          className="absolute bottom-5 right-5 grid h-11 w-11 place-items-center rounded-lg bg-black/45 text-white backdrop-blur-sm transition-colors hover:bg-black/65 max-lg:top-24 max-lg:bottom-auto"
-          aria-label={playing ? 'Pause background video' : 'Play background video'}
-        >
-          {playing ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-        </button>
-      )}
     </section>
   );
 }

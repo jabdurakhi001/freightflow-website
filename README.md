@@ -39,16 +39,19 @@ See [.env.example](.env.example). At minimum:
 
 ## Motion assets (Remotion)
 
-The hero's highway-drive loop and the social share image are rendered with [Remotion](https://www.remotion.dev) from the source in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
+The hero clip, the section photos and the social share image are rendered with [Remotion](https://www.remotion.dev) from FreightFlow's own truck footage in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
 
 ```bash
 cd video
 npm install
 npm run studio   # preview and tweak the compositions
-npm run render   # writes public/hero/drive-{landscape,portrait}.{mp4,webm,jpg} and public/og-image.jpg
+npm run render   # writes public/hero/truck-reveal*, public/photos/*.jpg and public/og-image.jpg
 ```
 
-- `HighwayDrive`: an 8 s seamless loop (landscape 1600×900 and portrait 900×1600 cuts) of a dusk interstate with FreightFlow gantry signs. Tall screens get the portrait cut. Reduced-motion and Data Saver visitors get the still poster, and a pause button sits on the hero (see `src/components/sections/Hero.tsx`).
+Rendering needs a system `ffmpeg` with the `removelogo` and `minterpolate` filters and WebP decoding (any distro build has them). `prepare-footage.mjs` runs first: it inpaints a smear in the source frames (`video/public/footage/`) and builds motion-interpolated slow motion into `video/public/footage-smooth/` (gitignored, rebuilt on demand).
+
+- `TruckReveal`: a 5 s camera pull-back from a FreightFlow Cascadia on the interstate. It plays once and rests on its last frame, so it needs no pause control. Phones see it as a 16:9 band above the sign; reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
+- `PhotoFleet`, `PhotoDrivers`, `PhotoFinal`: graded stills from the same footage for the Fleet, Drivers and closing sections.
 - `OgCard`: the 1200×630 Open Graph / Twitter image.
 
 Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).

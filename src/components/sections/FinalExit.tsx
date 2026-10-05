@@ -8,7 +8,19 @@ import { SignArrow } from '../ui/Signs';
 export default function FinalExit() {
   const { openQuote } = useQuoteModal();
   return (
-    <section aria-labelledby="final-exit-title" className="bg-surface pb-0 pt-24 sm:pt-28">
+    <section aria-labelledby="final-exit-title" className="relative isolate overflow-hidden bg-surface pb-0 pt-24 sm:pt-28">
+      {/* Roadside backdrop: the photo fades into the ground the posts stand on */}
+      <img
+        src="/photos/final.jpg"
+        alt=""
+        aria-hidden="true"
+        width={1600}
+        height={900}
+        loading="lazy"
+        decoding="async"
+        className="absolute inset-x-0 top-0 -z-10 h-[78%] w-full object-cover object-[55%_35%]"
+      />
+      <div aria-hidden="true" className="absolute inset-x-0 top-0 -z-10 h-[78%] bg-[linear-gradient(180deg,var(--color-surface)_0%,color-mix(in_oklab,var(--color-surface)_20%,transparent)_22%,color-mix(in_oklab,var(--color-surface)_10%,transparent)_55%,var(--color-surface)_100%)]" />
       <div className="mx-auto max-w-6xl px-5 sm:px-8">
         <motion.div
           className="relative pt-[30px]"
@@ -18,7 +30,7 @@ export default function FinalExit() {
           viewport={{ once: true, amount: 0.35 }}
           transition={SIGN_SPRING}
         >
-          <span className="legend absolute left-8 top-0 rounded-t-lg bg-sign px-4 pb-1.5 pt-2 text-sm text-white shadow-[inset_0_0_0_2px_#fff]">
+          <span className="sheen legend absolute left-8 top-0 rounded-t-lg bg-sign px-4 pb-1.5 pt-2 text-sm text-white shadow-[inset_0_0_0_2px_#fff,0_0_0_1px_rgba(120,128,123,0.8)]">
             Next exit
           </span>
           <motion.div
@@ -59,8 +71,8 @@ export default function FinalExit() {
         </motion.div>
         {/* Sign posts */}
         <div aria-hidden="true" className="mx-auto flex h-24 w-[70%] justify-between sm:h-32">
-          <span className="w-3 bg-gradient-to-r from-[#7b827d] via-[#c9cec9] to-[#6b726d] sm:w-4" />
-          <span className="w-3 bg-gradient-to-r from-[#7b827d] via-[#c9cec9] to-[#6b726d] sm:w-4" />
+          <span className="post w-3 sm:w-4" />
+          <span className="post w-3 sm:w-4" />
         </div>
       </div>
     </section>

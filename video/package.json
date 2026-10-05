@@ -4,7 +4,7 @@
   "type": "module",
   "description": "Remotion source for the FreightFlow hero reveal clip. Not part of the website build.",
   "scripts": {
-    "studio": "remotion studio",
+    "studio": "node prepare-footage.mjs && remotion studio",
     "render": "node render.mjs"
   },
   "dependencies": {

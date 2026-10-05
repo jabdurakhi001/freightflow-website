@@ -1,4 +1,4 @@
-import type { ReactNode, SVGProps } from 'react';
+import { useId, type ReactNode, type SVGProps } from 'react';
 
 /*
  * Signage primitives. Shapes are original (not the AASHTO Interstate
@@ -35,11 +35,20 @@ export function ShieldMark({ className, label = 'FF' }: { className?: string; la
 
 /** Route shield carrying a number or short word, e.g. 48. */
 export function RouteShield({ children, className }: { children: ReactNode; className?: string }) {
+  const sheen = `shield-sheen-${useId()}`;
   return (
     <span className={`relative inline-grid place-items-center ${className ?? ''}`}>
       <svg viewBox="0 0 100 112" className="absolute inset-0 h-full w-full" aria-hidden="true">
-        <path d="M6 16 Q50 0 94 16 L94 54 Q94 92 50 110 Q6 92 6 54 Z" fill="#fff" />
+        <defs>
+          <linearGradient id={sheen} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor="#fff" stopOpacity="0.22" />
+            <stop offset="0.4" stopColor="#fff" stopOpacity="0" />
+            <stop offset="1" stopColor="#000" stopOpacity="0.14" />
+          </linearGradient>
+        </defs>
+        <path d="M6 16 Q50 0 94 16 L94 54 Q94 92 50 110 Q6 92 6 54 Z" fill="#fff" stroke="#8a928c" strokeWidth="1.5" />
         <path d="M12 20 Q50 7 88 20 L88 54 Q88 87 50 103 Q12 87 12 54 Z" fill="var(--color-sign-deep)" />
+        <path d="M6 16 Q50 0 94 16 L94 54 Q94 92 50 110 Q6 92 6 54 Z" fill={`url(#${sheen})`} />
       </svg>
       <span className="relative -mt-1 font-black tracking-tight text-white">{children}</span>
     </span>
@@ -64,18 +73,22 @@ export function SignArrow({ dir = 'up', className, ...rest }: { dir?: ArrowDir }
 export function ExitTab({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <span
-      className={`legend inline-flex items-center rounded-t-lg bg-sign px-3 pb-1 pt-1.5 text-[0.7rem] text-white shadow-[inset_0_0_0_2px_#fff] ${className ?? ''}`}
+      className={`sheen legend inline-flex items-center rounded-t-lg bg-sign px-3 pb-1 pt-1.5 text-[0.7rem] text-white shadow-[inset_0_0_0_2px_#fff,0_0_0_1px_rgba(120,128,123,0.8)] ${className ?? ''}`}
     >
       {children}
     </span>
   );
 }
 
-/** Yellow warning diamond (truck-crossing style). */
+/** Yellow warning diamond (truck-crossing style), bolted top and bottom. */
 export function WarningDiamond({ children, className }: { children: ReactNode; className?: string }) {
   return (
     <span className={`relative inline-grid place-items-center ${className ?? ''}`}>
-      <span className="absolute inset-[14.6%] rotate-45 rounded-[10%] bg-caution shadow-[inset_0_0_0_4px_var(--color-caution),inset_0_0_0_7px_#0f1512,0_20px_40px_-20px_rgba(0,0,0,0.5)]" />
+      <span className="sheen absolute inset-[14.6%] rotate-45 rounded-[10%] bg-caution shadow-[inset_0_0_0_4px_var(--color-caution),inset_0_0_0_7px_#0f1512,0_0_0_1px_rgba(255,255,255,0.3),0_0_0_2px_rgba(120,128,123,0.75),0_20px_40px_-20px_rgba(0,0,0,0.5)]">
+        {/* Bolts sit on the square's top-left and bottom-right corners: top and bottom once rotated */}
+        <span className="bolt absolute left-[9%] top-[9%]" />
+        <span className="bolt absolute bottom-[9%] right-[9%]" />
+      </span>
       <span className="relative text-[#0f1512]">{children}</span>
     </span>
   );

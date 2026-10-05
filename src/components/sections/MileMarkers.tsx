@@ -34,7 +34,7 @@ export default function MileMarkers() {
                 <span className="mt-1 text-[2.6rem] font-black leading-none tracking-[-0.04em] tabular-nums sm:text-5xl">{m.value}</span>
               </div>
               {/* post */}
-              <span aria-hidden="true" className="h-6 w-2 rounded-b-sm bg-gradient-to-r from-[#8d948f] via-[#c9cec9] to-[#7b827d]" />
+              <span aria-hidden="true" className="post h-6 w-2 rounded-b-sm" />
               <p className="mt-3 max-w-[11rem] text-sm font-semibold leading-snug text-on-surface-variant">{m.caption}</p>
             </motion.li>
           ))}

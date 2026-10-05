@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { SIGN_SPRING, stagger } from '../../lib/motion';
+import { EASE_OUT_EXPO, SIGN_SPRING, stagger } from '../../lib/motion';
 import SectionTitle from '../ui/SectionTitle';
 import { WarningDiamond } from '../ui/Signs';
 
@@ -33,26 +33,44 @@ export default function Fleet() {
   return (
     <section id="fleet" className="overflow-hidden bg-surface py-24 sm:py-28">
       <div className="mx-auto grid max-w-7xl items-center gap-16 px-5 sm:px-8 lg:grid-cols-[0.9fr_1.1fr] lg:gap-24">
-        <motion.div
-          className="mx-auto w-full max-w-[26rem]"
-          initial={{ opacity: 0, rotate: -12, scale: 0.85 }}
-          whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={SIGN_SPRING}
+        {/* One of the trucks, with the truck-crossing diamond bolted on as a marker */}
+        <motion.figure
+          className="relative mx-auto w-full max-w-[38rem] pb-10 pl-6 sm:pl-10"
+          initial={{ opacity: 0, y: 28 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.3 }}
+          transition={{ duration: 0.8, ease: EASE_OUT_EXPO }}
         >
-          <WarningDiamond className="aspect-square w-full">
-            <motion.span
-              className="block"
-              // The rig rolls into the sign once it has landed
-              initial={{ x: -30, opacity: 0 }}
-              whileInView={{ x: 0, opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <TruckPictogram className="w-[11rem] sm:w-[13rem]" />
-            </motion.span>
-          </WarningDiamond>
-        </motion.div>
+          <div className="overflow-hidden rounded-2xl bg-asphalt shadow-[0_0_0_1px_var(--color-outline-variant),0_40px_80px_-40px_rgba(6,42,28,0.55)]">
+            <motion.img
+              src="/photos/fleet.jpg"
+              alt="A white FreightFlow Freightliner Cascadia pulling a 53-foot dry van down the interstate"
+              width={1200}
+              height={900}
+              loading="lazy"
+              decoding="async"
+              className="aspect-[4/3] w-full object-cover"
+              initial={{ scale: 1.08 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true, amount: 0.3 }}
+              transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
+            />
+          </div>
+          <figcaption className="legend absolute right-4 top-4 rounded-md bg-black/55 px-2.5 py-1.5 text-white backdrop-blur-sm">
+            Cascadia · 53′ dry van
+          </figcaption>
+          <motion.div
+            className="absolute bottom-0 left-0 w-28 sm:w-36"
+            initial={{ opacity: 0, rotate: -14, scale: 0.7 }}
+            whileInView={{ opacity: 1, rotate: 0, scale: 1 }}
+            viewport={{ once: true, amount: 0.6 }}
+            transition={{ ...SIGN_SPRING, delay: 0.35 }}
+          >
+            <WarningDiamond className="aspect-square w-full drop-shadow-[0_18px_24px_rgba(0,0,0,0.35)]">
+              <TruckPictogram className="w-[3.6rem] sm:w-[4.6rem]" />
+            </WarningDiamond>
+          </motion.div>
+        </motion.figure>
 
         <div>
           <SectionTitle

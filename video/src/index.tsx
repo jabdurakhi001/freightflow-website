@@ -1,31 +1,23 @@
 import { Composition, Still, registerRoot } from 'remotion';
-import { DRIVE_FPS, DRIVE_FRAMES, HighwayDrive, type DriveProps } from './HighwayDrive';
+import { FootageStill, REVEAL_FPS, REVEAL_FRAMES, TruckReveal } from './TruckReveal';
 import { OgCard } from './OgCard';
 
 function Root() {
   return (
     <>
-      {/* Landscape: road right of centre, leaving the left side for the hero sign. */}
       <Composition
-        id="DriveLandscape"
-        component={HighwayDrive}
-        durationInFrames={DRIVE_FRAMES}
-        fps={DRIVE_FPS}
-        width={1600}
-        height={900}
-        defaultProps={{ vpX: 0.75, horizon: 0.47, focal: 0.95 } satisfies DriveProps}
-      />
-      {/* Portrait (phones): road centred, horizon high so the sign card can sit below. */}
-      <Composition
-        id="DrivePortrait"
-        component={HighwayDrive}
-        durationInFrames={DRIVE_FRAMES}
-        fps={DRIVE_FPS}
-        width={900}
-        height={1600}
-        defaultProps={{ vpX: 0.56, horizon: 0.36, focal: 0.95 } satisfies DriveProps}
+        id="TruckReveal"
+        component={TruckReveal}
+        durationInFrames={REVEAL_FRAMES}
+        fps={REVEAL_FPS}
+        width={1280}
+        height={720}
       />
       <Still id="OgCard" component={OgCard} width={1200} height={630} />
+      {/* Photo slots on the site, cut from the same (cleaned) footage. */}
+      <Still id="PhotoFleet" component={FootageStill} width={1200} height={900} defaultProps={{ frame: 38, focus: '40% 50%', zoom: 1.04 }} />
+      <Still id="PhotoDrivers" component={FootageStill} width={1600} height={900} defaultProps={{ frame: 48, focus: '40% 60%', zoom: 1.04 }} />
+      <Still id="PhotoFinal" component={FootageStill} width={1600} height={900} defaultProps={{ frame: 56, focus: '40% 60%', zoom: 1.04 }} />
     </>
   );
 }

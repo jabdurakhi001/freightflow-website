@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useId, useRef } from 'react';
 import { motion, useScroll, useSpring, useTransform, type MotionValue } from 'motion/react';
 import SectionTitle from '../ui/SectionTitle';
 
@@ -12,17 +12,69 @@ const STEPS = [
 // Marker positions along the road (fraction of its length).
 const POS = STEPS.map((_, i) => (i + 0.5) / STEPS.length);
 
-/** Top-down tractor-trailer, nose pointing right. */
+/**
+ * Top-down tractor-trailer, nose pointing right: a white Cascadia and 53′ van
+ * as seen from an overpass — shaded roofs, roof bows, tyres, mirrors and a
+ * tinted windshield.
+ */
 function Rig({ className }: { className?: string }) {
+  const id = useId();
+  const roof = `rig-roof-${id}`;
+  const cab = `rig-cab-${id}`;
   return (
     <svg viewBox="0 0 120 40" className={className} aria-hidden="true">
-      <rect x="2" y="6" width="80" height="28" rx="3" fill="#f1efe9" />
-      <rect x="2" y="6" width="80" height="28" rx="3" fill="none" stroke="#0f1512" strokeWidth="2" />
-      <text x="42" y="25" textAnchor="middle" fontFamily="Overpass, sans-serif" fontWeight="900" fontSize="12" fill="#00653e">
-        FREIGHTFLOW
-      </text>
-      <rect x="86" y="8" width="30" height="24" rx="5" fill="var(--color-cone)" stroke="#0f1512" strokeWidth="2" />
-      <rect x="104" y="11" width="9" height="18" rx="2" fill="#0f1512" opacity="0.75" />
+      <defs>
+        {/* Curved roofs catch light along the middle and fall off to the edges */}
+        <linearGradient id={roof} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#b9beba" />
+          <stop offset="0.18" stopColor="#eceeea" />
+          <stop offset="0.5" stopColor="#fbfbf8" />
+          <stop offset="0.82" stopColor="#e3e6e2" />
+          <stop offset="1" stopColor="#a9aea9" />
+        </linearGradient>
+        <linearGradient id={cab} x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0" stopColor="#dfe2de" />
+          <stop offset="0.55" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#cfd3cf" />
+        </linearGradient>
+      </defs>
+      {/* Tyres peeking out under the bodywork: trailer tandem, drive tandem, steer */}
+      <g fill="#111513">
+        {[8, 16, 87, 94, 109].map((x) => (
+          <g key={x}>
+            <rect x={x} y="3.2" width="5.5" height="3" rx="1" />
+            <rect x={x} y="33.8" width="5.5" height="3" rx="1" />
+          </g>
+        ))}
+      </g>
+      {/* 53′ van: roof, bows, rear door seam */}
+      <rect x="2" y="5" width="79" height="30" rx="1.6" fill={`url(#${roof})`} />
+      <g stroke="#9ca29e" strokeWidth="0.45" opacity="0.7">
+        {Array.from({ length: 12 }, (_, i) => (
+          <line key={i} x1={8 + i * 6} y1="5.6" x2={8 + i * 6} y2="34.4" />
+        ))}
+      </g>
+      <rect x="2" y="5" width="2.2" height="30" fill="#8d938f" />
+      <rect x="2" y="5" width="79" height="30" rx="1.6" fill="none" stroke="#5f6662" strokeWidth="0.8" />
+      {/* Fifth wheel gap */}
+      <rect x="81" y="11" width="4" height="18" fill="#1b201d" />
+      {/* Sleeper + cab roof with aero fairing */}
+      <path d="M85 8.5 Q85 7 87 7 H104 Q106 7 106.5 9 V31 Q106 33 104 33 H87 Q85 33 85 31.5 Z" fill={`url(#${roof})`} />
+      <path d="M88 10 H103 V30 H88 Z" fill="none" stroke="#b3b8b4" strokeWidth="0.5" />
+      {/* Windshield */}
+      <path d="M106.5 9 L110 10.5 V29.5 L106.5 31 Z" fill="#1c2a30" />
+      <path d="M107 10.5 L109 11.3 V15 L107 14.4 Z" fill="#8fb3c4" opacity="0.5" />
+      {/* Hood, tapering to the bumper */}
+      <path d="M110 10.5 Q116 11 117.6 14 Q118.4 20 117.6 26 Q116 29 110 29.5 Z" fill={`url(#${cab})`} stroke="#5f6662" strokeWidth="0.5" />
+      <rect x="117.4" y="13" width="1.4" height="14" rx="0.6" fill="#9aa09c" />
+      {/* Mirrors on their arms */}
+      <g fill="#262c29">
+        <rect x="107" y="4.6" width="1.4" height="4.6" />
+        <rect x="107" y="30.8" width="1.4" height="4.6" />
+        <rect x="106.2" y="3.4" width="3" height="1.6" rx="0.5" />
+        <rect x="106.2" y="35" width="3" height="1.6" rx="0.5" />
+      </g>
+      <rect x="85" y="7" width="33.8" height="26" rx="2" fill="none" stroke="#5f6662" strokeWidth="0.5" opacity="0.6" />
     </svg>
   );
 }
