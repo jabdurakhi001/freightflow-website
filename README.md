@@ -1,6 +1,6 @@
 # FreightFlow Website
 
-Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, featuring a scroll-driven hero, live-style dispatch visuals, and quote/application capture.
+Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, built on an Interstate-signage design system (Overpass type, guide-sign green, work-zone orange), with a Remotion-rendered hero, quote capture and live chat.
 
 ## Tech stack
 
@@ -37,18 +37,28 @@ See [.env.example](.env.example). At minimum:
 | `npm run preview` | Preview the production build         |
 | `npm run lint`    | Type-check with `tsc --noEmit`       |
 
-## Hero video (Remotion)
+## Motion assets (Remotion)
 
-The 5-second sketch-to-photo clip behind the hero is rendered with [Remotion](https://www.remotion.dev) from the source in [`video/`](video/). It's a separate package, so the site build doesn't depend on it. The rendered files are committed in `public/hero/`.
+The hero clip, the section photos and the social share image are built from the scripts in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
 
 ```bash
 cd video
 npm install
-npm run studio   # preview and tweak the composition
-npm run render   # writes public/hero/hero-reveal.{webm,mp4} and the poster
+npm run studio   # preview and tweak the Remotion stills
+npm run render   # writes public/hero/truck-reveal*, public/photos/*.jpg and public/og-image.jpg
 ```
 
-The clip is built from the frames in `public/hero-frames/w1280`. Wide screens play it once; phones, reduced-motion users and Data Saver users get the static `frame-050.jpg` instead (see `src/components/Hero.tsx`). Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
+Rendering needs a system `ffmpeg` with libx264, libvpx-vp9, the `removelogo` filter and WebP decoding (any distro build has them).
+
+- **Hero clip** (`encode-hero.mjs`): `video/public/footage/hero-source.mp4` is an 8 s aerial shot of a Cascadia at sunrise. It's cut to the first 6.25 s at 1.25× speed (5 s), lightly graded, and encoded to MP4 and WebM, plus first-frame, last-frame and blurred-backdrop stills.
+  - It plays once and rests on its last frame, so it needs no pause control.
+  - Desktop shows the full frame as a feathered window on the right, so the sign never covers the truck; phones and tablets show it as a band above the sign.
+  - Reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
+- **Photos** (`fleet`, `drivers`, `final`): an owner-supplied shot in `video/public/photos-source/<name>.*` is cropped and encoded as is (the Fleet photo uses one); otherwise the graded Remotion still (`PhotoFleet`, `PhotoDrivers`, `PhotoFinal`) from the truck footage frames in `video/public/footage/` is used. `prepare-footage.mjs` first inpaints a road smear in those frames (output in `video/public/footage-smooth/`, gitignored, rebuilt on demand).
+- **`OgCard`**: the 1200×630 Open Graph / Twitter image, a guide sign beside the hero truck (frames written to `video/public/og/` by `encode-hero.mjs`).
+- **`generate-trucks.mjs`**: optional. Generates new truck stills and a hero clip with the Gemini API into `video/public/generated/` for review (needs `GEMINI_API_KEY` with billing enabled).
+
+Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
 
 ## Deployment
 

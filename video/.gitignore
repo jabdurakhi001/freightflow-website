@@ -1,2 +1,5 @@
 node_modules/
 out/
+public/footage-smooth/
+public/generated/
+public/og/

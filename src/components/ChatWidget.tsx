@@ -252,7 +252,7 @@ export default function ChatWidget() {
       <motion.button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 bg-secondary text-white rounded-full shadow-2xl flex items-center justify-center hover:brightness-110 transition-[filter]"
+        className="fixed bottom-5 right-5 z-50 w-14 h-14 bg-sign text-white rounded-2xl shadow-[inset_0_0_0_3px_var(--color-sign),inset_0_0_0_5px_#fff,0_14px_30px_-10px_rgba(6,42,28,0.7)] flex items-center justify-center hover:brightness-110 transition-[filter]"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 1 }}
@@ -270,14 +270,12 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-6 z-50 w-[380px] max-h-[600px] flex flex-col rounded-xl shadow-2xl border border-outline-variant/30 overflow-hidden max-sm:inset-4 max-sm:bottom-20 max-sm:w-auto max-sm:max-h-none"
+            className="fixed bottom-24 right-5 z-50 w-[380px] max-h-[600px] flex flex-col rounded-2xl shadow-2xl border border-outline-variant overflow-hidden max-sm:inset-3 max-sm:bottom-24 max-sm:w-auto max-sm:max-h-none"
           >
             {/* Header */}
-            <div className="bg-primary px-5 py-4 flex items-center justify-between shrink-0">
+            <div className="bg-sign px-5 py-4 flex items-center justify-between shrink-0 shadow-[inset_0_-3px_0_#fff]">
               <div>
-                <div className="text-sm font-black text-white tracking-tighter">
-                  <span>Freight</span><span className="text-secondary">Flow</span>
-                </div>
+                <div className="text-base font-black text-white tracking-tight">FreightFlow dispatch</div>
                 <p className="text-[10px] uppercase tracking-widest font-bold flex items-center gap-1.5">
                   {isLive ? (
                     <>
@@ -342,7 +340,7 @@ export default function ChatWidget() {
                     <div
                       className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed ${
                         isUser
-                          ? 'bg-secondary text-white rounded-2xl rounded-br-sm'
+                          ? 'bg-sign text-white rounded-2xl rounded-br-sm'
                           : isAdmin
                             ? 'bg-emerald-500/10 border border-emerald-500/30 text-on-surface rounded-2xl rounded-bl-sm'
                             : 'bg-surface-container dark:bg-surface-container-high text-on-surface rounded-2xl rounded-bl-sm'
@@ -423,7 +421,7 @@ export default function ChatWidget() {
                       type="button"
                       onClick={connectLive}
                       disabled={connecting || !canConnect}
-                      className="flex-1 bg-secondary text-white rounded-lg px-4 py-2 text-xs font-bold uppercase tracking-widest hover:brightness-110 transition-all disabled:opacity-40"
+                      className="flex-1 bg-cone text-[#0f1512] rounded-lg px-4 py-2 text-sm font-extrabold hover:brightness-105 transition-all disabled:opacity-40"
                     >
                       {connecting ? 'Connecting…' : 'Connect me'}
                     </button>
@@ -470,7 +468,7 @@ export default function ChatWidget() {
                   type="button"
                   onClick={sendMessage}
                   disabled={isLoading || connecting || !input.trim()}
-                  className="bg-secondary text-white rounded-lg px-4 py-3 hover:brightness-110 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="bg-cone text-[#0f1512] rounded-lg px-4 py-3 hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   aria-label="Send message"
                 >
                   <Send className="w-4 h-4" />

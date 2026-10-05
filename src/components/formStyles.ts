@@ -1,5 +1,5 @@
 /** Shared field styling for the dark modal forms (quote request, driver application). */
 export const inputClass =
-  'w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/50 outline-none focus:border-secondary/60 focus:ring-1 focus:ring-secondary/60 transition-colors';
+  'w-full bg-sign-ink/45 border border-white/30 rounded-lg px-4 py-3 text-[0.95rem] text-white placeholder:text-white/55 outline-none focus:border-cone focus:ring-2 focus:ring-cone/70 transition-colors';
 
-export const labelClass = 'block text-[10px] font-black uppercase tracking-widest text-white/50 mb-1.5';
+export const labelClass = 'legend block text-[0.68rem] text-white/85 mb-1.5';

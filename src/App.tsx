@@ -1,37 +1,35 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { MotionConfig } from 'motion/react';
-import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import TrustStrip from './components/TrustStrip';
-import ComplianceSection from './components/ComplianceSection';
-import SolutionsSection from './components/SolutionsSection';
-import AISystemsSection from './components/AISystemsSection';
-import HowItWorks from './components/HowItWorks';
-import Comparison from './components/Comparison';
-import FleetSection from './components/FleetSection';
-import RecruitmentSection from './components/RecruitmentSection';
-import CTASection from './components/CTASection';
-import Footer from './components/Footer';
-import ChatWidget from './components/ChatWidget';
-import ScrollProgress from './components/ScrollProgress';
-import BackToTop from './components/BackToTop';
-import LanesMarquee from './components/LanesMarquee';
-import FAQSection from './components/FAQSection';
-import QuoteModal from './components/QuoteModal';
 import { QuoteModalProvider } from './QuoteContext';
+import Header from './components/sections/Header';
+import Hero from './components/sections/Hero';
+import MileMarkers from './components/sections/MileMarkers';
+import Services from './components/sections/Services';
+import LoadRoute from './components/sections/LoadRoute';
+import Compliance from './components/sections/Compliance';
+import SystemsBoard from './components/sections/SystemsBoard';
+import Fleet from './components/sections/Fleet';
+import Drivers from './components/sections/Drivers';
+import FAQ from './components/sections/FAQ';
+import FinalExit from './components/sections/FinalExit';
+import Footer from './components/sections/Footer';
+import ChatWidget from './components/ChatWidget';
+import QuoteModal from './components/QuoteModal';
 
 export default function App() {
-  // The inline script in index.html applies the 'dark' class before first paint;
-  // React just picks up whatever is already on <html>.
+  // index.html applies the 'dark' class before first paint; React picks it up from <html>.
   const [isDark, setIsDark] = useState(() => document.documentElement.classList.contains('dark'));
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Follow live system-theme changes while no explicit choice is stored.
   useEffect(() => {
     const mq = window.matchMedia('(prefers-color-scheme: dark)');
     const onChange = () => {
-      if (localStorage.getItem('theme')) return;
+      try {
+        if (localStorage.getItem('theme')) return;
+      } catch {
+        /* storage unavailable */
+      }
       document.documentElement.classList.toggle('dark', mq.matches);
       setIsDark(mq.matches);
     };
@@ -49,8 +47,8 @@ export default function App() {
     setIsDark(dark);
   };
 
-  // Theme switch: where supported, wipe the new theme in as a circle growing
-  // from the toggle button; otherwise (or with reduced motion) swap instantly.
+  // Theme switch: a circular wipe from the toggle where View Transitions are
+  // supported; an instant swap otherwise or under reduced motion.
   const toggleTheme = (origin?: { x: number; y: number }) => {
     const next = !isDark;
     const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -72,48 +70,41 @@ export default function App() {
         );
       })
       .catch(() => {
-        /* transition skipped — theme is already applied */
+        /* transition skipped — theme already applied */
       });
   };
 
   return (
     <QuoteModalProvider>
-    <MotionConfig reducedMotion="user">
-    <div className="bg-surface text-on-surface font-body selection:bg-secondary-container selection:text-on-secondary-container min-h-screen">
-      <a href="#main-content" className="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[60] focus:bg-secondary focus:text-white focus:px-4 focus:py-2 focus:rounded-md focus:font-bold focus:text-sm">
-        Skip to main content
-      </a>
+      <MotionConfig reducedMotion="user">
+        <div className="min-h-screen bg-surface font-body text-on-surface">
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-3 focus:top-3 focus:z-[80] focus:rounded-lg focus:bg-cone focus:px-4 focus:py-2 focus:font-bold focus:text-[#0f1512]"
+          >
+            Skip to main content
+          </a>
 
-      <ScrollProgress />
+          <Header isDark={isDark} toggleTheme={toggleTheme} />
 
-      <Navbar
-        isDark={isDark}
-        toggleTheme={toggleTheme}
-        mobileMenuOpen={mobileMenuOpen}
-        setMobileMenuOpen={setMobileMenuOpen}
-      />
+          <main id="main-content">
+            <Hero />
+            <MileMarkers />
+            <Services />
+            <LoadRoute />
+            <Compliance />
+            <SystemsBoard />
+            <Fleet />
+            <Drivers />
+            <FAQ />
+            <FinalExit />
+          </main>
 
-      <main id="main-content">
-        <Hero />
-        <TrustStrip />
-        <LanesMarquee />
-        <SolutionsSection />
-        <ComplianceSection />
-        <AISystemsSection />
-        <HowItWorks />
-        <Comparison />
-        <FleetSection />
-        <RecruitmentSection />
-        <FAQSection />
-        <CTASection />
-      </main>
-
-      <Footer />
-      <ChatWidget />
-      <BackToTop />
-      <QuoteModal />
-    </div>
-    </MotionConfig>
+          <Footer />
+          <ChatWidget />
+          <QuoteModal />
+        </div>
+      </MotionConfig>
     </QuoteModalProvider>
   );
 }
