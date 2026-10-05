@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useScroll, useTransform, type Variants } from 'motion/react';
 import { ArrowRight, ShieldCheck, Truck, Activity } from 'lucide-react';
 import { useQuoteModal } from '../QuoteContext';
@@ -7,6 +7,30 @@ import { EASE_BRAND, EASE_OUT_EXPO, HOVER_LIFT, TAP_PRESS } from '../lib/motion'
 // Existing hero image, also used as the frame the
 // site already publishes as its Open Graph image.
 const HERO_POSTER = '/hero-frames/frame-050.jpg';
+
+// 5s sketch-to-photo reveal rendered with Remotion (source: video/). It plays
+// once and ends on the clean photo; no loop, so it stops within WCAG 2.2.2's
+// 5-second limit. The poster is its first frame.
+const HERO_VIDEO = {
+  webm: '/hero/hero-reveal.webm',
+  mp4: '/hero/hero-reveal.mp4',
+  poster: '/hero/hero-reveal-poster.jpg',
+};
+
+/**
+ * Play the reveal only on wider screens, without reduced motion or Data Saver.
+ * Phones keep the static photo: they'd crop most of the clip and pay ~0.7 MB for it.
+ * Decided once on mount — the app renders client-side, so this runs before first paint.
+ */
+function canPlayHeroVideo() {
+  if (typeof window === 'undefined') return false;
+  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
+  return (
+    window.matchMedia('(min-width: 768px)').matches &&
+    !window.matchMedia('(prefers-reduced-motion: reduce)').matches &&
+    !saveData
+  );
+}
 
 const HEADLINE = 'Freight that keeps your business moving.';
 
@@ -42,6 +66,18 @@ const laneDraw: Variants = {
 export default function Hero() {
   const { openQuote } = useQuoteModal();
   const sectionRef = useRef<HTMLElement>(null);
+  const [playVideo, setPlayVideo] = useState(canPlayHeroVideo);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  // Start the reveal once. React doesn't reflect `muted` as an attribute, so set
+  // the property before playing; if autoplay is refused (e.g. low-power mode),
+  // fall back to the photo rather than freezing on the sketch poster.
+  useEffect(() => {
+    const el = videoRef.current;
+    if (!playVideo || !el) return;
+    el.muted = true;
+    el.play().catch(() => setPlayVideo(false));
+  }, [playVideo]);
 
   // Scroll-out: the photo drifts slower than the page (parallax) while the copy
   // lifts and fades, so leaving the hero feels like pulling away down the road.
@@ -59,15 +95,36 @@ export default function Hero() {
       <div className="absolute inset-0 z-0">
         <motion.div style={{ y: imageY }} className="absolute inset-0 will-change-transform">
           {/* Slow settle on load — like the camera finishing its push-in */}
-          <motion.img
-            className="w-full h-full object-cover"
-            alt="Truck on an open highway"
-            src={HERO_POSTER}
-            fetchPriority="high"
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1.02 }}
-            transition={{ duration: 2.4, ease: EASE_OUT_EXPO }}
-          />
+          {playVideo ? (
+            <motion.video
+              className="w-full h-full object-cover"
+              poster={HERO_VIDEO.poster}
+              autoPlay
+              muted
+              playsInline
+              preload="auto"
+              aria-hidden="true"
+              ref={videoRef}
+              onError={() => setPlayVideo(false)}
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1.02 }}
+              transition={{ duration: 2.4, ease: EASE_OUT_EXPO }}
+            >
+              <source src={HERO_VIDEO.webm} type="video/webm" />
+              {/* A failed <source> doesn't fire the video's onError; the last one failing means none loaded. */}
+              <source src={HERO_VIDEO.mp4} type="video/mp4" onError={() => setPlayVideo(false)} />
+            </motion.video>
+          ) : (
+            <motion.img
+              className="w-full h-full object-cover"
+              alt="Truck on an open highway"
+              src={HERO_POSTER}
+              fetchPriority="high"
+              initial={{ scale: 1.1 }}
+              animate={{ scale: 1.02 }}
+              transition={{ duration: 2.4, ease: EASE_OUT_EXPO }}
+            />
+          )}
         </motion.div>
         <div className="absolute inset-0 bg-gradient-to-r from-primary via-primary/70 to-primary/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-primary/40" />

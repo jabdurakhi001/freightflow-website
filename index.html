@@ -9,7 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Inter:wght@300;400;600;700;800;900&display=swap" />
-    <link rel="preload" as="image" href="/hero-frames/frame-050.jpg" fetchpriority="high" />
+    <!-- Hero: wide screens with motion get the Remotion reveal (poster = its first frame); others the static photo. Mirrors canPlayHeroVideo() in Hero.tsx. -->
+    <link rel="preload" as="image" href="/hero/hero-reveal-poster.jpg" fetchpriority="high" media="(min-width: 768px) and (prefers-reduced-motion: no-preference)" />
+    <link rel="preload" as="image" href="/hero-frames/frame-050.jpg" fetchpriority="high" media="(max-width: 767px), (prefers-reduced-motion: reduce)" />
     <!-- Apply the saved/system theme before first paint to avoid a light flash for dark-mode users -->
     <script>
       (function () {
