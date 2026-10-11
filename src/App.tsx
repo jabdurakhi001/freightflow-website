@@ -88,7 +88,7 @@ export default function App() {
           <Header isDark={isDark} toggleTheme={toggleTheme} />
 
           <main id="main-content">
-            <Hero />
+            <Hero night={isDark} />
             <MileMarkers />
             <Services />
             <LoadRoute />

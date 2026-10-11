@@ -1,10 +1,22 @@
-import { Still, registerRoot } from 'remotion';
+import { Composition, Still, registerRoot } from 'remotion';
+import { DayIntro, DayToNight, DN_FPS, DN_FRAMES, NightIntro, NightToDay } from './DayNight';
 import { FootageStill } from './FootageStill';
 import { OgCard } from './OgCard';
 
 function Root() {
   return (
     <>
+      {/* Hero clips that follow the light/dark theme (see DayNight.tsx). */}
+      {(
+        [
+          ['DayIntro', DayIntro],
+          ['NightIntro', NightIntro],
+          ['DayToNight', DayToNight],
+          ['NightToDay', NightToDay],
+        ] as const
+      ).map(([id, component]) => (
+        <Composition key={id} id={id} component={component} durationInFrames={DN_FRAMES[id]} fps={DN_FPS} width={1280} height={720} />
+      ))}
       <Still id="OgCard" component={OgCard} width={1200} height={630} />
       {/* Photo slots on the site, cut from the same (cleaned) footage. */}
       <Still id="PhotoFleet" component={FootageStill} width={1200} height={900} defaultProps={{ frame: 38, focus: '40% 50%', zoom: 1.04 }} />

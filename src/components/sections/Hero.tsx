@@ -6,23 +6,25 @@ import { EASE_BRAND, rise, SIGN_SPRING, stagger } from '../../lib/motion';
 import { ExitTab, RouteShield, SignArrow } from '../ui/Signs';
 
 /*
- * Background: a 5 s aerial clip of a Cascadia crossing Midwest farmland at
- * sunrise (source and encode step in video/). It plays once and rests on its
- * last frame — no loop, so no pause control is needed (WCAG 2.2.2).
- * Reduced-motion and Data Saver visitors get that last frame as a still.
+ * Background: an aerial clip of a Cascadia crossing Midwest farmland that
+ * follows the site theme (Remotion source in video/src/DayNight.tsx):
+ *   - on load, the intro for the current theme plays once (day 2.4 s, night 5 s)
+ *     and rests on its last frame;
+ *   - toggling the theme plays a time-lapse — sunset into night, or sunrise into
+ *     day (3 s / 2.8 s) — that also rests on its last frame.
+ * Each clip starts on the frame the other state rests on, so swapping between
+ * the stacked <video> elements is invisible. Every clip is ≤5 s and only plays
+ * on load or on the visitor's own toggle, so no pause control is needed
+ * (WCAG 2.2.2). Reduced-motion and Data Saver visitors get the day or night
+ * rest frame as a still.
  *
  * The truck sits mid-frame, so a full-bleed crop would hide the cab behind the
  * sign. Desktop instead shows the whole 16:9 frame as a feathered window on
  * the right, over a blurred backdrop of the same scene; phones and tablets
  * show it as a band above the sign.
  */
-const REVEAL = {
-  mp4: '/hero/truck-reveal.mp4',
-  webm: '/hero/truck-reveal.webm',
-  poster: '/hero/truck-reveal-first.jpg',
-  still: '/hero/truck-reveal-last.jpg',
-  backdrop: '/hero/truck-reveal-backdrop.jpg',
-};
+type ClipId = 'day' | 'night' | 'day-to-night' | 'night-to-day';
+const HERO = (file: string) => `/hero/${file}`;
 
 // Desktop window edge: fade in from the left, soften top and bottom.
 const WINDOW_MASK = {
@@ -52,25 +54,130 @@ function allowsVideo() {
   return !saveData && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-export default function Hero() {
+const clipClass = 'absolute inset-0 h-full w-full object-cover object-[70%_50%] sm:object-center';
+
+/** The hero's video (or still) layer, following `night`. */
+function HeroScene({ night, desktop }: { night: boolean; desktop: boolean }) {
+  const [useVideo, setUseVideo] = useState(allowsVideo);
+  // The intro matches the theme on first render; later changes play time-lapses.
+  const [intro] = useState<ClipId>(() => (night ? 'night' : 'day'));
+  const [active, setActive] = useState<ClipId>(intro);
+  const [warm, setWarm] = useState(false);
+  const videos = useRef<Partial<Record<ClipId, HTMLVideoElement | null>>>({});
+  const shownNight = useRef(night);
+
+  // Play the intro once.
+  useEffect(() => {
+    const el = videos.current[intro];
+    if (!useVideo || !el) return;
+    el.muted = true; // React doesn't reflect `muted` as an attribute
+    el.play().catch(() => setUseVideo(false));
+    // Start fetching the time-lapses once the intro is under way.
+    const t = window.setTimeout(() => setWarm(true), 1500);
+    return () => window.clearTimeout(t);
+  }, [useVideo, intro]);
+
+  useEffect(() => {
+    if (!warm) return;
+    for (const id of ['day-to-night', 'night-to-day'] as const) {
+      const el = videos.current[id];
+      if (el && el.preload !== 'auto') {
+        el.preload = 'auto';
+        el.load();
+      }
+    }
+  }, [warm]);
+
+  // Theme toggled: play the matching time-lapse, and show it once it's moving
+  // (its first frame is the frame on screen, so the swap is seamless).
+  useEffect(() => {
+    if (shownNight.current === night) return;
+    shownNight.current = night;
+    if (!useVideo) return;
+    const id: ClipId = night ? 'day-to-night' : 'night-to-day';
+    const el = videos.current[id];
+    if (!el) return;
+    setWarm(true);
+    el.muted = true;
+    el.currentTime = 0;
+    const show = () => setActive(id);
+    if (!el.paused) show(); // already running (rapid re-toggle): 'playing' won't fire again
+    else el.addEventListener('playing', show, { once: true });
+    el.play().catch(() => setUseVideo(false));
+    return () => el.removeEventListener('playing', show);
+  }, [night, useVideo]);
+
+  // Pause whatever is no longer on screen (e.g. a time-lapse cut short by another toggle).
+  useEffect(() => {
+    for (const [id, el] of Object.entries(videos.current)) if (id !== active && el && !el.paused) el.pause();
+  }, [active]);
+
+  const fade = 'transition-opacity duration-[1800ms] ease-out motion-reduce:duration-300';
+  return (
+    <>
+      {/* Desktop backdrop: the same scene, blurred and dimmed, crossfading with the time of day */}
+      {(['day', 'night'] as const).map((t) => (
+        <img
+          key={t}
+          src={HERO(`${t}-backdrop.jpg`)}
+          alt=""
+          aria-hidden="true"
+          className={`absolute inset-0 hidden h-full w-full scale-110 object-cover lg:block ${fade} ${(t === 'night') === night ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ))}
+      <div aria-hidden="true" className="absolute inset-0 hidden bg-black/40 lg:block" />
+
+      {/* The clip: fills the band on phones/tablets, a feathered 16:9 window on desktop */}
+      <div
+        className="absolute inset-0 lg:inset-auto lg:right-0 lg:top-[53%] lg:aspect-video lg:w-[74%] lg:-translate-y-1/2"
+        style={desktop ? WINDOW_MASK : undefined}
+      >
+        {useVideo
+          ? ([intro, 'day-to-night', 'night-to-day'] as const).map((id) => (
+              <video
+                key={id}
+                ref={(el) => {
+                  videos.current[id] = el;
+                }}
+                className={`${clipClass} transition-opacity duration-300 ${active === id ? 'opacity-100' : 'opacity-0'}`}
+                poster={id === intro ? HERO(`${intro}-first.jpg`) : undefined}
+                autoPlay={id === intro}
+                muted
+                playsInline
+                preload={id === intro ? 'auto' : 'none'}
+                aria-hidden="true"
+              >
+                {/* WebM first: it's the smaller encode. A failed <source> doesn't fire the
+                    video's onError, so watch the last one. */}
+                <source src={HERO(`${id}.webm`)} type="video/webm" />
+                <source src={HERO(`${id}.mp4`)} type="video/mp4" onError={id === intro ? () => setUseVideo(false) : undefined} />
+              </video>
+            ))
+          : (['day', 'night'] as const).map((t) => (
+              <img
+                key={t}
+                src={HERO(`${t}-rest.jpg`)}
+                alt=""
+                aria-hidden="true"
+                className={`${clipClass} transition-opacity duration-700 motion-reduce:duration-300 ${(t === 'night') === night ? 'opacity-100' : 'opacity-0'}`}
+                fetchPriority={(t === 'night') === night ? 'high' : 'low'}
+              />
+            ))}
+      </div>
+    </>
+  );
+}
+
+export default function Hero({ night }: { night: boolean }) {
   const { openQuote } = useQuoteModal();
   const reduceMotion = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [useVideo, setUseVideo] = useState(allowsVideo);
   const desktop = useIsDesktop();
 
   // Scroll-out: the sign lifts away a little faster than the page.
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
   const signY = useTransform(scrollYProgress, [0, 1], [0, -120]);
   const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!useVideo || !el) return;
-    el.muted = true; // React doesn't reflect `muted` as an attribute
-    el.play().catch(() => setUseVideo(false));
-  }, [useVideo]);
 
   return (
     <section
@@ -82,46 +189,7 @@ export default function Hero() {
         className="relative aspect-[4/3] w-full shrink-0 sm:aspect-video lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto"
         style={{ scale: reduceMotion ? 1 : bgScale }}
       >
-        {/* Desktop backdrop: the same scene, blurred and dimmed */}
-        <img
-          src={REVEAL.backdrop}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 hidden h-full w-full scale-110 object-cover lg:block"
-        />
-        <div aria-hidden="true" className="absolute inset-0 hidden bg-black/40 lg:block" />
-
-        {/* The clip: fills the band on phones/tablets, a feathered 16:9 window on desktop */}
-        <div
-          className="absolute inset-0 lg:inset-auto lg:right-0 lg:top-[53%] lg:aspect-video lg:w-[74%] lg:-translate-y-1/2"
-          style={desktop ? WINDOW_MASK : undefined}
-        >
-          {useVideo ? (
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
-              poster={REVEAL.poster}
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-            >
-              {/* WebM first: it's the smaller encode. A failed <source> doesn't fire the
-                  video's onError, so watch the last one. */}
-              <source src={REVEAL.webm} type="video/webm" />
-              <source src={REVEAL.mp4} type="video/mp4" onError={() => setUseVideo(false)} />
-            </video>
-          ) : (
-            <img
-              src={REVEAL.still}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
-              fetchPriority="high"
-            />
-          )}
-        </div>
+        <HeroScene night={night} desktop={desktop} />
         {/* Phones: fade the band into the asphalt below. Desktop: shade the side the sign sits on. */}
         <div className="absolute inset-0 bg-gradient-to-t from-asphalt via-transparent via-30% to-black/30 lg:bg-gradient-to-r lg:from-sign-ink/80 lg:via-sign-ink/25 lg:via-40% lg:to-transparent lg:to-60%" />
       </motion.div>

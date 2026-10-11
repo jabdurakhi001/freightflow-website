@@ -1,5 +1,6 @@
 // Renders the site's Remotion assets into ../public:
-//   hero/truck-reveal*                 5 s hero clip + stills (encode-hero.mjs, from footage/hero-source.mp4)
+//   hero/{day,night,day-to-night,night-to-day}.{mp4,webm} + stills
+//                                      theme-following hero clips (DayNight.tsx, encode-hero.mjs)
 //   photos/{fleet,drivers,final}.jpg   graded stills for the page
 //   og-image.jpg                       1200×630 social card
 // Sources: truck footage in video/public/footage (frames cleaned by prepare-footage.mjs).
@@ -10,9 +11,10 @@ import { existsSync, mkdirSync, readdirSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { bundle } from '@remotion/bundler';
-import { renderStill, selectComposition } from '@remotion/renderer';
+import { renderMedia, renderStill, selectComposition } from '@remotion/renderer';
 import { prepareFootage } from './prepare-footage.mjs';
-import { encodeHero } from './encode-hero.mjs';
+import { blurred, heroOut, transcode, writeOgFrames } from './encode-hero.mjs';
+import { prepareDayNight } from './prepare-daynight.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const site = path.join(here, '..', 'public');
@@ -21,15 +23,35 @@ for (const d of [path.join(site, 'hero'), path.join(site, 'photos'), workDir]) m
 const browserExecutable = process.env.REMOTION_BROWSER || null;
 
 prepareFootage();
-// Hero clip (the owner's aerial footage, trimmed, retimed and graded by
-// ffmpeg). Runs before bundling: it also writes the OG card's frames into
-// public/og, which the bundle copies.
-encodeHero();
+prepareDayNight();
+// Before bundling: the bundle copies public/, which needs the OG card's frames.
+writeOgFrames();
 const serveUrl = await bundle({ entryPoint: path.join(here, 'src', 'index.tsx'), publicDir: path.join(here, 'public') });
 const pick = (id) => selectComposition({ serveUrl, id, browserExecutable });
 const still = async (id, output, extra = {}) =>
   renderStill({ composition: await pick(id), serveUrl, browserExecutable, imageFormat: 'jpeg', jpegQuality: 84, output, ...extra });
 
+// Hero: four theme-following clips. Each rest frame (last frame of an intro or
+// transition) is shared by the clip that leaves that state, so the site can cut
+// between them invisibly.
+const HERO = [
+  ['DayIntro', 'day'],
+  ['NightIntro', 'night'],
+  ['DayToNight', 'day-to-night'],
+  ['NightToDay', 'night-to-day'],
+];
+for (const [id, name] of HERO) {
+  const composition = await pick(id);
+  const master = path.join(workDir, `${name}-master.mp4`);
+  await renderMedia({ composition, serveUrl, browserExecutable, codec: 'h264', crf: 10, muted: true, outputLocation: master });
+  transcode(master, name);
+  if (id.endsWith('Intro')) {
+    await still(id, path.join(heroOut, `${name}-first.jpg`), { frame: 0 });
+    const rest = path.join(heroOut, `${name}-rest.jpg`);
+    await still(id, rest, { frame: composition.durationInFrames - 1 });
+    blurred(rest, path.join(heroOut, `${name}-backdrop.jpg`));
+  }
+}
 console.log('hero done');
 
 // Photos: an owner-supplied shot in public/photos-source/<name>.* wins;

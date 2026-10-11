@@ -50,10 +50,12 @@ npm run render   # writes public/hero/truck-reveal*, public/photos/*.jpg and pub
 
 Rendering needs a system `ffmpeg` with libx264, libvpx-vp9, the `removelogo` filter and WebP decoding (any distro build has them).
 
-- **Hero clip** (`encode-hero.mjs`): `video/public/footage/hero-source.mp4` is an 8 s aerial shot of a Cascadia at sunrise. It's cut to the first 6.25 s at 1.25× speed (5 s), lightly graded, and encoded to MP4 and WebM, plus first-frame, last-frame and blurred-backdrop stills.
-  - It plays once and rests on its last frame, so it needs no pause control.
-  - Desktop shows the full frame as a feathered window on the right, so the sign never covers the truck; phones and tablets show it as a band above the sign.
-  - Reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
+- **Hero clips** (`src/DayNight.tsx`, `encode-hero.mjs`): built from `video/public/footage/hero-daynight-source.mp4`, the owner's 8 s day-to-night aerial shot of a Cascadia. `prepare-daynight.mjs` extracts its frames (gitignored). Four Remotion clips follow the site theme:
+  - `day` / `night` intros play once on load, for the current theme.
+  - `day-to-night` and `night-to-day` are time-lapses (sunset → blue hour → night; sunrise flare → day) played when the visitor toggles the theme.
+  - Every clip starts on the frame the other state rests on, so the hero swaps between them invisibly. All are ≤5 s and play only on load or on the toggle, so they need no pause control.
+  - Desktop shows the full frame as a feathered window over a blurred backdrop that crossfades between day and night; phones and tablets show a band above the sign.
+  - Reduced-motion and Data Saver visitors get the day or night rest frame as a still (see `src/components/sections/Hero.tsx`).
 - **Photos** (`fleet`, `drivers`, `final`): an owner-supplied shot in `video/public/photos-source/<name>.*` is cropped and encoded as is (the Fleet photo uses one); otherwise the graded Remotion still (`PhotoFleet`, `PhotoDrivers`, `PhotoFinal`) from the truck footage frames in `video/public/footage/` is used. `prepare-footage.mjs` first inpaints a road smear in those frames (output in `video/public/footage-smooth/`, gitignored, rebuilt on demand).
 - **`OgCard`**: the 1200×630 Open Graph / Twitter image, a guide sign beside the hero truck (frames written to `video/public/og/` by `encode-hero.mjs`).
 - **`generate-trucks.mjs`**: optional. Generates new truck stills and a hero clip with the Gemini API into `video/public/generated/` for review (needs `GEMINI_API_KEY` with billing enabled).

@@ -10,7 +10,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800;900&family=Overpass+Mono:wght@500;600&family=Doto:wght@700;900&display=swap" />
     <!-- Hero poster: portrait cut for tall screens, landscape otherwise. Mirrors pickCut() in Hero.tsx. -->
-    <link rel="preload" as="image" href="/hero/truck-reveal-first.jpg" fetchpriority="high" />
+    <link rel="preload" as="image" href="/hero/day-first.jpg" fetchpriority="high" media="(prefers-color-scheme: light)" />
+    <link rel="preload" as="image" href="/hero/night-first.jpg" fetchpriority="high" media="(prefers-color-scheme: dark)" />
     <!-- Apply the saved/system theme before first paint to avoid a light flash for dark-mode users -->
     <script>
       (function () {
