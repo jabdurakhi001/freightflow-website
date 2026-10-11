@@ -8,10 +8,11 @@ import { ExitTab, RouteShield, SignArrow } from '../ui/Signs';
 /*
  * Background: an aerial clip of a Cascadia crossing Midwest farmland that
  * follows the site theme (Remotion source in video/src/DayNight.tsx):
- *   - on load, the intro for the current theme plays once (day 2.4 s, night 5 s)
- *     and rests on its last frame;
- *   - toggling the theme plays a time-lapse — sunset into night, or sunrise into
- *     day (3 s / 2.8 s) — that also rests on its last frame.
+ *   - on load, the intro for the current theme plays once (day 2.4 s, night
+ *     3.3 s) and rests on its last frame;
+ *   - toggling the theme plays a time-lapse — the footage's own sunset into
+ *     night (3.2 s), or a sunrise flare into day (2.8 s) — that also rests on
+ *     its last frame.
  * Each clip starts on the frame the other state rests on, so swapping between
  * the stacked <video> elements is invisible. Every clip is ≤5 s and only plays
  * on load or on the visitor's own toggle, so no pause control is needed

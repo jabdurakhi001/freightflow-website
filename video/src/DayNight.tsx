@@ -3,17 +3,19 @@ import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame } f
 
 /*
  * Hero clips that follow the site's light/dark theme, built from the owner's
- * day-to-night clip (frames extracted by prepare-daynight.mjs, 24 fps):
+ * day-to-night clip (frames extracted by prepare-daynight.mjs, 24 fps). The
+ * source changes light continuously — day, sunset, dusk, night with the
+ * headlights on — with the truck and camera moving throughout:
  *
- *   DayIntro    frames 0–56 in real time; rests on 56 (the day rest frame).
- *   NightIntro  frames 72–191 in real time (5 s); rests on 191 (night rest).
- *   DayToNight  starts on day rest 56. The sky warms to sunset and dims
- *               (frames 57–67 already dim a little), dissolves into night
- *               (the source cut at 68 keeps the camera continuous), then the
- *               night drive plays as a time-lapse that eases into night rest 191.
- *   NightToDay  starts on night rest 191. A sunrise glow builds from the
- *               horizon and flares to cover the change of framing, then the day
- *               drive plays as an easing time-lapse into day rest 56.
+ *   DayIntro    frames 0–57 in real time; rests on 57 (the day rest frame).
+ *   NightIntro  frames 112–191 in real time (3.3 s); rests on 191 (night rest).
+ *   DayToNight  the source's own change of light, 57→191, played as a
+ *               time-lapse: unhurried through sunset and dusk, quicker through
+ *               the night drive, easing into night rest.
+ *   NightToDay  the source only runs day→night (reversed, the truck would drive
+ *               backwards), so this one is built: from night rest 191 a sunrise
+ *               glow builds and flares to cover the change of framing, then the
+ *               day drive plays as an easing time-lapse into day rest 57.
  *
  * Every clip shares one base grade and ends with its overlays at zero, so the
  * rest frames match exactly and the site can cut between clips invisibly.
@@ -21,9 +23,10 @@ import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame } f
  */
 
 export const DN_FPS = 30;
-export const DN_FRAMES = { DayIntro: 71, NightIntro: 150, DayToNight: 90, NightToDay: 84 } as const;
+export const DN_FRAMES = { DayIntro: 73, NightIntro: 100, DayToNight: 96, NightToDay: 84 } as const;
 
-const DAY_REST = 56;
+const DAY_REST = 57;
+const NIGHT_START = 112;
 const NIGHT_REST = 191;
 const SRC_FPS = 24;
 
@@ -63,19 +66,6 @@ function SunGlow({ amount, warmth = 1 }: { amount: number; warmth?: number }) {
   );
 }
 
-/** Blue-hour sky closing in from the top as the light goes. */
-function Dusk({ amount }: { amount: number }) {
-  if (amount <= 0.001) return null;
-  return (
-    <AbsoluteFill
-      style={{
-        background: `linear-gradient(180deg, rgba(12,22,62,${0.75 * amount}) 0%, rgba(30,30,80,${0.45 * amount}) 45%, rgba(10,12,30,${0.35 * amount}) 100%)`,
-        mixBlendMode: 'multiply',
-      }}
-    />
-  );
-}
-
 /** Full-frame sunrise flare that hides the cut between framings. */
 function Flare({ amount }: { amount: number }) {
   if (amount <= 0.001) return null;
@@ -99,28 +89,49 @@ export function NightIntro() {
   const f = useCurrentFrame();
   return (
     <AbsoluteFill style={{ backgroundColor: '#000' }}>
-      <Frame n={Math.min(NIGHT_REST, 72 + Math.floor((f * SRC_FPS) / DN_FPS))} />
+      <Frame n={Math.min(NIGHT_REST, NIGHT_START + Math.floor((f * SRC_FPS) / DN_FPS))} />
     </AbsoluteFill>
   );
 }
 
+// DayToNight playhead: keyframes (output frame → source frame) joined by a
+// monotone cubic, so speed changes smoothly and the playhead never runs back.
+//   0–0.3 s   ease out of day rest            57 → 62
+//   0.3–1 s   sunset and dusk                 62 → 88
+//   1–2 s     dark, headlights on, ~1× speed  88 → 111
+//   2–3.2 s   the night drive, quick, then easing into night rest 111 → 191
+const D2N_KEYS: [number, number][] = [
+  [0, DAY_REST],
+  [9, 62],
+  [30, 88],
+  [60, 111],
+  [80, 176],
+  [95, NIGHT_REST],
+];
+const D2N_PATH = (() => {
+  const xs = D2N_KEYS.map((k) => k[0]);
+  const ys = D2N_KEYS.map((k) => k[1]);
+  const n = xs.length;
+  const d = xs.slice(1).map((x, i) => (ys[i + 1] - ys[i]) / (x - xs[i]));
+  // Fritsch–Carlson tangents; zero at both ends so it eases in and out.
+  const m = xs.map((_, i) => (i === 0 || i === n - 1 ? 0 : d[i - 1] * d[i] <= 0 ? 0 : (2 * d[i - 1] * d[i]) / (d[i - 1] + d[i])));
+  const path: number[] = [];
+  for (let f = 0; f <= xs[n - 1]; f++) {
+    const i = Math.min(n - 2, xs.findIndex((x, j) => f >= x && f <= xs[j + 1]));
+    const h = xs[i + 1] - xs[i];
+    const t = (f - xs[i]) / h;
+    const t2 = t * t;
+    const t3 = t2 * t;
+    path.push((2 * t3 - 3 * t2 + 1) * ys[i] + (t3 - 2 * t2 + t) * h * m[i] + (-2 * t3 + 3 * t2) * ys[i + 1] + (t3 - t2) * h * m[i + 1]);
+  }
+  return path;
+})();
+
 export function DayToNight() {
   const f = useCurrentFrame();
-  // 0–13: from day rest 56 through the last daylight (to 67), warming and dimming.
-  // 14–25: dissolve into night while the source runs 68→70.
-  // 26–89: the night drive as a time-lapse, easing out into rest frame 191.
-  const dayN = interpolate(f, [0, 13], [DAY_REST, 67], clamp);
-  const dayDim = interpolate(f, [0, 13, 25], [1, 0.78, 0.6], clamp);
-  const sunset = interpolate(f, [0, 10, 22, 40], [0, 0.75, 0.55, 0], clamp);
-  const dusk = interpolate(f, [4, 20, 34, 60], [0, 0.7, 0.45, 0], clamp);
-  const mix = interpolate(f, [14, 25], [0, 1], { ...clamp, easing: Easing.inOut(Easing.quad) });
-  const nightN = interpolate(f, [14, 26, 89], [68, 70, NIGHT_REST], { ...clamp, easing: Easing.out(Easing.cubic) });
   return (
     <AbsoluteFill style={{ backgroundColor: '#000' }}>
-      {mix < 1 && <Frame n={dayN} brightness={dayDim} />}
-      {mix > 0 && <Frame n={nightN} opacity={mix} />}
-      <SunGlow amount={sunset} />
-      <Dusk amount={dusk} />
+      <Frame n={D2N_PATH[Math.min(f, D2N_PATH.length - 1)]} />
     </AbsoluteFill>
   );
 }

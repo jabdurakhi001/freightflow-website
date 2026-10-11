@@ -2,9 +2,10 @@
 // (public/footage/hero-daynight-source.mp4, 8 s at 24 fps, 192 frames) to
 // public/daynight/f000.jpg … f191.jpg (gitignored) for the Remotion
 // DayIntro / NightIntro / DayToNight / NightToDay compositions.
-//   frames   0–56   daylight (the day rest frame is 56)
-//   frames  57–67   the generator's brief dimming, used at the start of DayToNight
-//   frames  68–191  night after a hard cut (the night rest frame is 191)
+//   frames   0–57   daylight (the day rest frame is 57)
+//   frames  58–111  a continuous change of light: sunset, dusk, then dark with
+//                   the headlights coming on (the real time-lapse, DayToNight)
+//   frames 112–191  night (the night rest frame is 191)
 // Uses the system ffmpeg. Run automatically by render.mjs.
 import { execFileSync } from 'node:child_process';
 import { existsSync, mkdirSync } from 'node:fs';
