@@ -39,7 +39,7 @@ export default function ModalShell({ open, onClose, label, children }: ModalShel
       if (e.key !== 'Tab') return;
       const root = containerRef.current;
       if (!root) return;
-      const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+      const focusables = Array.from(root.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)).filter((el) => el.tabIndex !== -1);
       if (focusables.length === 0) {
         e.preventDefault();
         return;
@@ -89,7 +89,7 @@ export default function ModalShell({ open, onClose, label, children }: ModalShel
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-[70] flex items-center justify-center p-4 sm:p-6 outline-none"
+          className="modal-frame fixed inset-0 z-[70] flex items-center justify-center outline-none"
           aria-modal="true"
           role="dialog"
           aria-label={label}
@@ -98,15 +98,15 @@ export default function ModalShell({ open, onClose, label, children }: ModalShel
             type="button"
             aria-label="Close"
             onClick={onClose}
-            className="absolute inset-0 bg-sign-ink/80 backdrop-blur-sm cursor-default"
+            tabIndex={-1}
+            className="absolute inset-0 cursor-default bg-[#06162b]/80 backdrop-blur-sm"
           />
           <motion.div
-            style={{ transformPerspective: 1000, transformOrigin: 'top center' }}
-            initial={{ opacity: 0, y: -24, rotateX: -14 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            exit={{ opacity: 0, y: 16, rotateX: 6 }}
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 12 }}
             transition={{ duration: 0.25, ease: EASE_BRAND }}
-            className="guide-sign relative w-full max-w-lg max-h-[90vh] overflow-y-auto"
+            className="modal-panel relative w-full max-w-lg overflow-y-auto overscroll-contain border border-line-2 bg-ink-2 text-paper shadow-[0_30px_80px_-20px_rgba(0,0,0,0.6)]"
           >
             {children}
           </motion.div>

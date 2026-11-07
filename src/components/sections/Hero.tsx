@@ -1,200 +1,207 @@
 import { useEffect, useRef, useState } from 'react';
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
 import { useQuoteModal } from '../../QuoteContext';
-import { COMPANY } from '../../content';
-import { EASE_BRAND, rise, SIGN_SPRING, stagger } from '../../lib/motion';
-import { ExitTab, RouteShield, SignArrow } from '../ui/Signs';
+import { COMPANY, HERO } from '../../content';
+import { CITIES, CITY_NAMES, DEFAULT_DESTINATION, HUB, estimateLane, guessOrigin, shortName } from '../../lib/lanes';
+import { useFlowBridge, useFlowMode, useFlowSection, useLaneGeometry } from '../flow/FlowContext';
+import type { LaneGeometry } from '../flow/bridge';
+import { MAP_H, MAP_W, laneControl, projectAlbers } from '../flow/projection';
 
-/*
- * Background: a 5 s aerial clip of a Cascadia crossing Midwest farmland at
- * sunrise (source and encode step in video/). It plays once and rests on its
- * last frame — no loop, so no pause control is needed (WCAG 2.2.2).
- * Reduced-motion and Data Saver visitors get that last frame as a still.
- *
- * The truck sits mid-frame, so a full-bleed crop would hide the cab behind the
- * sign. Desktop instead shows the whole 16:9 frame as a feathered window on
- * the right, over a blurred backdrop of the same scene; phones and tablets
- * show it as a band above the sign.
- */
-const REVEAL = {
-  mp4: '/hero/truck-reveal.mp4',
-  webm: '/hero/truck-reveal.webm',
-  poster: '/hero/truck-reveal-first.jpg',
-  still: '/hero/truck-reveal-last.jpg',
-  backdrop: '/hero/truck-reveal-backdrop.jpg',
-};
+const prefersReducedMotion = () => window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;
 
-// Desktop window edge: fade in from the left, soften top and bottom.
-const WINDOW_MASK = {
-  WebkitMaskImage:
-    'linear-gradient(90deg, transparent 0%, #000 26%), linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%)',
-  WebkitMaskComposite: 'source-in',
-  maskImage:
-    'linear-gradient(90deg, transparent 0%, #000 26%), linear-gradient(180deg, transparent 0%, #000 12%, #000 88%, transparent 100%)',
-  maskComposite: 'intersect',
-} as const;
-
-function useIsDesktop() {
-  const query = '(min-width: 1024px)';
-  const [desktop, setDesktop] = useState(() => typeof window !== 'undefined' && window.matchMedia(query).matches);
+/** Road miles counting up (eased) whenever the lane changes; instant under reduced motion. */
+function LaneAnswer({ from, to }: { from: string; to: string }) {
+  const est = to ? estimateLane(from, to) : null;
+  const [shown, setShown] = useState(est?.road ?? 0);
   useEffect(() => {
-    const mq = window.matchMedia(query);
-    const on = () => setDesktop(mq.matches);
-    mq.addEventListener('change', on);
-    return () => mq.removeEventListener('change', on);
-  }, []);
-  return desktop;
+    if (!est) return;
+    if (prefersReducedMotion()) { setShown(est.road); return; }
+    let raf = 0;
+    const t0 = performance.now(), dur = 1500, road = est.road;
+    const tick = (now: number) => {
+      const k = Math.min(1, (now - t0) / dur), e = 1 - Math.pow(1 - k, 4);
+      setShown(Math.round((road * e) / 10) * 10);
+      if (k < 1) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [est?.road, from, to]);
+
+  if (!to) return <span className="wait">Pick a delivery city to see road miles and days.</span>;
+  if (!est) return <span className="wait">Pickup and delivery are the same city. Try another lane.</span>;
+  return (
+    <>
+      <span className="big">
+        <span data-testid="lane-miles" aria-hidden="true">{shown.toLocaleString('en-US')}</span>
+        <small aria-hidden="true">road miles</small>
+        <span className="sr-only">{est.road.toLocaleString('en-US')} road miles.</span>
+      </span>
+      <span className="days" data-testid="lane-days">
+        About {est.days} {est.days === 1 ? 'day' : 'days'} for a solo driver, {shortName(from)} to {shortName(to)}.
+      </span>
+    </>
+  );
 }
 
-function allowsVideo() {
-  if (typeof window === 'undefined') return false;
-  const saveData = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData === true;
-  return !saveData && !window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function CitySelect({ id, label, value, onChange, allowEmpty }: { id: string; label: string; value: string; onChange: (v: string) => void; allowEmpty?: boolean }) {
+  return (
+    <div className="field">
+      <label htmlFor={id}>{label}</label>
+      <div className="sel">
+        <span className={`sel-v${value ? '' : ' empty'}`} aria-hidden="true">{value ? shortName(value) : 'Choose a city'}</span>
+        <select id={id} value={value} onChange={(e) => onChange(e.target.value)}>
+          {allowEmpty && <option value="">Choose a city</option>}
+          {CITY_NAMES.map((n) => <option key={n} value={n}>{n}</option>)}
+        </select>
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 9l6 6 6-6" /></svg>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * The outline as dots and the lane as a drawn arc. Shown from first paint (index.html preloads
+ * the outline), kept as the fallback without canvas or with save-data, and faded out once the
+ * live particle field has formed the map.
+ */
+function StaticMap({ geometry, hidden }: { geometry: LaneGeometry | null; hidden: boolean }) {
+  const [d, setD] = useState<string | null>(null);
+  useEffect(() => {
+    let live = true;
+    fetch('/flow/us48.json').then((r) => (r.ok ? r.json() : null)).then((j) => live && j && setD(j.d)).catch(() => {});
+    return () => { live = false; };
+  }, []);
+  const p1 = geometry?.p1, p2 = geometry?.p2;
+  const c = p1 && p2 ? laneControl(p1, p2) : null;
+  return (
+    <svg className={`map-static${hidden ? ' is-gone' : ''}`} viewBox={`0 0 ${MAP_W} ${MAP_H}`} aria-hidden="true" focusable="false">
+      <defs>
+        <pattern id="ff-dots" width="7" height="7" patternUnits="userSpaceOnUse">
+          <circle cx="3.5" cy="3.5" r="1.2" fill="rgba(214,222,236,0.42)" />
+        </pattern>
+        <linearGradient id="ff-lane" x1="0" x2="1">
+          <stop offset="0" stopColor="#ffcc99" />
+          <stop offset="1" stopColor="#f26b1d" />
+        </linearGradient>
+      </defs>
+      {d && <path d={d} fill="url(#ff-dots)" />}
+      {p1 && p2 && c && (
+        <path d={`M${p1[0]} ${p1[1]}Q${c[0]} ${c[1]} ${p2[0]} ${p2[1]}`} fill="none" stroke="url(#ff-lane)" strokeWidth="4" strokeLinecap="round" />
+      )}
+    </svg>
+  );
+}
+
+function MapMarkers({ geometry, from, to }: { geometry: LaneGeometry | null; from: string; to: string }) {
+  if (!geometry) return null;
+  const { p1, p2 } = geometry;
+  const up = p2 ? p1[1] <= p2[1] : true;
+  const reduce = prefersReducedMotion();
+  const pct = (p: [number, number]) => ({ x: (p[0] / MAP_W) * 100, y: (p[1] / MAP_H) * 100 });
+  const label = (p: [number, number], name: string, above: boolean, key: string) => {
+    const { x, y } = pct(p);
+    const right = x < 80;
+    return (
+      <span
+        key={`${key}-${name}`}
+        className="ml"
+        style={{
+          left: `calc(${x}% ${right ? '+' : '-'} 12px)`,
+          top: `calc(${y}% ${above ? '- 26px' : '+ 8px'})`,
+          transform: right ? 'none' : 'translateX(-100%)',
+        }}
+      >
+        {name}
+      </span>
+    );
+  };
+  const a = pct(p1);
+  return (
+    <div className="map-labels">
+      <span key={`mkA-${from}`} className={`mk${!p2 && !reduce ? ' pulse' : ''}`} style={{ left: `${a.x}%`, top: `${a.y}%` }} />
+      {label(p1, shortName(from), up, 'mlA')}
+      {p2 && to && (
+        <>
+          <span key={`mkB-${to}`} className="mk to" style={{ left: `${pct(p2).x}%`, top: `${pct(p2).y}%` }} />
+          {label(p2, shortName(to), !up, 'mlB')}
+        </>
+      )}
+    </div>
+  );
 }
 
 export default function Hero() {
   const { openQuote } = useQuoteModal();
-  const reduceMotion = useReducedMotion();
+  const bridge = useFlowBridge();
+  const mode = useFlowMode();
+  const engineGeometry = useLaneGeometry();
   const sectionRef = useRef<HTMLElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [useVideo, setUseVideo] = useState(allowsVideo);
-  const desktop = useIsDesktop();
+  const stageRef = useRef<HTMLDivElement>(null);
+  useFlowSection('hero', sectionRef, stageRef);
 
-  // Scroll-out: the sign lifts away a little faster than the page.
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start start', 'end start'] });
-  const signY = useTransform(scrollYProgress, [0, 1], [0, -120]);
-  const bgScale = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
+  const [from, setFrom] = useState(HUB);
+  const [to, setTo] = useState(DEFAULT_DESTINATION);
+  const [guessed, setGuessed] = useState(false);
+  const touched = useRef(false);
 
+  // Start the lane at the visitor's nearest listed city (approximate IP location), else Chicago.
   useEffect(() => {
-    const el = videoRef.current;
-    if (!useVideo || !el) return;
-    el.muted = true; // React doesn't reflect `muted` as an attribute
-    el.play().catch(() => setUseVideo(false));
-  }, [useVideo]);
+    let live = true;
+    guessOrigin().then((city) => {
+      if (!live || !city || touched.current) return;
+      setFrom(city);
+      setTo((t) => (t === city ? (city === HUB ? DEFAULT_DESTINATION : HUB) : t));
+      setGuessed(true);
+    });
+    return () => { live = false; };
+  }, []);
+
+  const lane = to && to !== from ? to : null;
+  useEffect(() => bridge.setLane(from, lane), [bridge, from, lane]);
+
+  // Straight projection, available at first paint. Once the live field has its outline it
+  // reports endpoints nudged onto land, and the static art crossfades out under the particles.
+  const directGeometry: LaneGeometry | null = CITIES[from] ? { p1: projectAlbers(CITIES[from]), p2: lane ? projectAlbers(CITIES[lane]) : null } : null;
+  const live = mode !== 'static' && mode !== 'pending' && !!engineGeometry;
+  const geometry = live ? engineGeometry : directGeometry;
 
   return (
-    <section
-      ref={sectionRef}
-      id="top"
-      className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-asphalt text-white lg:flex-row lg:items-center"
-    >
-      <motion.div
-        className="relative aspect-[4/3] w-full shrink-0 sm:aspect-video lg:absolute lg:inset-0 lg:-z-10 lg:aspect-auto"
-        style={{ scale: reduceMotion ? 1 : bgScale }}
-      >
-        {/* Desktop backdrop: the same scene, blurred and dimmed */}
-        <img
-          src={REVEAL.backdrop}
-          alt=""
-          aria-hidden="true"
-          className="absolute inset-0 hidden h-full w-full scale-110 object-cover lg:block"
-        />
-        <div aria-hidden="true" className="absolute inset-0 hidden bg-black/40 lg:block" />
+    <section id="top" ref={sectionRef} className="hero sec" aria-labelledby="hero-title">
+      <div className="wrap hero-grid">
+        <div className="hero-copy">
+          <h1 id="hero-title">
+            Full truckload freight, <b>flowing</b> across the 48&nbsp;states.
+          </h1>
+          <p className="lede">{HERO.lede}</p>
 
-        {/* The clip: fills the band on phones/tablets, a feathered 16:9 window on desktop */}
-        <div
-          className="absolute inset-0 lg:inset-auto lg:right-0 lg:top-[53%] lg:aspect-video lg:w-[74%] lg:-translate-y-1/2"
-          style={desktop ? WINDOW_MASK : undefined}
-        >
-          {useVideo ? (
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
-              poster={REVEAL.poster}
-              autoPlay
-              muted
-              playsInline
-              preload="auto"
-              aria-hidden="true"
-            >
-              {/* WebM first: it's the smaller encode. A failed <source> doesn't fire the
-                  video's onError, so watch the last one. */}
-              <source src={REVEAL.webm} type="video/webm" />
-              <source src={REVEAL.mp4} type="video/mp4" onError={() => setUseVideo(false)} />
-            </video>
-          ) : (
-            <img
-              src={REVEAL.still}
-              alt=""
-              aria-hidden="true"
-              className="h-full w-full object-cover object-[70%_50%] sm:object-center"
-              fetchPriority="high"
-            />
-          )}
+          <form className="lane" id="lane-estimate" onSubmit={(e) => e.preventDefault()} aria-label="Lane estimate">
+            <p className="lane-q">{HERO.laneQuestion}</p>
+            <div className="fields">
+              <CitySelect id="lane-from" label="Pickup" value={from} onChange={(v) => { touched.current = true; setFrom(v); }} />
+              <CitySelect id="lane-to" label="Delivery" value={to} onChange={(v) => { touched.current = true; setTo(v); }} allowEmpty />
+            </div>
+            <output className="answer" htmlFor="lane-from lane-to" aria-live="polite">
+              <LaneAnswer from={from} to={to} />
+            </output>
+            <div className="lane-actions btn-row">
+              <button type="button" className="btn solid" onClick={() => openQuote(lane ? { origin: from, destination: lane } : undefined)}>
+                Ask for a quote on this lane
+              </button>
+            </div>
+            <p className="method">
+              {guessed
+                ? 'Pickup picked from your approximate location. Change it to any listed city.'
+                : `Starting from ${COMPANY.hub}, our dispatch hub. Change it to any listed city.`}{' '}
+              {HERO.method}
+            </p>
+          </form>
         </div>
-        {/* Phones: fade the band into the asphalt below. Desktop: shade the side the sign sits on. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-asphalt via-transparent via-30% to-black/30 lg:bg-gradient-to-r lg:from-sign-ink/80 lg:via-sign-ink/25 lg:via-40% lg:to-transparent lg:to-60%" />
-      </motion.div>
 
-      <div className="relative mx-auto -mt-3 w-full max-w-7xl px-5 pb-10 sm:-mt-14 sm:px-8 sm:pb-14 lg:mt-0 lg:pb-0 lg:pt-24 short:lg:pt-20">
-        <motion.div style={{ y: reduceMotion ? 0 : signY }} className="max-w-[44rem] lg:max-w-[38rem] xl:max-w-[40rem]">
-          {/* The sign drops onto its mount and swings to rest */}
-          <motion.div
-            className="guide-sign px-6 pb-7 pt-8 sm:px-10 sm:pb-9 sm:pt-10"
-            style={{ transformPerspective: 1100, transformOrigin: 'top center' }}
-            initial={{ opacity: 0, y: -80, rotateX: -35 }}
-            animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            transition={{ ...SIGN_SPRING, delay: 0.15 }}
-          >
-            <ExitTab className="absolute -top-[26px] right-8">Exit · FTL</ExitTab>
-
-            <motion.div variants={stagger(0.09, 0.45)} initial="hidden" animate="visible">
-              <motion.p variants={rise} className="flex items-center gap-3">
-                <RouteShield className="h-12 w-11 text-[1.15rem]">48</RouteShield>
-                <span className="legend text-white/85">Full truckload · Lower 48</span>
-              </motion.p>
-
-              <motion.h1
-                variants={rise}
-                className="mt-5 text-[clamp(2.5rem,6.2vw,4.9rem)] lg:text-[clamp(2.5rem,4.4vw,4.6rem)] font-black leading-[0.98] tracking-[-0.035em] short:text-[2.4rem]"
-              >
-                Capacity you can plan around.
-              </motion.h1>
-
-              <motion.p variants={rise} className="mt-5 max-w-xl text-[1.08rem] leading-relaxed text-white/88 sm:text-lg short:hidden">
-                Full-truckload freight across the contiguous US, dispatched from our Chicago hub — new Freightliner
-                Cascadias, GPS on every load, and proof of delivery the moment it lands.
-              </motion.p>
-
-              {/* Hub and coverage rows: tablet and up, so the phone card stays compact. */}
-              <motion.div variants={rise} className="mt-7 hidden border-t-[3px] border-white pt-5 sm:block short:!hidden">
-                <ul className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
-                  {(
-                    [
-                      { name: COMPANY.hub, label: 'Dispatch hub', dir: 'up' },
-                      { name: 'Lower 48', label: 'Coverage', dir: 'up-right' },
-                    ] as const
-                  ).map((row) => (
-                    <li key={row.name} className="flex items-center gap-3">
-                      <SignArrow dir={row.dir} className="h-8 w-7 shrink-0" />
-                      <span>
-                        <span className="block text-2xl font-black leading-none tracking-tight">{row.name}</span>
-                        <span className="legend text-[0.62rem] text-white/70">{row.label}</span>
-                      </span>
-                    </li>
-                  ))}
-                </ul>
-              </motion.div>
-            </motion.div>
-          </motion.div>
-
-          <motion.div
-            className="mt-6 flex flex-wrap gap-3"
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 1.05, ease: EASE_BRAND }}
-          >
-            <button type="button" onClick={() => openQuote()} className="btn-cone px-7 py-4 text-lg">
-              Get a quote
-              <SignArrow dir="right" className="h-5 w-4" />
-            </button>
-            <a href="#drivers" className="btn-ghost px-7 py-4 text-lg text-white hover:bg-white/10">
-              Drive with us
-            </a>
-          </motion.div>
-        </motion.div>
+        <div className="map-stage stage" ref={stageRef} aria-hidden="true">
+          <StaticMap geometry={directGeometry} hidden={live} />
+          <MapMarkers geometry={geometry} from={from} to={lane ?? ''} />
+          <span className="map-note">Lane drawn for illustration</span>
+        </div>
       </div>
-
     </section>
   );
 }

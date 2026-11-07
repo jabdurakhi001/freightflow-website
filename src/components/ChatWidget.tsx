@@ -29,7 +29,7 @@ const WELCOME_MESSAGE: Message = {
   role: 'assistant',
   author: 'ai',
   content:
-    "Hey there! 👋 I'm FreightFlow's AI assistant. I can help with our freight services, fleet, compliance, quotes, or driver recruitment — and if I can't answer something, I'll connect you with a real teammate. What can I help you with?",
+    "Dispatch here. Ask about lanes, equipment, compliance or driving for us. I'm an AI assistant; if I can't answer, I'll pass you to a dispatcher.",
 };
 
 export default function ChatWidget() {
@@ -49,14 +49,42 @@ export default function ChatWidget() {
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const launcherRef = useRef<HTMLButtonElement>(null);
+  // On phones the launcher waits until the hero lane picker has scrolled away, so it never
+  // sits on top of the Delivery select.
+  const [laneInView, setLaneInView] = useState(false);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, showHandoffForm]);
 
+  // Focus the input on open, except on touch screens where that would throw up the keyboard.
   useEffect(() => {
-    if (isOpen) setTimeout(() => inputRef.current?.focus(), 200);
+    if (!isOpen || window.matchMedia('(pointer: coarse)').matches) return;
+    const id = window.setTimeout(() => inputRef.current?.focus(), 200);
+    return () => window.clearTimeout(id);
   }, [isOpen]);
+
+  // Escape closes the chat and hands focus back to the launcher.
+  useEffect(() => {
+    if (!isOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== 'Escape' || document.querySelector('[aria-label="Request a quote"]')) return;
+      setIsOpen(false);
+      window.setTimeout(() => launcherRef.current?.focus(), 0);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [isOpen]);
+
+  useEffect(() => {
+    const lane = document.getElementById('lane-estimate');
+    if (!lane) return;
+    // ignore the strip under the sticky header
+    const io = new IntersectionObserver(([e]) => setLaneInView(e.isIntersecting), { rootMargin: '-80px 0px 0px 0px' });
+    io.observe(lane);
+    return () => io.disconnect();
+  }, []);
 
   // Lets CTAs elsewhere on the page ("Speak With Our Team") pop the widget open.
   useEffect(() => {
@@ -250,13 +278,15 @@ export default function ChatWidget() {
   return (
     <>
       <motion.button
+        ref={launcherRef}
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-5 right-5 z-50 w-14 h-14 bg-sign text-white rounded-2xl shadow-[inset_0_0_0_3px_var(--color-sign),inset_0_0_0_5px_#fff,0_14px_30px_-10px_rgba(6,42,28,0.7)] flex items-center justify-center hover:brightness-110 transition-[filter]"
+        aria-expanded={isOpen}
+        className={`chat-launcher${isOpen ? ' is-open' : ''}${laneInView && !isOpen ? ' is-tucked' : ''} fixed z-50 flex h-14 w-14 items-center justify-center rounded-full border border-line-2 bg-paper text-ink shadow-[0_14px_30px_-10px_rgba(0,0,0,0.6)] transition-colors hover:bg-white`}
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         transition={{ type: 'spring', stiffness: 260, damping: 20, delay: 1 }}
-        whileHover={{ scale: 1.1 }}
+        whileHover={{ scale: 1.06 }}
         whileTap={{ scale: 0.95 }}
         aria-label={isOpen ? 'Close chat' : 'Open chat'}
       >
@@ -270,23 +300,25 @@ export default function ChatWidget() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             transition={{ duration: 0.2 }}
-            className="fixed bottom-24 right-5 z-50 w-[380px] max-h-[600px] flex flex-col rounded-2xl shadow-2xl border border-outline-variant overflow-hidden max-sm:inset-3 max-sm:bottom-24 max-sm:w-auto max-sm:max-h-none"
+            role="dialog"
+            aria-label="Chat with FreightFlow dispatch"
+            className="chat-panel fixed z-50 flex flex-col overflow-hidden rounded-2xl border border-line-2 bg-ink-2 text-paper shadow-[0_30px_80px_-20px_rgba(0,0,0,0.65)]"
           >
             {/* Header */}
-            <div className="bg-sign px-5 py-4 flex items-center justify-between shrink-0 shadow-[inset_0_-3px_0_#fff]">
+            <div className="flex shrink-0 items-center justify-between border-b border-line bg-ink px-5 py-3.5">
               <div>
-                <div className="text-base font-black text-white tracking-tight">FreightFlow dispatch</div>
-                <p className="text-[10px] uppercase tracking-widest font-bold flex items-center gap-1.5">
+                <div className="font-display text-lg font-normal text-white">FreightFlow dispatch</div>
+                <p className="flex items-center gap-1.5 text-[13px] font-medium">
                   {isLive ? (
                     <>
                       <span className="relative flex h-2 w-2">
-                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-                        <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+                        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-warm opacity-75 motion-reduce:animate-none" />
+                        <span className="relative inline-flex h-2 w-2 rounded-full bg-warm" />
                       </span>
-                      <span className="text-emerald-300">Live with our team</span>
+                      <span className="text-warm">Live with a dispatcher</span>
                     </>
                   ) : (
-                    <span className="text-white/60">AI Assistant</span>
+                    <span className="text-dim">AI assistant</span>
                   )}
                 </p>
               </div>
@@ -295,7 +327,7 @@ export default function ChatWidget() {
                   <button
                     type="button"
                     onClick={endChat}
-                    className="text-[10px] font-bold uppercase tracking-widest text-white/70 hover:text-white border border-white/20 hover:border-white/40 rounded-full px-2.5 py-1 transition-colors"
+                    className="min-h-9 rounded-full border border-line-2 px-3 text-[13px] font-semibold text-muted transition-colors hover:border-paper hover:text-white"
                   >
                     End chat
                   </button>
@@ -303,7 +335,7 @@ export default function ChatWidget() {
                 <button
                   type="button"
                   onClick={() => setIsOpen(false)}
-                  className="text-white/60 hover:text-white p-1 rounded-full hover:bg-white/10 transition-colors"
+                  className="grid h-11 w-11 place-items-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-white"
                   aria-label="Close chat"
                 >
                   <X className="w-5 h-5" />
@@ -316,13 +348,13 @@ export default function ChatWidget() {
               role="log"
               aria-live="polite"
               aria-label="Chat messages"
-              className="flex-1 overflow-y-auto p-4 space-y-4 bg-surface-container-low dark:bg-surface-container min-h-[300px] max-h-[420px] max-sm:max-h-none"
+              className="chat-log min-h-0 flex-1 space-y-4 overflow-y-auto overscroll-contain p-4"
             >
               {messages.map((msg, i) => {
                 if (msg.author === 'system') {
                   return (
                     <div key={i} className="flex justify-center">
-                      <p className="text-[11px] text-on-surface-variant/80 bg-surface-container dark:bg-surface-container-high px-3 py-1.5 rounded-full text-center max-w-[90%]">
+                      <p className="max-w-[90%] rounded-full bg-white/[0.06] px-3 py-1.5 text-center text-[13px] text-dim">
                         {msg.content}
                       </p>
                     </div>
@@ -333,17 +365,17 @@ export default function ChatWidget() {
                 return (
                   <div key={i} className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
                     {isAdmin && (
-                      <span className="text-[10px] font-bold uppercase tracking-widest text-emerald-600 dark:text-emerald-400 mb-1 ml-1">
+                      <span className="mb-1 ml-1 text-[13px] font-semibold text-warm">
                         FreightFlow Team
                       </span>
                     )}
                     <div
-                      className={`max-w-[80%] px-4 py-3 text-sm leading-relaxed ${
+                      className={`max-w-[85%] px-4 py-3 text-[15px] leading-relaxed ${
                         isUser
-                          ? 'bg-sign text-white rounded-2xl rounded-br-sm'
+                          ? 'rounded-2xl rounded-br-sm bg-paper text-ink'
                           : isAdmin
-                            ? 'bg-emerald-500/10 border border-emerald-500/30 text-on-surface rounded-2xl rounded-bl-sm'
-                            : 'bg-surface-container dark:bg-surface-container-high text-on-surface rounded-2xl rounded-bl-sm'
+                            ? 'rounded-2xl rounded-bl-sm border border-warm/40 bg-warm/10 text-paper'
+                            : 'rounded-2xl rounded-bl-sm bg-white/[0.07] text-paper'
                       }`}
                     >
                       {msg.image ? (
@@ -369,7 +401,7 @@ export default function ChatWidget() {
 
               {error && (
                 <div className="flex justify-center">
-                  <p role="alert" className="text-xs text-error bg-error/10 px-3 py-2 rounded-lg text-center">{error}</p>
+                  <p role="alert" className="rounded-lg bg-[#5a1d14]/70 px-3 py-2 text-center text-[13px] text-white">{error}</p>
                 </div>
               )}
 
@@ -377,12 +409,12 @@ export default function ChatWidget() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="bg-surface-container dark:bg-surface-container-high rounded-2xl rounded-bl-sm p-4 space-y-3"
+                  className="space-y-3 rounded-2xl rounded-bl-sm bg-white/[0.07] p-4"
                 >
-                  <p className="text-xs font-bold text-on-surface-variant uppercase tracking-widest">Connect with our team</p>
-                  <p className="text-[11px] text-on-surface-variant/80 -mt-1">Quick intro so we can help and follow up.</p>
+                  <p className="text-[15px] font-semibold text-white">Connect with our team</p>
+                  <p className="-mt-1 text-[13px] text-dim">Quick intro so we can help and follow up.</p>
                   <div>
-                    <label htmlFor="ff-handoff-name" className="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
+                    <label htmlFor="ff-handoff-name" className="mb-1 block text-[13px] font-medium text-muted">
                       First name <span aria-hidden="true">*</span>
                     </label>
                     <input
@@ -393,11 +425,11 @@ export default function ChatWidget() {
                       value={contactName}
                       onChange={(e) => setContactName(e.target.value)}
                       placeholder="Jane"
-                      className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none focus:ring-2 focus:ring-secondary"
+                      className="min-h-11 w-full rounded-lg border border-line-2 bg-ink/70 px-3 py-2 text-base text-paper placeholder:text-dim outline-none focus:border-warm focus:ring-2 focus:ring-warm/60"
                     />
                   </div>
                   <div>
-                    <label htmlFor="ff-handoff-contact" className="block text-[10px] font-bold uppercase tracking-widest text-on-surface-variant mb-1">
+                    <label htmlFor="ff-handoff-contact" className="mb-1 block text-[13px] font-medium text-muted">
                       Email or phone <span aria-hidden="true">*</span>
                     </label>
                     <input
@@ -408,11 +440,11 @@ export default function ChatWidget() {
                       value={contactInfo}
                       onChange={(e) => setContactInfo(e.target.value)}
                       placeholder="jane@acme.com"
-                      className="w-full bg-surface-container-low dark:bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/60 outline-none focus:ring-2 focus:ring-secondary"
+                      className="min-h-11 w-full rounded-lg border border-line-2 bg-ink/70 px-3 py-2 text-base text-paper placeholder:text-dim outline-none focus:border-warm focus:ring-2 focus:ring-warm/60"
                     />
                   </div>
                   {!canConnect && (contactName.trim() !== '' || contactInfo.trim() !== '') && (
-                    <p id="ff-handoff-hint" className="text-[11px] text-on-surface-variant">
+                    <p id="ff-handoff-hint" className="text-[13px] text-dim">
                       Please enter your first name and a valid email address or phone number so we can follow up.
                     </p>
                   )}
@@ -421,14 +453,14 @@ export default function ChatWidget() {
                       type="button"
                       onClick={connectLive}
                       disabled={connecting || !canConnect}
-                      className="flex-1 bg-cone text-[#0f1512] rounded-lg px-4 py-2 text-sm font-extrabold hover:brightness-105 transition-all disabled:opacity-40"
+                      className="min-h-11 flex-1 rounded-full bg-paper px-4 py-2 text-[15px] font-semibold text-ink transition-colors hover:bg-white disabled:opacity-40"
                     >
                       {connecting ? 'Connecting…' : 'Connect me'}
                     </button>
                     <button
                       type="button"
                       onClick={() => setShowHandoffForm(false)}
-                      className="px-4 py-2 text-xs font-bold text-on-surface-variant hover:text-on-surface transition-colors"
+                      className="min-h-11 px-4 py-2 text-[15px] font-medium text-muted transition-colors hover:text-white"
                     >
                       Cancel
                     </button>
@@ -440,7 +472,7 @@ export default function ChatWidget() {
             </div>
 
             {/* Input */}
-            <div className="p-3 border-t border-outline-variant/20 bg-surface dark:bg-surface-container-low shrink-0">
+            <div className="shrink-0 border-t border-line bg-ink p-3">
               <div className="flex gap-2">
                 <input
                   ref={inputRef}
@@ -450,14 +482,15 @@ export default function ChatWidget() {
                   onKeyDown={handleKeyDown}
                   placeholder={isLive ? 'Message the team…' : 'Ask about our services…'}
                   disabled={isLoading}
-                  className="flex-1 bg-surface-container dark:bg-surface-container-high rounded-lg px-4 py-3 text-sm text-on-surface placeholder:text-on-surface-variant/50 outline-none focus:ring-2 focus:ring-secondary transition-all disabled:opacity-50"
+                  aria-label={isLive ? 'Message the team' : 'Ask about our services'}
+                  className="min-h-11 min-w-0 flex-1 rounded-full border border-line-2 bg-ink-2 px-4 py-2.5 text-base text-paper placeholder:text-dim outline-none transition-colors focus:border-warm focus:ring-2 focus:ring-warm/60 disabled:opacity-50"
                 />
                 {!isLive && (
                   <button
                     type="button"
                     onClick={beginHandoff}
                     disabled={isLoading || connecting}
-                    className="text-on-surface-variant hover:text-secondary rounded-lg px-2 py-3 transition-all disabled:opacity-20 disabled:cursor-not-allowed"
+                    className="grid h-11 w-11 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-warm disabled:cursor-not-allowed disabled:opacity-30"
                     aria-label="Talk to a human"
                     title="Talk to a human"
                   >
@@ -468,7 +501,7 @@ export default function ChatWidget() {
                   type="button"
                   onClick={sendMessage}
                   disabled={isLoading || connecting || !input.trim()}
-                  className="bg-cone text-[#0f1512] rounded-lg px-4 py-3 hover:brightness-105 active:scale-95 transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-paper text-ink transition-colors hover:bg-white active:scale-95 disabled:cursor-not-allowed disabled:opacity-40"
                   aria-label="Send message"
                 >
                   <Send className="w-4 h-4" />
@@ -488,7 +521,7 @@ function LoadingDots() {
       {[0, 1, 2].map((i) => (
         <motion.span
           key={i}
-          className="w-2 h-2 rounded-full bg-on-surface-variant/40"
+          className="h-2 w-2 rounded-full bg-paper/40"
           animate={{ y: [0, -4, 0] }}
           transition={{ duration: 0.6, repeat: Infinity, delay: i * 0.15 }}
         />

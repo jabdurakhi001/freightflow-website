@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { X, ArrowRight, CheckCircle2, MapPin } from 'lucide-react';
+import { X, CheckCircle2, MapPin } from 'lucide-react';
 import { useQuoteModal } from '../QuoteContext';
 import ModalShell from './ModalShell';
 import { inputClass, labelClass } from './formStyles';
+import { COMPANY } from '../content';
 
-const EQUIPMENT_OPTIONS = ['Dry Van', 'Reefer', 'Flatbed', 'Power Only', 'Not Sure'];
+/** The fleet is 53′ dry vans only, so that's the only equipment we offer to quote. */
+const EQUIPMENT_OPTIONS = ['53′ dry van', 'Not sure'];
 
 const INITIAL_FORM = {
   name: '',
@@ -13,7 +15,7 @@ const INITIAL_FORM = {
   contact: '',
   origin: '',
   destination: '',
-  equipment: 'Dry Van',
+  equipment: EQUIPMENT_OPTIONS[0],
   details: '',
 };
 
@@ -25,7 +27,7 @@ type Status = 'idle' | 'sending' | 'success' | 'error';
  * mailto link if the request fails.
  */
 export default function QuoteModal() {
-  const { isQuoteOpen, closeQuote } = useQuoteModal();
+  const { isQuoteOpen, closeQuote, prefill } = useQuoteModal();
   const [form, setForm] = useState(INITIAL_FORM);
   const [status, setStatus] = useState<Status>('idle');
   const firstFieldRef = useRef<HTMLInputElement>(null);
@@ -37,10 +39,18 @@ export default function QuoteModal() {
   }, [status]);
 
   useEffect(() => {
-    if (isQuoteOpen) {
-      setTimeout(() => firstFieldRef.current?.focus(), 150);
+    if (!isQuoteOpen) return;
+    // A lane picked in the hero arrives as a prefill; don't overwrite what the visitor typed otherwise.
+    if (prefill) {
+      setForm((f) => ({
+        ...f,
+        origin: prefill.origin ?? f.origin,
+        destination: prefill.destination ?? f.destination,
+      }));
     }
-  }, [isQuoteOpen]);
+    const id = window.setTimeout(() => firstFieldRef.current?.focus(), 150);
+    return () => window.clearTimeout(id);
+  }, [isQuoteOpen, prefill]);
 
   const set = (field: keyof typeof INITIAL_FORM) => (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
@@ -92,16 +102,15 @@ export default function QuoteModal() {
   return (
     <ModalShell open={isQuoteOpen} onClose={handleClose} label="Request a quote">
       {/* Header */}
-      <div className="relative z-10 flex items-start justify-between px-8 pt-9 pb-2">
+      <div className="relative z-10 flex items-start justify-between gap-4 px-5 pt-5 pb-1 sm:px-7 sm:pt-6">
         <div>
-          <span className="legend text-white/80">Dispatch desk</span>
-          <h3 className="mt-1 text-3xl font-black text-white tracking-tight">Get a quote</h3>
-          <p className="text-sm text-white/80 mt-1.5">Tell us about your lane — our team responds during business hours (Mon–Fri, 8AM–5PM CST).</p>
+          <h2 className="font-display text-[clamp(1.75rem,5vw,2.25rem)] font-light leading-tight text-white">Get a quote</h2>
+          <p className="mt-1.5 text-[15px] text-muted">Tell us about your lane. Our team responds during business hours ({COMPANY.hours}).</p>
         </div>
         <button
           type="button"
           onClick={handleClose}
-          className="text-white/80 hover:text-white p-2 rounded-lg hover:bg-white/10 transition-colors shrink-0"
+          className="-mr-2 grid h-11 w-11 shrink-0 place-items-center rounded-full text-muted transition-colors hover:bg-white/10 hover:text-white"
           aria-label="Close"
         >
           <X className="w-5 h-5" />
@@ -112,30 +121,30 @@ export default function QuoteModal() {
         <motion.div
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          className="relative z-10 px-8 pb-10 pt-6 text-center"
+          className="relative z-10 px-5 pb-8 pt-6 text-center sm:px-8"
         >
           <motion.div
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ type: 'spring', stiffness: 200, damping: 14, delay: 0.1 }}
-            className="mx-auto mb-4 w-16 h-16 rounded-full bg-white flex items-center justify-center"
+            className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-paper"
           >
-            <CheckCircle2 className="w-8 h-8 text-sign" />
+            <CheckCircle2 className="h-8 w-8 text-orange" />
           </motion.div>
-          <h4 ref={successHeadingRef} tabIndex={-1} className="text-xl font-black text-white tracking-tight mb-2 outline-none">Request received</h4>
-          <p className="text-sm text-white/85 max-w-sm mx-auto">
-            Thanks, {form.name.trim()}. Your lane details are with our dispatch team — we'll get back to you shortly.
+          <h4 ref={successHeadingRef} tabIndex={-1} className="mb-2 font-display text-2xl font-normal text-white outline-none">Request received</h4>
+          <p className="mx-auto max-w-sm text-[15px] text-muted">
+            Thanks, {form.name.trim()}. Your lane details are with our dispatch team. We reply during business hours ({COMPANY.hours}).
           </p>
           <button
             type="button"
             onClick={handleClose}
-            className="btn-cone mt-7 px-8 py-3"
+            className="btn solid mt-7"
           >
             Done
           </button>
         </motion.div>
       ) : (
-        <form onSubmit={submit} className="relative z-10 px-8 pb-9 pt-4 space-y-4">
+        <form onSubmit={submit} className="relative z-10 space-y-3.5 px-5 pb-6 pt-3 sm:px-7 sm:pb-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className={labelClass} htmlFor="q-name">Name *</label>
@@ -148,22 +157,22 @@ export default function QuoteModal() {
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="q-contact">Email or Phone *</label>
+            <label className={labelClass} htmlFor="q-contact">Email or phone *</label>
             <input id="q-contact" type="text" required value={form.contact} onChange={set('contact')} placeholder="jane@acme.com" className={inputClass} />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className={labelClass} htmlFor="q-origin">Origin</label>
+              <label className={labelClass} htmlFor="q-origin">Pickup</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-cone pointer-events-none" />
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-paper" />
                 <input id="q-origin" type="text" value={form.origin} onChange={set('origin')} placeholder="Chicago, IL" className={`${inputClass} pl-9`} />
               </div>
             </div>
             <div>
-              <label className={labelClass} htmlFor="q-destination">Destination</label>
+              <label className={labelClass} htmlFor="q-destination">Delivery</label>
               <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-caution pointer-events-none" />
+                <MapPin className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-orange" />
                 <input id="q-destination" type="text" value={form.destination} onChange={set('destination')} placeholder="Dallas, TX" className={`${inputClass} pl-9`} />
               </div>
             </div>
@@ -178,10 +187,10 @@ export default function QuoteModal() {
                   type="button"
                   onClick={() => setForm((f) => ({ ...f, equipment: option }))}
                   aria-pressed={form.equipment === option}
-                  className={`px-3.5 py-2 rounded-lg text-sm font-bold border transition-colors ${
+                  className={`min-h-11 rounded-full border px-4 py-2 text-[15px] font-semibold transition-colors ${
                     form.equipment === option
-                      ? 'bg-cone border-[#0f1512] text-[#0f1512]'
-                      : 'border-white/35 text-white/85 hover:border-white hover:text-white'
+                      ? 'border-paper bg-paper text-ink'
+                      : 'border-line-2 text-muted hover:border-paper hover:text-white'
                   }`}
                 >
                   {option}
@@ -191,26 +200,25 @@ export default function QuoteModal() {
           </div>
 
           <div>
-            <label className={labelClass} htmlFor="q-details">Load Details</label>
-            <textarea id="q-details" rows={3} value={form.details} onChange={set('details')} placeholder="Weight, commodity, frequency, target dates…" className={`${inputClass} resize-none`} />
+            <label className={labelClass} htmlFor="q-details">Load details</label>
+            <textarea id="q-details" rows={2} value={form.details} onChange={set('details')} placeholder="Weight, commodity, frequency, target dates…" className={`${inputClass} resize-none`} />
           </div>
 
           {status === 'error' && (
-            <p role="alert" className="text-sm text-white bg-[#7f1d1d]/70 border border-white/30 px-4 py-3 rounded-lg">
+            <p role="alert" className="rounded-xl border border-[#ff9d5c]/50 bg-[#5a1d14]/60 px-4 py-3 text-[15px] text-white">
               Couldn't send your request. Please try again, or email us directly at{' '}
-              <a className="underline font-bold" href="mailto:info@freightflow.group?subject=Quote%20Request">info@freightflow.group</a>.
+              <a className="font-semibold underline" href={`mailto:${COMPANY.email}?subject=Quote%20Request`}>{COMPANY.email}</a>.
             </p>
           )}
 
           <button
             type="submit"
             disabled={sending}
-            className="btn-cone group w-full px-8 py-4 text-lg disabled:opacity-50 disabled:pointer-events-none"
+            className="btn solid group w-full justify-center disabled:pointer-events-none disabled:opacity-50"
           >
             {sending ? 'Sending…' : 'Send quote request'}
-            {!sending && <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />}
           </button>
-          <p className="text-xs text-white/75 text-center">No spam, no obligations — your details go straight to our dispatch team.</p>
+          <p className="text-center text-sm text-dim">No spam, no obligations. Your details go straight to our dispatch team.</p>
         </form>
       )}
     </ModalShell>

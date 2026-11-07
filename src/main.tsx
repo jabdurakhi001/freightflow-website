@@ -23,14 +23,14 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex items-center justify-center bg-[#062a1c] text-white p-8">
+        <div className="flex min-h-svh items-center justify-center bg-ink p-8 text-paper">
           <div className="text-center max-w-md">
-            <h1 className="text-3xl font-black mb-4">Something went wrong</h1>
-            <p className="text-white/60 mb-6">We're experiencing a temporary issue. Please refresh the page.</p>
+            <h1 className="mb-4 font-display text-3xl font-light">Something went wrong</h1>
+            <p className="mb-6 text-muted">We're experiencing a temporary issue. Please refresh the page.</p>
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="bg-[#f26a1b] text-[#0f1512] px-8 py-3 rounded-lg font-extrabold hover:brightness-105 transition-all"
+              className="btn solid"
             >
               Refresh Page
             </button>
