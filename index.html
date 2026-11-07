@@ -5,23 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="theme-color" content="#00653e" />
+    <meta name="theme-color" content="#0b2545" />
+    <meta name="color-scheme" content="dark" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Overpass:wght@400;600;700;800;900&family=Overpass+Mono:wght@500;600&family=Doto:wght@700;900&display=swap" />
-    <!-- Hero poster: portrait cut for tall screens, landscape otherwise. Mirrors pickCut() in Hero.tsx. -->
-    <link rel="preload" as="image" href="/hero/truck-reveal-first.jpg" fetchpriority="high" />
-    <!-- Apply the saved/system theme before first paint to avoid a light flash for dark-mode users -->
-    <script>
-      (function () {
-        try {
-          var t = localStorage.getItem('theme');
-          if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-          }
-        } catch (e) { /* storage unavailable */ }
-      })();
-    </script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,200..600&family=Hanken+Grotesk:wght@400;500;600&display=swap" />
+    <!-- Lower-48 outline: the hero's static map paints from it right away; the particle field reuses it -->
+    <link rel="preload" href="/flow/us48.json" as="fetch" type="application/json" crossorigin="anonymous" />
     <title>FreightFlow | Full-Truckload Carrier — 48 States from Chicago</title>
     <meta name="description" content="FreightFlow is a full-truckload carrier serving all 48 contiguous states from its dispatch hub in Chicago — 2025–2027 Freightliner Cascadias, GPS tracking on every load, and digital proof of delivery. USDOT 4357973 · MC 1704871.">
     <link rel="canonical" href="https://freightflow.group/">
@@ -35,14 +25,14 @@
     <meta property="og:image" content="https://freightflow.group/og-image.jpg">
     <meta property="og:image:width" content="1200">
     <meta property="og:image:height" content="630">
-    <meta property="og:image:alt" content="FreightFlow highway guide sign (full truckload, all 48 states, Chicago dispatch hub) beside a grey Freightliner Cascadia on the interstate.">
+    <meta property="og:image:alt" content="FreightFlow logo and the line Full truckload freight, flowing across the 48 states, beside a dotted map of the United States with an illustrative lane from Chicago to Dallas.">
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="FreightFlow | Full-Truckload Carrier — 48 States">
     <meta name="twitter:description" content="Capacity you can plan around: full-truckload freight across the lower 48, dispatched from Chicago, tracked on every load.">
     <meta name="twitter:image" content="https://freightflow.group/og-image.jpg">
-    <meta name="twitter:image:alt" content="FreightFlow highway guide sign (full truckload, all 48 states, Chicago dispatch hub) beside a grey Freightliner Cascadia on the interstate.">
+    <meta name="twitter:image:alt" content="FreightFlow logo and the line Full truckload freight, flowing across the 48 states, beside a dotted map of the United States with an illustrative lane from Chicago to Dallas.">
 
     <!-- Schema.org -->
     <script type="application/ld+json">
@@ -58,8 +48,83 @@
       "sameAs": []
     }
     </script>
+    <!-- FAQ, kept in sync with FAQS in src/content.ts by src/seo.test.ts -->
+    <script type="application/ld+json" id="faq-jsonld">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Where do you run?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "All 48 contiguous states. Trucks are dispatched from our Chicago hub, covering high-frequency regional lanes and coast-to-coast long-haul."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What equipment do you operate?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "2025–2027 Freightliner Cascadia tractors pulling 53′ dry vans, maintained on a preventive, data-driven schedule."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I track my load?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Every load has live GPS tracking with automated milestone updates from pickup to delivery, and digital proof of delivery as soon as it is signed."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do your AI agents work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Our agents match each load to an available truck and driver and propose the assignment. A dispatcher reviews and approves every assignment before the truck moves."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are you licensed and insured?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. We hold active USDOT (4357973) and MC (1704871) authority for interstate commerce, with cargo and liability coverage. You can verify our authority on FMCSA SAFER."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How fast will I get a quote?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Send your lane through the quote form and our dispatch desk will respond during business hours (Mon–Fri, 8 AM–5 PM CST). Our systems support active loads around the clock."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are you hiring drivers?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. CDL-A drivers around Chicago. We offer competitive per-mile pay, planned home time, a dedicated dispatcher and new equipment."
+          }
+        }
+      ]
+    }
+    </script>
   </head>
-  <body>
+  <body style="background:#0b2545">
+    <noscript>
+      <div style="max-width:640px;margin:0 auto;padding:48px 20px;color:#f3f1ec;font:17px/1.6 system-ui,-apple-system,'Segoe UI',sans-serif">
+        <h1 style="font-weight:400;font-size:34px;line-height:1.1;margin:0 0 16px">FreightFlow Logistics</h1>
+        <p style="margin:0 0 16px;color:#c3cad6">Full truckload freight: 53&prime; dry vans behind 2025&ndash;2027 Freightliner Cascadias, across the 48 contiguous states, dispatched from our Chicago hub.</p>
+        <p style="margin:0 0 8px">Quotes: <a style="color:#f3f1ec" href="mailto:info@freightflow.group?subject=Quote%20request">info@freightflow.group</a> (Mon&ndash;Fri, 8 AM&ndash;5 PM CST)</p>
+        <p style="margin:0 0 8px">USDOT 4357973 &middot; MC 1704871 &middot; <a style="color:#f3f1ec" href="https://safer.fmcsa.dot.gov/query.asp?searchtype=ANY&amp;query_type=queryCarrierSnapshot&amp;query_param=USDOT&amp;query_string=4357973">FMCSA SAFER snapshot</a></p>
+        <p style="margin:0 0 24px">Drivers: <a style="color:#f3f1ec" href="https://app.freightflow.group/apply">apply to drive</a></p>
+        <p style="margin:0;font-size:14px;color:#a3aec0"><a style="color:#a3aec0" href="/privacy.html">Privacy</a> &nbsp; <a style="color:#a3aec0" href="/terms.html">Terms</a></p>
+      </div>
+    </noscript>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
