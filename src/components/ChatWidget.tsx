@@ -29,7 +29,7 @@ const WELCOME_MESSAGE: Message = {
   role: 'assistant',
   author: 'ai',
   content:
-    "Dispatch here. Ask about lanes, equipment, compliance or driving for us. I'm an AI assistant; if I can't answer, I'll pass you to a dispatcher.",
+    "Dispatch here. Ask about lanes, equipment, compliance or driving for us. I'm an AI assistant and I'm here 24/7. If I can't answer, I'll pass you to a dispatcher.",
 };
 
 export default function ChatWidget() {
@@ -318,7 +318,7 @@ export default function ChatWidget() {
                       <span className="text-warm">Live with a dispatcher</span>
                     </>
                   ) : (
-                    <span className="text-dim">AI assistant</span>
+                    <span className="text-dim">AI assistant, 24/7</span>
                   )}
                 </p>
               </div>

@@ -13,6 +13,8 @@ export const COMPANY = {
   mc: '1704871',
   hub: 'Chicago',
   hours: 'Mon–Fri, 8 AM–5 PM CST',
+  /** The chat's AI assistant answers around the clock; people staff the desk during `hours`. */
+  aiHours: '24/7',
   applyUrl: 'https://app.freightflow.group/apply',
   /** FMCSA SAFER company snapshot, so visitors can verify the authority themselves. */
   saferUrl:
@@ -113,7 +115,7 @@ export const FAQS = [
   },
   {
     q: 'How fast will I get a quote?',
-    a: `Send your lane through the quote form and our dispatch desk will respond during business hours (${COMPANY.hours}). Our systems support active loads around the clock.`,
+    a: `Send your lane through the quote form and our dispatch desk will respond during business hours (${COMPANY.hours}). Questions before then? The AI assistant in our chat answers 24/7.`,
   },
   {
     q: 'Are you hiring drivers?',

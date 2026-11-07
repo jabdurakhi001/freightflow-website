@@ -28,7 +28,7 @@ export default function FAQ() {
         </div>
         <div className="faq-more">
           <p>
-            Something we didn’t cover? Our chat assistant answers first and hands you to a dispatcher when it can’t help.
+            Something we didn’t cover? Our AI chat assistant answers 24/7 and hands you to a dispatcher when it can’t help.
             Or email <a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a>.
           </p>
           <div className="btn-row">
