@@ -204,6 +204,9 @@ p { margin: 0; }
 .map-note { position: absolute; left: 0; bottom: -26px; font: 400 12px var(--body); color: var(--dim); }
 .map-static { position: absolute; inset: 0; width: 100%; height: 100%; transition: opacity 1.6s ease 0.4s; }
 .map-static.is-gone { opacity: 0; }
+/* the map is drawn at about a third of its size on phones: bigger dots keep it visible */
+.map-static .land-lg { display: none; }
+@media (max-width: 760px) { .map-static .land-sm { display: none; } .map-static .land-lg { display: inline; } }
 @media (max-width: 860px) {
   .hero-grid { grid-template-columns: 1fr; min-height: 0; }
   .hero { padding-top: 16px; }
@@ -275,7 +278,7 @@ p { margin: 0; }
 @media (max-width: 520px) { .prac { grid-template-columns: 1fr; } .auth dl { gap: 28px; } }
 
 /* ---------------- fleet ---------------- */
-.bar { height: clamp(34px, 4vw, 52px); margin-top: clamp(48px, 7vw, 88px); }
+.bar { height: clamp(44px, 5vw, 68px); margin-top: clamp(48px, 7vw, 88px); }
 .is-static .bar { background: linear-gradient(90deg, rgba(214, 222, 236, 0.18), rgba(214, 222, 236, 0.32) 96%, var(--orange) 96%); border-radius: 2px; }
 .ruler { position: relative; height: 34px; border-top: 1px solid var(--line-2); margin-top: 10px; }
 .ruler span { position: absolute; top: 0; transform: translateX(-50%); font: 400 12.5px var(--body); color: var(--dim); padding-top: 12px; white-space: nowrap; }
@@ -299,7 +302,8 @@ p { margin: 0; }
 @media (max-width: 520px) { .ben { grid-template-columns: 1fr; } }
 
 /* ---------------- faq ---------------- */
-.faq { max-width: 900px; margin: 0 auto; }
+.faq { max-width: 1320px; margin: 0 auto; }
+.faq > * { max-width: 900px; }
 .faq-list { margin-top: 44px; border-top: 1px solid var(--line); }
 .faq details { border-bottom: 1px solid var(--line); }
 .faq summary { list-style: none; cursor: pointer; padding: 22px 44px 22px 0; position: relative; font: 350 clamp(20px, 2vw, 25px)/1.3 var(--display); min-height: 44px; }
@@ -344,6 +348,8 @@ p { margin: 0; }
 @media (max-width: 760px) {
   /* on phones, wait until the hero lane picker has scrolled away */
   .chat-launcher.is-tucked { visibility: hidden; pointer-events: none; }
+  /* smaller and tucked into the corner so it covers less of the text column */
+  .chat-launcher { width: 48px !important; height: 48px !important; right: max(10px, env(safe-area-inset-right)); bottom: max(10px, calc(var(--safe-bottom) + 8px)); }
 }
 @media (max-width: 639px) {
   /* the open chat is a full-screen sheet with its own close button */

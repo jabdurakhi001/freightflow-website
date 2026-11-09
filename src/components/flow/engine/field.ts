@@ -224,9 +224,11 @@ export function createFlowField({ canvas, plan, gl, c2d, bridge, mapUrl, onSlow 
   const bootAt = now();
   let winStart = 0, winSum = 0, winCount = 0, slowFired = false;
   function monitor(t: number, raw: number) {
-    if (slowFired || !onSlow || t - bootAt < 1.5 || raw > 0.5) return; // skip boot jank and tab returns
+    if (slowFired || !onSlow || t - bootAt < 1.5) return; // skip boot jank
     if (!winStart) winStart = t;
-    winSum += raw; winCount++;
+    // Cap, don't skip, very long frames: one stall after a tab return can't trip the average on
+    // a healthy device, but a device stuck at a few frames a second still steps down.
+    winSum += Math.min(raw, 0.5); winCount++;
     if (t - winStart >= SLOW_WINDOW_S) {
       const avgMs = (winSum / winCount) * 1000;
       winStart = t; winSum = 0; winCount = 0;

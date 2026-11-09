@@ -61,7 +61,7 @@ export const HOW = {
 };
 
 export const PLATFORM = [
-  { title: 'AI agents that match and assign', body: 'Agents match each load to the right truck and driver and propose the assignment. A dispatcher approves every one before it moves.' },
+  { title: 'AI agents that match and propose', body: 'Agents match each load to the right truck and driver and propose the assignment. A dispatcher approves every one before it moves.' },
   { title: 'Live GPS tracking', body: 'Live GPS and milestone updates for everyone who needs to know where the freight is.' },
   { title: 'Digital proof of delivery', body: 'Load documents and proof of delivery stored digitally and available the moment you need them.' },
   { title: 'Routing for conditions', body: 'Routes planned around live traffic and weather, not last year’s map.' },
