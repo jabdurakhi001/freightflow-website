@@ -13,6 +13,8 @@ export const COMPANY = {
   mc: '1704871',
   hub: 'Chicago',
   hours: 'Mon–Fri, 8 AM–5 PM CST',
+  /** The chat's AI assistant answers around the clock; people staff the desk during `hours`. */
+  aiHours: '24/7',
   applyUrl: 'https://app.freightflow.group/apply',
   /** FMCSA SAFER company snapshot, so visitors can verify the authority themselves. */
   saferUrl:
@@ -59,7 +61,7 @@ export const HOW = {
 };
 
 export const PLATFORM = [
-  { title: 'AI agents that match and assign', body: 'Agents match each load to the right truck and driver and propose the assignment. A dispatcher approves every one before it moves.' },
+  { title: 'AI agents that match and propose', body: 'Agents match each load to the right truck and driver and propose the assignment. A dispatcher approves every one before it moves.' },
   { title: 'Live GPS tracking', body: 'Live GPS and milestone updates for everyone who needs to know where the freight is.' },
   { title: 'Digital proof of delivery', body: 'Load documents and proof of delivery stored digitally and available the moment you need them.' },
   { title: 'Routing for conditions', body: 'Routes planned around live traffic and weather, not last year’s map.' },
@@ -113,7 +115,7 @@ export const FAQS = [
   },
   {
     q: 'How fast will I get a quote?',
-    a: `Send your lane through the quote form and our dispatch desk will respond during business hours (${COMPANY.hours}). Our systems support active loads around the clock.`,
+    a: `Send your lane through the quote form and our dispatch desk will respond during business hours (${COMPANY.hours}). Questions before then? The AI assistant in our chat answers 24/7.`,
   },
   {
     q: 'Are you hiring drivers?',

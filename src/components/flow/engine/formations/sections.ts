@@ -127,18 +127,23 @@ export class ComplianceFormation extends StageFormation {
  * ruler), and a sparse flow inside that warms at the trailer's end.
  */
 export class FleetFormation extends StageFormation {
-  assign(list: Int32Array) { this.f = this.claim(list, 0.2, 22); }
+  assign(list: Int32Array) { this.f = this.claim(list, 0.3, 22); }
   step(t: number) {
     const { P } = this.ctx;
     const { x, y, w, h } = this.r;
     for (const i of this.f) {
       const role = P.s3[i];
-      if (role < 0.36) {
+      if (role < 0.06) {
+        // end walls: close the box at 0 ft and 53 ft
+        const leftEnd = role < 0.03;
+        P.tx[i] = x + (leftEnd ? 0 : w) + (P.s2[i] - 0.5) * 1.2; P.ty[i] = y + P.s1[i] * h;
+        if (leftEnd) P.setC(i, 0.86, 0.87, 0.9, 0.85); else P.setC(i, 1, 0.54, 0.14, 0.9);
+      } else if (role < 0.36) {
         // top and bottom edges: a tight line, drifting slowly along its length
-        const top = role < 0.18;
+        const top = role < 0.21;
         const lx = fract(P.s1[i] + t / 90) * w;
         P.tx[i] = x + lx; P.ty[i] = y + (top ? 0 : h) + (P.s2[i] - 0.5) * 1.2;
-        P.setC(i, 0.86, 0.87, 0.9, 0.7);
+        P.setC(i, 0.86, 0.87, 0.9, 0.9);
       } else if (role < 0.46) {
         // dividers at 10, 20, 30, 40 and 50 ft
         const k = 1 + Math.floor(P.s1[i] * 5), lx = ((k * 10) / 53) * w;
@@ -148,7 +153,7 @@ export class FleetFormation extends StageFormation {
         const lx = fract(P.s1[i] + (t / 60) * (0.8 + 0.4 * role)) * w, ly = (0.12 + 0.76 * P.s2[i]) * h;
         P.tx[i] = x + lx; P.ty[i] = y + ly;
         const end = lx > w * 0.97 ? 1 : 0;
-        P.setC(i, 0.84 + 0.16 * end, 0.84 - 0.3 * end, 0.84 - 0.7 * end, 0.42 * Math.min(1, lx / 6 + 0.3));
+        P.setC(i, 0.84 + 0.16 * end, 0.84 - 0.3 * end, 0.84 - 0.7 * end, 0.6 * Math.min(1, lx / 6 + 0.3));
       }
     }
   }

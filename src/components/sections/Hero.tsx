@@ -78,14 +78,18 @@ function StaticMap({ geometry, hidden }: { geometry: LaneGeometry | null; hidden
         <pattern id="ff-dots" width="7" height="7" patternUnits="userSpaceOnUse">
           <circle cx="3.5" cy="3.5" r="1.2" fill="rgba(214,222,236,0.42)" />
         </pattern>
+        <pattern id="ff-dots-lg" width="15" height="15" patternUnits="userSpaceOnUse">
+          <circle cx="7.5" cy="7.5" r="3" fill="rgba(214,222,236,0.5)" />
+        </pattern>
         <linearGradient id="ff-lane" x1="0" x2="1">
           <stop offset="0" stopColor="#ffcc99" />
           <stop offset="1" stopColor="#f26b1d" />
         </linearGradient>
       </defs>
-      {d && <path d={d} fill="url(#ff-dots)" />}
+      {d && <path className="land land-sm" d={d} fill="url(#ff-dots)" />}
+      {d && <path className="land land-lg" d={d} fill="url(#ff-dots-lg)" />}
       {p1 && p2 && c && (
-        <path d={`M${p1[0]} ${p1[1]}Q${c[0]} ${c[1]} ${p2[0]} ${p2[1]}`} fill="none" stroke="url(#ff-lane)" strokeWidth="4" strokeLinecap="round" />
+        <path d={`M${p1[0]} ${p1[1]}Q${c[0]} ${c[1]} ${p2[0]} ${p2[1]}`} fill="none" stroke="url(#ff-lane)" strokeWidth="3" vectorEffect="non-scaling-stroke" strokeLinecap="round" />
       )}
     </svg>
   );

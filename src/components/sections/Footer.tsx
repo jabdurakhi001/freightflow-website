@@ -13,7 +13,8 @@ export default function Footer() {
         <div>
           <ul>
             <li><a href={`mailto:${COMPANY.email}`}>{COMPANY.email}</a></li>
-            <li>Dispatch: {COMPANY.hours}</li>
+            <li>Dispatch desk: {COMPANY.hours}</li>
+            <li>AI chat assistant: {COMPANY.aiHours}</li>
             <li><a href={COMPANY.applyUrl}>Driver application</a></li>
           </ul>
         </div>
