@@ -1,13 +1,14 @@
 # FreightFlow Website
 
-Marketing site for FreightFlow Logistics — a single-page React app built with Vite, TypeScript, and Tailwind CSS, built on an Interstate-signage design system (Overpass type, guide-sign green, work-zone orange), with a Remotion-rendered hero, quote capture and live chat.
+Marketing site for FreightFlow Logistics: a single page that rides along with one truck from night to dawn. A real-time 3D scene (three.js) sits fixed behind the page and the scroll position directs it: each chapter of copy calls a camera shot, and the scene blends between them.
 
 ## Tech stack
 
 - **React 19** + **TypeScript**
 - **Vite 6** (dev server & build)
 - **Tailwind CSS 4**
-- **motion** (animations, scroll-driven hero)
+- **three.js** (the scroll-directed 3D scene, loaded as its own chunk after first paint)
+- **motion** (modal and chat transitions)
 - **lucide-react** (icons)
 - **Supabase** / serverless API routes under `api/`
 
@@ -37,28 +38,24 @@ See [.env.example](.env.example). At minimum:
 | `npm run preview` | Preview the production build         |
 | `npm run lint`    | Type-check with `tsc --noEmit`       |
 
-## Motion assets (Remotion)
+## The drive (3D scene)
 
-The hero clip, the section photos and the social share image are built from the scripts in [`video/`](video/). It's a separate package, so the site build doesn't depend on it; the rendered files are committed.
+Everything 3D lives in [`src/drive/`](src/drive/); React only talks to it through a small bridge in [`src/components/drive/`](src/components/drive/).
 
-```bash
-cd video
-npm install
-npm run studio   # preview and tweak the Remotion stills
-npm run render   # writes public/hero/truck-reveal*, public/photos/*.jpg and public/og-image.jpg
-```
+| File | What it is |
+| --- | --- |
+| `shots.ts` | The camera script: one shot per chapter (camera, time of day, blueprint amount, map, gates). Edit this to re-direct the film. |
+| `engine.ts` | Renderer, scroll → shot blending, lighting, labels pinned to the scene, quality watchdog. |
+| `truck.ts` | The procedural tractor and 53′ trailer (no model files; textures are drawn on canvas). |
+| `road.ts`, `scenery.ts`, `sky.ts` | Road and terrain shaders, traffic, lamps, skyline, ridgelines, night-to-dawn sky. |
+| `gates.ts` | The five checkpoints of “How it works”; scrolling drives the truck through them. |
+| `map3d.ts` | The lower-48 map the camera lifts off to, the visitor's lane and the illustrative network. |
 
-Rendering needs a system `ffmpeg` with libx264, libvpx-vp9, the `removelogo` filter and WebP decoding (any distro build has them).
+A chapter is any element with `data-shot="<name>"`; the name must exist in `shots.ts`. Chapters, in order: hero, services (trailer opens to show the load), how it works (pinned, scroll-driven), lanes (map and lane estimate), platform, compliance, fleet (blueprint, drag to turn), drivers, FAQ, quote (the truck leaves into the sunrise).
 
-- **Hero clip** (`encode-hero.mjs`): `video/public/footage/hero-source.mp4` is an 8 s aerial shot of a Cascadia at sunrise. It's cut to the first 6.25 s at 1.25× speed (5 s), lightly graded, and encoded to MP4 and WebM, plus first-frame, last-frame and blurred-backdrop stills.
-  - It plays once and rests on its last frame, so it needs no pause control.
-  - Desktop shows the full frame as a feathered window on the right, so the sign never covers the truck; phones and tablets show it as a band above the sign.
-  - Reduced-motion and Data Saver visitors get the last frame as a still (see `src/components/sections/Hero.tsx`).
-- **Photos** (`fleet`, `drivers`, `final`): an owner-supplied shot in `video/public/photos-source/<name>.*` is cropped and encoded as is (the Fleet photo uses one); otherwise the graded Remotion still (`PhotoFleet`, `PhotoDrivers`, `PhotoFinal`) from the truck footage frames in `video/public/footage/` is used. `prepare-footage.mjs` first inpaints a road smear in those frames (output in `video/public/footage-smooth/`, gitignored, rebuilt on demand).
-- **`OgCard`**: the 1200×630 Open Graph / Twitter image, a guide sign beside the hero truck (frames written to `video/public/og/` by `encode-hero.mjs`).
-- **`generate-trucks.mjs`**: optional. Generates new truck stills and a hero clip with the Gemini API into `video/public/generated/` for review (needs `GEMINI_API_KEY` with billing enabled).
+**Fallbacks.** `capabilities.ts` picks a mode per device: `high` (bloom), `low` (no post-processing, 1× pixels) or `static` (no canvas, a painted backdrop; also used for save-data and when WebGL is missing). If frames stay slow at runtime the page steps down one rung. With `prefers-reduced-motion` the scene stops moving on its own and cuts between chapters, and the pinned chapter becomes a plain list. Append `?drive=high|low|static` to pin a mode while testing.
 
-Remotion is free for individuals and companies with up to 3 employees; larger teams need a [company license](https://www.remotion.pro/license).
+The share image tooling in [`video/`](video/) (Remotion) is a separate package and is not part of the site build.
 
 ## Deployment
 

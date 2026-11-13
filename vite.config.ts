@@ -13,6 +13,10 @@ export default defineConfig(({mode}) => {
         '@': path.resolve(__dirname, '.'),
       },
     },
+    build: {
+      // the 3D engine (three.js + scene) is one lazy chunk, fetched after first paint
+      chunkSizeWarningLimit: 700,
+    },
     test: {
       include: ['src/**/*.test.ts'],
       environment: 'node',

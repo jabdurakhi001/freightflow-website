@@ -1,18 +1,20 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
 import { QuoteModalProvider, useQuoteModal } from './QuoteContext';
-import { FlowProvider, useFlowBridge, useFlowMode } from './components/flow/FlowContext';
-import ParticleField from './components/flow/ParticleField';
-import Header from './components/sections/Header';
-import Hero from './components/sections/Hero';
-import Services from './components/sections/Services';
-import HowItWorks from './components/sections/HowItWorks';
-import Platform from './components/sections/Platform';
-import Compliance from './components/sections/Compliance';
-import Fleet from './components/sections/Fleet';
-import Drivers from './components/sections/Drivers';
-import FAQ from './components/sections/FAQ';
-import QuoteCta from './components/sections/QuoteCta';
-import Footer from './components/sections/Footer';
+import { DriveProvider, useDrive, useDriveMode, useDriveStill } from './components/drive/DriveContext';
+import DriveCanvas from './components/drive/DriveCanvas';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import Hero from './components/chapters/Hero';
+import Services from './components/chapters/Services';
+import HowItWorks from './components/chapters/HowItWorks';
+import Lanes from './components/chapters/Lanes';
+import Platform from './components/chapters/Platform';
+import Compliance from './components/chapters/Compliance';
+import Fleet from './components/chapters/Fleet';
+import Drivers from './components/chapters/Drivers';
+import FAQ from './components/chapters/FAQ';
+import QuoteCta from './components/chapters/QuoteCta';
+import RouteRail from './components/chapters/RouteRail';
 
 const Overlays = lazy(() => import('./components/Overlays'));
 
@@ -31,22 +33,24 @@ function useOverlaysReady(force: boolean) {
 }
 
 function Page() {
-  const mode = useFlowMode();
-  const bridge = useFlowBridge();
+  const mode = useDriveMode();
+  const still = useDriveStill();
+  const drive = useDrive();
   const { isQuoteOpen } = useQuoteModal();
   // Nothing animates behind the quote form: keeps it responsive on slow GPUs.
-  useEffect(() => bridge.setPaused(isQuoteOpen), [bridge, isQuoteOpen]);
+  useEffect(() => drive.setPaused(isQuoteOpen), [drive, isQuoteOpen]);
   const overlays = useOverlaysReady(isQuoteOpen);
   return (
     <>
       <a className="skip" href="#main">Skip to content</a>
-      <ParticleField />
-      <div className={`site${mode === 'static' ? ' is-static' : ''}`}>
+      <DriveCanvas />
+      <div className={`site${mode === 'static' ? ' is-static' : ''}${still ? ' is-still' : ''}`}>
         <Header />
         <main id="main">
           <Hero />
           <Services />
           <HowItWorks />
+          <Lanes />
           <Platform />
           <Compliance />
           <Fleet />
@@ -55,6 +59,7 @@ function Page() {
           <QuoteCta />
         </main>
         <Footer />
+        <RouteRail />
       </div>
       {overlays && (
         <Suspense fallback={null}>
@@ -68,9 +73,9 @@ function Page() {
 export default function App() {
   return (
     <QuoteModalProvider>
-      <FlowProvider>
+      <DriveProvider>
         <Page />
-      </FlowProvider>
+      </DriveProvider>
     </QuoteModalProvider>
   );
 }
