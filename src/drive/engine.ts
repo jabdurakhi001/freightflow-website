@@ -8,7 +8,7 @@ import { createRoad, createTerrain } from './road';
 import { createScenery } from './scenery';
 import { createGates, GATE_SPACING } from './gates';
 import { createMap } from './map3d';
-import { createTruck } from './truckStub';
+import { createTruck } from './truck';
 import { SHOTS, blendShots, type Shot } from './shots';
 
 export type DriveQuality = 'high' | 'low';
@@ -40,7 +40,7 @@ interface Section { el: HTMLElement; key: string; top: number; height: number; s
 const smoother = (t: number) => t * t * t * (t * (t * 6 - 15) + 10);
 const clamp01 = (t: number) => Math.min(1, Math.max(0, t));
 const NIGHT_FOG = new THREE.Color('#071528'), DAWN_FOG = new THREE.Color('#2f2a47');
-const NIGHT_GLOW = new THREE.Color(0.014, 0.04, 0.095), DAWN_GLOW = new THREE.Color(1.0, 0.5, 0.26);
+const NIGHT_GLOW = new THREE.Color(0.014, 0.04, 0.095), DAWN_GLOW = new THREE.Color(0.55, 0.27, 0.15);
 
 export function createDrive(opts: DriveOptions): DriveHandle {
   const { canvas, still } = opts;
@@ -68,6 +68,9 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   const scenery = createScenery(low);
   const gates = createGates();
   const truck = createTruck();
+  // the road shader already paints the headlamp pool (and lights the lane paint with it)
+  const pool = truck.group.getObjectByName('headlightPool');
+  if (pool) pool.visible = false;
   world.add(terrain.mesh, road.mesh, scenery.group, gates.group, truck.group);
   const map = createMap(low);
   scene.add(sky, world, map.group);
@@ -79,7 +82,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   if (!low) {
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
-    bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.62, 0.55, 0.86);
+    bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.42, 0.5, 0.9);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
   }
@@ -171,6 +174,8 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     el.style.opacity = o.toFixed(3);
     el.style.visibility = o < 0.02 ? 'hidden' : 'visible';
     if (o >= 0.02) el.style.transform = `translate3d(${x.toFixed(1)}px, ${y.toFixed(1)}px, 0)`;
+    // near the right edge the label hangs to the left of its point
+    if (o >= 0.02) el.classList.toggle('flip', x > W * 0.6);
   };
 
   const frame = (now: number) => {
@@ -256,6 +261,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     if (Math.abs(orbitYaw) > 1e-4 && orbitW > 0) camPos.sub(camTgt).applyAxisAngle(THREE.Object3D.DEFAULT_UP, orbitYaw * orbitW).add(camTgt);
     // the opening move: the camera settles in from further back
     camPos.sub(camTgt).multiplyScalar(k * (1 + 0.32 * (1 - smoother(intro)))).add(camTgt);
+    camPos.y = Math.max(camPos.y, 0.9);
     camera.fov = shot.fov;
     camera.up.set(0, 1, 0);
     camera.position.copy(camPos);
@@ -286,7 +292,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     placeLabel('hub', ORIGIN, (shot.map - 0.8) * 5 * shot.net);
     const xs = (shot.xT - 0.75) * 4;
     truck.group.updateMatrixWorld();
-    (['tractor', 'sleeper', 'trailer', 'telematics'] as const).forEach((n) => placeLabel(`fleet-${n}`, tmp2.copy(truck.anchors[n]).applyMatrix4(truck.group.matrixWorld), xs));
+    (['tractor', 'sleeper', 'trailer'] as const).forEach((n) => placeLabel(`fleet-${n}`, tmp2.copy(truck.anchors[n]).applyMatrix4(truck.group.matrixWorld), xs));
 
     if (composer) composer.render(dtRaw); else renderer.render(scene, camera);
     if (!readySent) { readySent = true; opts.onReady?.(); }

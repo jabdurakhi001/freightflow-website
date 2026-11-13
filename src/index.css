@@ -308,8 +308,10 @@ p { margin: 0; }
 .pin-spec b { left: 30px; top: 34px; font-weight: 500; }
 .pin-spec.up::before { transform: rotate(145deg); }
 .pin-spec.up b { top: auto; bottom: 34px; }
-.pin-spec.left::before { transform: rotate(-145deg); }
-.pin-spec.left b { left: auto; right: 30px; }
+.pin.flip b { left: auto; right: 14px; }
+.pin-spec.flip::before { transform: rotate(35deg); }
+.pin-spec.flip b { right: 30px; }
+.pin-spec.up.flip::before { transform: rotate(-145deg); }
 .pin small { display: block; font: 500 11px var(--body); letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); }
 @media (max-width: 760px) { .pin b { font-size: 12.5px; padding: 4px 8px; } .pin-spec small { font-size: 10px; } }
 
@@ -508,7 +510,8 @@ p { margin: 0; }
   .is-scrub .steps { margin-top: 10px; }
   .is-scrub .steps li { padding: 7px 0; }
   .is-scrub .steps h3 { font-size: 16.5px; }
-  .ch-cta { padding-top: 96px; }
+  .ch-cta { align-items: flex-end; padding-top: 46vh; padding-top: 46svh; padding-bottom: 56px; min-height: 100vh; min-height: 100svh; }
+  .ch-cta::before { background: linear-gradient(transparent 30%, rgba(6, 14, 30, 0.82) 56%, rgba(6, 14, 30, 0.92)); }
   .orbit-pad { left: 0; right: 0; top: auto; bottom: 100%; height: 46vh; height: 46svh; margin-bottom: 0; }
   .ch-right .orbit-pad { left: 0; }
 }

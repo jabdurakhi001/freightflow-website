@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import { env, FOG_PARS } from './sky';
 import { ROAD } from './road';
+import { mergeGeometries } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 const Z_NEAR = 160, Z_FAR = -760, Z_SPAN = Z_NEAR - Z_FAR;
 const wrapZ = (z: number) => ((((z - Z_FAR) % Z_SPAN) + Z_SPAN) % Z_SPAN) + Z_FAR;
@@ -229,11 +230,17 @@ export function createScenery(low: boolean) {
   const cars: Car[] = [];
   const oncoming = low ? 5 : 8;
   for (let i = 0; i < oncoming; i++) {
-    const truck = i % 3 === 2;
+    const truck = false;
     cars.push({ x: i % 2 ? -13.5 : -17.1, z: Z_FAR + (i + Math.random() * 0.6) * (Z_SPAN / oncoming), v: 27 + Math.random() * 5, dir: 1, len: truck ? 17 : 4.6, h: truck ? 3.9 : 1.45 });
   }
   cars.push({ x: -3.7, z: -150, v: 28.5, dir: -1, len: 4.6, h: 1.45 }, { x: -3.7, z: 120, v: 23.5, dir: -1, len: 4.8, h: 1.6 });
-  const carMesh = new THREE.InstancedMesh(new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0), dark, cars.length);
+  // a car is a body with a narrower cabin on top: enough of a silhouette at this distance
+  const carGeo = mergeGeometries([
+    new THREE.BoxGeometry(1, 0.52, 1).translate(0, 0.3, 0),
+    new THREE.BoxGeometry(0.86, 0.42, 0.52).translate(0, 0.77, -0.04),
+  ]);
+  const carMat = new THREE.MeshBasicMaterial({ color: 0x0a101c });
+  const carMesh = new THREE.InstancedMesh(carGeo, carMat, cars.length);
   carMesh.frustumCulled = false;
   group.add(carMesh);
   group.add(glows.points);
@@ -246,11 +253,11 @@ export function createScenery(low: boolean) {
     let pi = 0;
     for (let i = 0; i < POSTS; i++) {
       const z = wrapZ(i * POST_STEP + offset);
-      m4.makeTranslation(ROAD.right - 0.5, 0, z); posts.setMatrixAt(pi++, m4);
+      m4.makeTranslation(ROAD.oEdgeB - 1.6, 0, z); posts.setMatrixAt(pi++, m4);
       m4.makeTranslation(ROAD.medianA - 0.35, 0, z + 15); posts.setMatrixAt(pi++, m4);
       const near = z > -260 && z < 60;
       if (near) {
-        glows.add(ROAD.right - 0.5, 1.05, z, 0.5, 0.52, 0.55, 0.12);
+        glows.add(ROAD.oEdgeB - 1.6, 1.05, z, 0.5, 0.52, 0.55, 0.12);
         glows.add(ROAD.medianA - 0.35, 1.05, z + 15, 0.6, 0.38, 0.1, 0.12);
       }
     }
@@ -270,12 +277,13 @@ export function createScenery(low: boolean) {
       c.z = wrapZ(c.z);
       p3.set(c.x, 0.25, c.z); s3.set(c.len > 10 ? 2.5 : 1.85, c.h, c.len);
       m4.compose(p3, q, s3); carMesh.setMatrixAt(i, m4);
-      const front = c.z + (c.dir * c.len) / 2, rear = c.z - (c.dir * c.len) / 2;
+      const front = c.z + c.dir * (c.len / 2 + 0.35), rear = c.z - c.dir * (c.len / 2 + 0.35);
       const hl = 2.0 * (0.45 + 0.55 * night);
-      glows.add(c.x - 0.7, 0.85, front, hl, hl * 0.95, hl * 0.85, 1.5);
-      glows.add(c.x + 0.7, 0.85, front, hl, hl * 0.95, hl * 0.85, 1.5);
-      glows.add(c.x - 0.72, 0.95, rear, 1.6, 0.06, 0.03, 0.9);
-      glows.add(c.x + 0.72, 0.95, rear, 1.6, 0.06, 0.03, 0.9);
+      glows.add(c.x - 0.7, 0.85, front, hl, hl * 0.95, hl * 0.85, 0.7 + 0.8 * night);
+      glows.add(c.x + 0.7, 0.85, front, hl, hl * 0.95, hl * 0.85, 0.7 + 0.8 * night);
+      const tl = 0.45 + 0.45 * night;
+      glows.add(c.x - 0.72, 0.95, rear, 1.6, 0.06, 0.03, tl);
+      glows.add(c.x + 0.72, 0.95, rear, 1.6, 0.06, 0.03, tl);
     });
     carMesh.instanceMatrix.needsUpdate = true;
     if (show.skyline > 0.02) {

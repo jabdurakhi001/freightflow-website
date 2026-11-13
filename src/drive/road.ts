@@ -51,16 +51,16 @@ export function createRoad() {
         float lz = mod(z + 40.0, 80.0) - 40.0;
         vec2 lp = vec2(x + 7.0, lz) / vec2(11.0, 13.0);
         float lamp = exp(-dot(lp, lp)) * (1.0 - smoothstep(0.35, 0.8, uDay));
-        float ambient = 0.3 + 1.0 * uDay;
+        float ambient = 0.3 + 0.75 * uDay;
         vec3 lightCol = vec3(1.0, 0.93, 0.8) * head * 0.9 + vec3(1.0, 0.1, 0.06) * tail + vec3(1.0, 0.72, 0.42) * lamp * 0.5;
         vec3 col = asphalt * (ambient + lightCol * 9.0);
         vec3 paint = (vec3(0.82, 0.84, 0.86) * white + vec3(0.95, 0.66, 0.16) * yellow) * wear;
         col += paint * (0.10 + 0.5 * uDay + head * 1.6 + lamp * 0.5 + tail * vec3(1.0, 0.2, 0.15));
         // wet sheen: the horizon's glow smeared along the road at grazing angles
         vec3 v = normalize(uCam - vW);
-        float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), 5.0);
+        float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), mix(5.0, 10.0, uDay));
         float toSun = pow(max(dot(normalize(-v.xz), normalize(uSunDir.xz)), 0.0), 3.0);
-        col += uGlow * fres * (0.5 - 0.2 * uDay + toSun * 0.9 * uDay) * (0.6 + 0.4 * n) * (1.0 - median);
+        col += uGlow * fres * (0.5 * (1.0 - uDay) + toSun * 0.2 * uDay) * (0.6 + 0.4 * n) * (1.0 - median);
         col = mix(col, uFogColor, fogAmt(dist));
         gl_FragColor = vec4(col, 1.0);
         #include <tonemapping_fragment>

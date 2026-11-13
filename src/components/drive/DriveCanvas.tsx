@@ -103,9 +103,8 @@ export default function DriveCanvas() {
           <span className="pin pin-city to" ref={pin('lane-to')}><i /><b>{lane.to ? shortName(lane.to) : ''}</b></span>
           <span className="pin pin-city" ref={pin('hub')}><i /><b>Chicago hub</b></span>
           <span className="pin pin-spec" ref={pin('fleet-tractor')}><i /><b><small>Tractor</small>{spec('Tractor')}</b></span>
-          <span className="pin pin-spec up" ref={pin('fleet-sleeper')}><i /><b><small>Model years</small>{spec('Model years')}</b></span>
           <span className="pin pin-spec up" ref={pin('fleet-trailer')}><i /><b><small>Trailer</small>{spec('Trailer')}</b></span>
-          <span className="pin pin-spec up left" ref={pin('fleet-telematics')}><i /><b><small>Telematics</small>{spec('Telematics')}</b></span>
+          <span className="pin pin-spec up" ref={pin('fleet-sleeper')}><i /><b><small>Telematics</small>{spec('Telematics')}</b></span>
         </div>
       )}
     </>

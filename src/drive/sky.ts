@@ -49,11 +49,11 @@ export function createSky() {
         // first light along the horizon long before the sun
         col += vec3(0.95, 0.42, 0.22) * pow(az, 6.0) * smoothstep(0.16, -0.01, h) * smoothstep(0.04, 0.5, uDay) * 0.5;
         // stars
-        vec3 sp = d * 150.0, g = floor(sp);
+        vec3 sp = d * 210.0, g = floor(sp);
         float s = hash(g);
-        float dotty = smoothstep(0.42, 0.05, length(fract(sp) - 0.5));
+        float dotty = smoothstep(0.2, 0.02, length(fract(sp) - 0.5));
         float tw = 0.75 + 0.25 * sin(uTime * 1.7 + s * 90.0);
-        float star = smoothstep(0.985, 1.0, s) * dotty * smoothstep(0.02, 0.3, h) * tw;
+        float star = smoothstep(0.93, 1.0, s) * dotty * smoothstep(0.02, 0.3, h) * tw;
         col += vec3(0.85, 0.9, 1.0) * star * (1.0 - smoothstep(0.1, 0.7, uDay)) * 1.4;
         // below the horizon: settle into the fog tone
         col = mix(col, col * 0.55, smoothstep(0.0, -0.12, d.y));
