@@ -14,7 +14,7 @@ const NOISE = /* glsl */ `
 export function createRoad() {
   const uniforms = {
     ...env,
-    uOffset: { value: 0 }, uHead: { value: 1 }, uLead: { value: 0 }, uCam: { value: new THREE.Vector3() }, uGates: { value: 0 },
+    uOffset: { value: 0 }, uHead: { value: 1 }, uLead: { value: 0 }, uCam: { value: new THREE.Vector3() }, uGates: { value: 0 }, uShadow: { value: 1 },
   };
   const mat = new THREE.ShaderMaterial({
     uniforms,
@@ -24,7 +24,7 @@ export function createRoad() {
     `,
     fragmentShader: /* glsl */ `
       varying vec3 vW;
-      uniform float uOffset, uHead, uLead, uDay, uGates; uniform vec3 uCam, uGlow, uSunDir;
+      uniform float uOffset, uHead, uLead, uDay, uGates, uShadow; uniform vec3 uCam, uGlow, uSunDir;
       ${FOG_PARS}
       ${NOISE}
       float band(float x, float c, float w) { float aa = fwidth(x) * 1.2; return 1.0 - smoothstep(w - aa, w + aa, abs(x - c)); }
@@ -53,9 +53,16 @@ export function createRoad() {
         float lamp = exp(-dot(lp, lp)) * (1.0 - smoothstep(0.35, 0.8, uDay));
         float ambient = 0.3 + 0.75 * uDay;
         vec3 lightCol = vec3(1.0, 0.93, 0.8) * head * 0.9 + vec3(1.0, 0.1, 0.06) * tail + vec3(1.0, 0.72, 0.42) * lamp * 0.5;
+        // the rig's shadow: tight under the chassis, a longer soft one thrown back by the low sun
+        float sz = vW.z + uLead;
+        float under = (1.0 - smoothstep(1.15, 1.75, abs(x))) * (1.0 - smoothstep(10.4, 11.4, abs(sz)));
+        float thrown = (1.0 - smoothstep(1.0, 2.6, abs(x - (sz - 10.0) * 0.16 * step(10.0, sz)))) * smoothstep(-11.5, -9.5, sz) * (1.0 - smoothstep(10.0, 10.0 + 34.0 * uDay, sz));
+        float shade = max(under * 0.78, thrown * 0.5 * smoothstep(0.3, 0.9, uDay)) * uShadow;
+        ambient *= 1.0 - shade;
+        lightCol *= 1.0 - under * 0.6 * uShadow;
         vec3 col = asphalt * (ambient + lightCol * 9.0);
         vec3 paint = (vec3(0.82, 0.84, 0.86) * white + vec3(0.95, 0.66, 0.16) * yellow) * wear;
-        col += paint * (0.10 + 0.5 * uDay + head * 1.6 + lamp * 0.5 + tail * vec3(1.0, 0.2, 0.15));
+        col += paint * (1.0 - shade * 0.8) * (0.10 + 0.5 * uDay + head * 1.6 + lamp * 0.5 + tail * vec3(1.0, 0.2, 0.15));
         // wet sheen: the horizon's glow smeared along the road at grazing angles
         vec3 v = normalize(uCam - vW);
         float fres = pow(1.0 - clamp(v.y, 0.0, 1.0), mix(5.0, 10.0, uDay));

@@ -3,6 +3,7 @@ import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer
 import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js';
 import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass.js';
 import { OutputPass } from 'three/examples/jsm/postprocessing/OutputPass.js';
+import { ShaderPass } from 'three/examples/jsm/postprocessing/ShaderPass.js';
 import { createSky, env } from './sky';
 import { createRoad, createTerrain } from './road';
 import { createScenery } from './scenery';
@@ -79,12 +80,29 @@ export function createDrive(opts: DriveOptions): DriveHandle {
 
   let composer: EffectComposer | null = null;
   let bloom: UnrealBloomPass | null = null;
+  let grade: ShaderPass | null = null;
   if (!low) {
     composer = new EffectComposer(renderer);
     composer.addPass(new RenderPass(scene, camera));
     bloom = new UnrealBloomPass(new THREE.Vector2(256, 256), 0.42, 0.5, 0.9);
     composer.addPass(bloom);
     composer.addPass(new OutputPass());
+    // the lens: darker corners and a little grain, so flat gradients don't band
+    grade = new ShaderPass({
+      uniforms: { tDiffuse: { value: null }, uTime: { value: 0 }, uAmount: { value: 1 } },
+      vertexShader: 'varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+      fragmentShader: `varying vec2 vUv; uniform sampler2D tDiffuse; uniform float uTime, uAmount;
+        float h(vec2 p) { return fract(sin(dot(p, vec2(12.9898, 78.233)) + uTime) * 43758.5453); }
+        void main() {
+          vec4 c = texture2D(tDiffuse, vUv);
+          vec2 q = vUv - 0.5;
+          float v = smoothstep(0.95, 0.25, length(q * vec2(1.0, 0.82)));
+          c.rgb *= mix(1.0, 0.72 + 0.28 * v, uAmount);
+          c.rgb += (h(gl_FragCoord.xy) - 0.5) * 0.028 * uAmount;
+          gl_FragColor = c;
+        }`,
+    });
+    composer.addPass(grade);
   }
 
   // ---------- layout ----------
@@ -232,6 +250,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     if (roadShow) {
       road.uniforms.uOffset.value = total;
       road.uniforms.uLead.value = shot.lead;
+      road.uniforms.uShadow.value = 1 - Math.max(shot.xT, shot.xL) * 0.75;
       terrain.update(total);
       const flick = intro < 0.5 ? (Math.sin(intro * 90) > -0.2 ? 1 : 0.25) * smoother(clamp01(intro * 2.4)) : 1;
       const head = (1 + headBoost) * flick * (1 - shot.map);
@@ -294,6 +313,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     truck.group.updateMatrixWorld();
     (['tractor', 'sleeper', 'trailer'] as const).forEach((n) => placeLabel(`fleet-${n}`, tmp2.copy(truck.anchors[n]).applyMatrix4(truck.group.matrixWorld), xs));
 
+    if (grade) { grade.uniforms.uTime.value = still ? 0 : time % 10; grade.uniforms.uAmount.value = 1 - shot.map * 0.6; }
     if (composer) composer.render(dtRaw); else renderer.render(scene, camera);
     if (!readySent) { readySent = true; opts.onReady?.(); }
 
