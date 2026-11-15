@@ -53,9 +53,15 @@ captures directly only gave moving 3D renders. Each capture was first re-rendere
 photograph with `gpt_image_2_6` (capture as `image_references`, quality high, 2k), and
 those photographs are the plates and the start frames for video.
 
-Still to do: animate the plates. Set `video: true` on a plate in `PLATES` and put the clip
-at `public/drive/video/<name>.mp4` (muted, looping, H.264, aim for under ~3 MB). Seedance 2.5
-cost through the connector, 8 s 16:9: draft 24 credits, 720p 56, 1080p 128.
+Clips are in too: `public/drive/video/<name>.mp4` (1080p) and `<name>-720.mp4` (phones),
+made from the plates with Seedance 2.5 at 1080p, 8 s (128 credits each through the
+connector). `hero`, `compliance` and `sunrise` hold a steady framing and are encoded as
+seamless 7 s loops (last second cross-faded into the first). `drivers` and `aerial` have a
+camera move, so they play once as the chapter arrives and hold their last frame
+(`video: 'once'` in `PLATES`). Reduced motion and save-data get the stills only.
+
+The generated truck is not a Freightliner Cascadia, which the copy names. The owner has
+been told; regenerate the plates or use real fleet photos if that needs to match.
 
 ## Rules that still apply
 

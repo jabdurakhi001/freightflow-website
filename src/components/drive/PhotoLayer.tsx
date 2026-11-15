@@ -16,15 +16,16 @@ interface Plate {
   posTall: string;
   /** where the copy sits, for the scrim */
   copy: 'left' | 'wide' | 'top';
-  video?: boolean;
+  /** a clip over the still: `loop` repeats seamlessly, `once` plays as the chapter arrives and holds its last frame */
+  video?: 'loop' | 'once';
 }
 
 export const PLATES: Plate[] = [
-  { shot: 'hero', name: 'hero', pos: '72% 50%', posTall: '86% 50%', copy: 'left' },
-  { shot: 'compliance', name: 'compliance', pos: '80% 50%', posTall: '86% 50%', copy: 'left' },
-  { shot: 'drivers', name: 'drivers', pos: '82% 50%', posTall: '100% 50%', copy: 'left' },
-  { shot: 'faq', name: 'aerial', pos: '70% 60%', posTall: '74% 60%', copy: 'wide' },
-  { shot: 'cta', name: 'sunrise', pos: '50% 70%', posTall: '50% 70%', copy: 'top' },
+  { shot: 'hero', name: 'hero', pos: '72% 50%', posTall: '86% 50%', copy: 'left', video: 'loop' },
+  { shot: 'compliance', name: 'compliance', pos: '80% 50%', posTall: '86% 50%', copy: 'left', video: 'loop' },
+  { shot: 'drivers', name: 'drivers', pos: '82% 50%', posTall: '100% 50%', copy: 'left', video: 'once' },
+  { shot: 'faq', name: 'aerial', pos: '70% 60%', posTall: '74% 60%', copy: 'wide', video: 'once' },
+  { shot: 'cta', name: 'sunrise', pos: '50% 70%', posTall: '50% 70%', copy: 'top', video: 'loop' },
 ];
 
 const clamp01 = (v: number) => Math.min(1, Math.max(0, v));
@@ -35,6 +36,10 @@ export default function PhotoLayer() {
   const still = useDriveStill();
   const layers = useRef<(HTMLDivElement | null)[]>([]);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
+  const shown = useRef<boolean[]>([]);
+  const refresh = useRef<() => void>(() => {});
+  // no clips for reduced motion or a data-saving connection: the stills stand on their own
+  const [clips] = useState(() => !(navigator as Navigator & { connection?: { saveData?: boolean } }).connection?.saveData);
   // a plate's files are requested once its chapter is within reach, the hero's at once
   // phones get the 720p encode
   const [small] = useState(() => Math.min(window.innerWidth, window.innerHeight) < 600);
@@ -71,14 +76,20 @@ export default function PhotoLayer() {
         if (r.top < H * 2.5 && r.bottom > -H * 1.5) near.push(i);
         const v = videos.current[i];
         if (v) {
-          if (o > 0.02 && !still) { if (v.paused) void v.play().catch(() => {}); }
-          else if (!v.paused) v.pause();
+          const on = o > 0.02;
+          if (on && !shown.current[i]) {
+            // arriving: a one-shot clip starts over, a loop carries on
+            if (PLATES[i].video === 'once') v.currentTime = 0;
+            void v.play().catch(() => {});
+          } else if (!on && !v.paused) v.pause();
+          shown.current[i] = on;
         }
       });
       drive.setCovered(covered);
       if (near.length) setArmed((a) => (near.every((i) => a[i]) ? a : a.map((v, i) => v || near.includes(i))));
     };
     const on = () => { if (!raf) raf = requestAnimationFrame(read); };
+    refresh.current = on;
     window.addEventListener('scroll', on, { passive: true });
     window.addEventListener('resize', on);
     const ro = new ResizeObserver(on);
@@ -105,8 +116,8 @@ export default function PhotoLayer() {
                 alt="" decoding="async" fetchPriority={i === 0 ? 'high' : 'low'}
               />
             )}
-            {armed[i] && p.video && !still && (
-              <video ref={(el) => { videos.current[i] = el; }} src={`/drive/video/${p.name}${small ? '-720' : ''}.mp4`} muted loop playsInline preload={i === 0 ? 'auto' : 'metadata'} />
+            {armed[i] && p.video && clips && !still && (
+              <video ref={(el) => { videos.current[i] = el; if (el) refresh.current(); }} src={`/drive/video/${p.name}${small ? '-720' : ''}.mp4`} muted loop={p.video === 'loop'} playsInline preload={i === 0 ? 'auto' : 'metadata'} />
             )}
           </div>
         );
