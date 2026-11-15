@@ -385,7 +385,12 @@ export function createDrive(opts: DriveOptions): DriveHandle {
 
   return {
     setLane(from, to) { map.setLane(from, to); kick(); },
-    setPaused(p) { paused = p; if (p) { cancelAnimationFrame(raf); raf = 0; } else kick(); },
+    setPaused(p) {
+      paused = p;
+      if (p) { cancelAnimationFrame(raf); raf = 0; intro = 1; }
+      // resume where the page is now, not where the scene was left
+      else { sY = window.scrollY; sVel = 0; kick(); }
+    },
     flash() { headBoost = 1.4; kick(); },
     orbit(delta) { orbitVel += delta * 9; orbitYaw += delta; kick(); },
     setLabel(name, el) { if (el) labels.set(name, el); else labels.delete(name); kick(); },

@@ -293,6 +293,23 @@ p { margin: 0; }
 .drive-canvas.is-live { opacity: 1; }
 .drive-canvas[hidden] { display: none; }
 
+/* photographic plates that take over from the scene in the on-the-road chapters */
+.photos { position: fixed; inset: 0 auto auto 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; pointer-events: none; }
+.photo { position: absolute; inset: 0; opacity: 0; visibility: hidden; will-change: opacity; background: #050b16; }
+.photo img, .photo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); }
+.photo::after { content: ""; position: absolute; inset: 0; }
+.photo-left::after { background: linear-gradient(90deg, rgba(4, 10, 22, 0.86) 0%, rgba(4, 10, 22, 0.55) 38%, rgba(4, 10, 22, 0) 68%), linear-gradient(rgba(4, 10, 22, 0.55), rgba(4, 10, 22, 0) 22%); }
+.photo-wide::after { background: rgba(4, 10, 22, 0.5); }
+.photo-top::after { background: linear-gradient(rgba(4, 10, 22, 0.7) 0%, rgba(4, 10, 22, 0.25) 46%, rgba(4, 10, 22, 0) 70%); }
+/* Portrait: the plate fills the top of the screen (the bottom for the closing chapter) and
+   melts into the page colour, so the rig stays large instead of being cropped to a sliver. */
+@media (max-aspect-ratio: 4/5) {
+  .photo img, .photo video { height: 62%; object-position: var(--pos-tall, 50% 50%); }
+  .photo-left::after, .photo-wide::after { background: linear-gradient(rgba(5, 11, 22, 0.5) 0%, rgba(5, 11, 22, 0.1) 22%, rgba(5, 11, 22, 0.35) 40%, #050b16 62%); }
+  .photo-top img, .photo-top video { top: auto; bottom: 0; }
+  .photo-top::after { background: linear-gradient(#050b16 38%, rgba(5, 11, 22, 0.45) 58%, rgba(5, 11, 22, 0.05) 80%); }
+}
+
 /* labels the engine pins to points in the scene */
 .pins { position: fixed; inset: 0; z-index: 1; pointer-events: none; overflow: hidden; }
 .pin { position: absolute; left: 0; top: 0; opacity: 0; visibility: hidden; will-change: transform; }

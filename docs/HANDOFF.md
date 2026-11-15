@@ -42,24 +42,20 @@ Reject takes where the "FreightFlow" wordmark is garbled, the livery changes
 Check Higgsfield's terms before automating generation in the browser, and
 confirm the plan allows commercial use of the output.
 
-### Step 2 — build the clips into the site
+### Step 2 — build the plates into the site
 
-Not started. Suggested approach:
+Done for stills. `src/components/drive/PhotoLayer.tsx` cross-fades a photographic plate over
+the canvas for the `hero`, `compliance`, `drivers`, `faq` and `cta` shots and pauses the 3D
+engine while a plate fully covers it. The plates are in `public/drive/photo/`.
 
-- Keep live 3D for `services`, `how`, `lanes`, `platform`, `fleet` (x-ray truck,
-  scroll-driven gates, lane map — video cannot do these).
-- For the five shots above, cross-fade a full-bleed `<video>` over the canvas
-  while that chapter is active, driven by the same active-shot signal the
-  engine already uses. Pause the 3D render while a video fully covers it.
-- Videos: `muted loop playsInline preload="metadata"`, a poster image each,
-  H.264 MP4 (plus WebM if it is smaller), aim for under ~3 MB per clip, in
-  `public/video/`. Load a clip only when its chapter is near.
-- Respect the existing quality ladder: `static` mode and
-  `prefers-reduced-motion` show the poster only, never autoplay.
-- Keep the copy readable: the existing scrims were tuned for the dark 3D scene,
-  so re-check contrast over real footage, on mobile portrait too (clips are
-  16:9; crop with `object-fit: cover` and pick `object-position` per clip).
-- Re-shoot `public/og-image.jpg` from the hero clip when it lands.
+How the plates were made: the Seedance start frame locks the look, so animating the 3D
+captures directly only gave moving 3D renders. Each capture was first re-rendered as a
+photograph with `gpt_image_2_6` (capture as `image_references`, quality high, 2k), and
+those photographs are the plates and the start frames for video.
+
+Still to do: animate the plates. Set `video: true` on a plate in `PLATES` and put the clip
+at `public/drive/video/<name>.mp4` (muted, looping, H.264, aim for under ~3 MB). Seedance 2.5
+cost through the connector, 8 s 16:9: draft 24 credits, 720p 56, 1080p 128.
 
 ## Rules that still apply
 

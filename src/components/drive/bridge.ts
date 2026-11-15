@@ -24,7 +24,14 @@ export class DriveBridge {
     this.engine?.setLane(from, to);
     this.laneListeners.forEach((cb) => cb());
   }
-  setPaused(paused: boolean) { this.paused = paused; this.engine?.setPaused(paused); }
+  setPaused(paused: boolean) { this.paused = paused; this.engine?.setPaused(paused || this.covered); }
+  /** A photo layer fully hides the scene: stop drawing it until it shows again. */
+  covered = false;
+  setCovered(covered: boolean) {
+    if (covered === this.covered) return;
+    this.covered = covered;
+    this.engine?.setPaused(this.paused || covered);
+  }
   setLabel(name: string, el: HTMLElement | null) {
     if (el) this.labels.set(name, el); else this.labels.delete(name);
     this.engine?.setLabel(name, el);
@@ -35,7 +42,7 @@ export class DriveBridge {
   attach(engine: DriveHandle) {
     this.engine = engine;
     engine.setLane(this.lane.from, this.lane.to);
-    if (this.paused) engine.setPaused(true);
+    if (this.paused || this.covered) engine.setPaused(true);
     this.labels.forEach((el, name) => engine.setLabel(name, el));
   }
   detach() { this.engine = null; }

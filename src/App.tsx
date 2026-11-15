@@ -2,6 +2,7 @@ import { lazy, Suspense, useEffect, useState } from 'react';
 import { QuoteModalProvider, useQuoteModal } from './QuoteContext';
 import { DriveProvider, useDrive, useDriveMode, useDriveStill } from './components/drive/DriveContext';
 import DriveCanvas from './components/drive/DriveCanvas';
+import PhotoLayer from './components/drive/PhotoLayer';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Hero from './components/chapters/Hero';
@@ -44,6 +45,7 @@ function Page() {
     <>
       <a className="skip" href="#main">Skip to content</a>
       <DriveCanvas />
+      <PhotoLayer />
       <div className={`site${mode === 'static' ? ' is-static' : ''}${still ? ' is-still' : ''}`}>
         <Header />
         <main id="main">
