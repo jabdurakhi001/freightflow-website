@@ -335,7 +335,7 @@ p { margin: 0; }
 @media (max-width: 760px) { .pin b { font-size: 12.5px; padding: 4px 8px; } .pin-spec small { font-size: 10px; } }
 
 /* ---------------- header over the scene ---------------- */
-.top { background: rgba(7, 21, 40, 0.42); border-bottom-color: transparent; -webkit-backdrop-filter: blur(12px) saturate(1.2); backdrop-filter: blur(12px) saturate(1.2); }
+.top { background: rgba(7, 21, 40, 0.86); border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; }
 @media (max-width: 959px) { .nav { background: #071528; } }
 
 /* ---------------- chapters ---------------- */
@@ -348,8 +348,8 @@ p { margin: 0; }
 .panel {
   position: relative; width: min(520px, 100%); padding: clamp(22px, 2.4vw, 36px);
   border-radius: 22px; border: 1px solid var(--line);
-  background: linear-gradient(160deg, rgba(9, 26, 50, 0.72), rgba(7, 19, 38, 0.58));
-  -webkit-backdrop-filter: blur(18px) saturate(1.25); backdrop-filter: blur(18px) saturate(1.25);
+  /* opaque enough to read without a backdrop blur, which is costly over playing video */
+  background: linear-gradient(160deg, rgba(9, 26, 50, 0.93), rgba(7, 19, 38, 0.88));
   box-shadow: 0 30px 80px -40px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 .panel.wide { width: min(620px, 100%); }

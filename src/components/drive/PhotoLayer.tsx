@@ -24,7 +24,7 @@ export const PLATES: Plate[] = [
   // in page order: a later plate fades in on top of the one before it
   { shot: 'hero', name: 'hero', pos: '72% 50%', posTall: '86% 50%', copy: 'left', video: 'loop' },
   { shot: 'services', name: 'services', pos: '76% 50%', posTall: '84% 50%', copy: 'left', video: 'loop' },
-  { shot: 'how', name: 'how', pos: '62% 50%', posTall: '56% 50%', copy: 'left', video: 'loop' },
+  { shot: 'how', name: 'how', pos: '56% 50%', posTall: '52% 50%', copy: 'left' },
   { shot: 'compliance', name: 'compliance', pos: '80% 50%', posTall: '86% 50%', copy: 'left', video: 'loop' },
   { shot: 'fleet', name: 'fleet', pos: '20% 50%', posTall: '26% 50%', copy: 'right', video: 'loop' },
   { shot: 'drivers', name: 'drivers', pos: '82% 50%', posTall: '66% 50%', copy: 'left', video: 'loop' },

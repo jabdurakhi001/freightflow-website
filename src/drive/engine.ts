@@ -111,7 +111,9 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   const measure = () => {
     const y = window.scrollY;
     sections = Array.from(document.querySelectorAll<HTMLElement>('[data-shot]'))
-      .filter((el) => SHOTS[el.dataset.shot!])
+      // Every other chapter is covered by a photographic plate, so the scene only ever frames
+      // the map: when a plate fades out, the map is already in place behind it.
+      .filter((el) => el.dataset.shot === 'lanes' || el.dataset.shot === 'platform')
       .map((el) => { const r = el.getBoundingClientRect(); return { el, key: el.dataset.shot!, top: r.top + y, height: r.height, sticky: el.hasAttribute('data-scrub') }; });
   };
   // Render resolution: the device's pixel ratio, scaled down if frames run slow.
