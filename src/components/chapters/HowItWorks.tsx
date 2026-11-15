@@ -4,7 +4,8 @@ import { useDriveMode, useDriveStill } from '../drive/DriveContext';
 import { useReveal } from './Chapter';
 
 /**
- * A pinned chapter: while it holds the screen, scrolling drives the truck through five gates on
+ * A pinned chapter: while it holds the screen, scrolling steps through the five stages (and, where
+ * the 3D scene shows, drives the truck through five gates) on
  * the road and lights the matching step here. Without the scene (or with reduced motion) it's a
  * plain list at its natural height.
  */
@@ -53,7 +54,7 @@ export default function HowItWorks() {
                 </li>
               ))}
             </ol>
-            {scrub && <p className="cap">Keep scrolling: you’re driving. The orange gate is the dispatcher’s approval.</p>}
+            {scrub && <p className="cap">Keep scrolling to follow a load through each step.</p>}
           </div>
         </div>
       </div>
