@@ -45,7 +45,7 @@ confirm the plan allows commercial use of the output.
 ### Step 2 — build the plates into the site
 
 Done for stills. `src/components/drive/PhotoLayer.tsx` cross-fades a photographic plate over
-the canvas for the `hero`, `compliance`, `drivers`, `faq` and `cta` shots and pauses the 3D
+the canvas for every shot except the two map chapters (`lanes`, `platform`) and pauses the 3D
 engine while a plate fully covers it. The plates are in `public/drive/photo/`.
 
 How the plates were made: the Seedance start frame locks the look, so animating the 3D
