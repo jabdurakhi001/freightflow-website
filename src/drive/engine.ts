@@ -114,13 +114,19 @@ export function createDrive(opts: DriveOptions): DriveHandle {
       .filter((el) => SHOTS[el.dataset.shot!])
       .map((el) => { const r = el.getBoundingClientRect(); return { el, key: el.dataset.shot!, top: r.top + y, height: r.height, sticky: el.hasAttribute('data-scrub') }; });
   };
-  const resize = () => {
-    W = window.innerWidth; H = window.innerHeight; aspect = W / H;
-    const dpr = Math.min(window.devicePixelRatio || 1, low ? 1 : W < 760 ? 1.5 : 1.75);
+  // Render resolution: the device's pixel ratio, scaled down if frames run slow.
+  let baseDpr = 1, resScale = 1;
+  const applyDpr = () => {
+    const dpr = Math.max(0.5, baseDpr * resScale);
     renderer.setPixelRatio(dpr);
     renderer.setSize(W, H, false);
     composer?.setPixelRatio(dpr);
     composer?.setSize(W, H);
+  };
+  const resize = () => {
+    W = window.innerWidth; H = window.innerHeight; aspect = W / H;
+    baseDpr = Math.min(window.devicePixelRatio || 1, low ? 1 : W < 760 ? 1.5 : 1.75);
+    applyDpr();
     camera.aspect = aspect;
     measure();
     dirty = 3;
@@ -320,8 +326,12 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     // ----- watchdog: tell the page when this device can't keep up -----
     if (!still && intro >= 1) {
       slowT += dtRaw; slowAcc += dtRaw; slowN++;
-      if (slowT > 2.5) {
-        if ((slowAcc / slowN) * 1000 > 48) opts.onSlow?.();
+      if (slowT > 1.5) {
+        const avg = (slowAcc / slowN) * 1000;
+        // Missing the display's rhythm: first render fewer pixels, and only when that
+        // is not enough hand over to the next rung of the quality ladder.
+        if (opts.onSlow && avg > 21 && resScale > 0.55) { resScale *= 0.8; applyDpr(); }
+        else if (avg > (low ? 48 : 36)) opts.onSlow?.();
         slowT = slowAcc = slowN = 0;
       }
     }
@@ -331,7 +341,9 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   const ORIGIN = new THREE.Vector3(0, 0.5, 0), tmp2 = new THREE.Vector3();
   let last = performance.now(), lastTotal = 0;
   const schedule = () => { if (!raf && !paused && !destroyed && !document.hidden) { raf = requestAnimationFrame(frame); } };
-  const kick = () => { dirty = 3; last = performance.now(); schedule(); };
+  // Restart the clock only when the loop was idle; while it runs, a scroll event must not
+  // shorten the next frame's time step (that made the camera ease unevenly while scrolling).
+  const kick = () => { dirty = 3; if (!raf) last = performance.now(); schedule(); };
 
   const onPointer = (e: PointerEvent) => { if (e.pointerType === 'touch') return; pointer.x = (e.clientX / W) * 2 - 1; pointer.y = (e.clientY / H) * 2 - 1; };
   const onVis = () => { if (!document.hidden) kick(); };
