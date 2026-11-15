@@ -141,7 +141,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
   const labels = new Map<string, HTMLElement>();
   const camPos = new THREE.Vector3(), camTgt = new THREE.Vector3(), tmp = new THREE.Vector3(), right = new THREE.Vector3(), up = new THREE.Vector3();
-  let slowT = 0, slowAcc = 0, slowN = 0, readySent = false;
+  let slowT = 0, slowAcc = 0, slowN = 0, slowWin = 0, slowBad = 0, readySent = false;
 
   /** The blended shot for a (smoothed) scroll position. */
   const shotAt = (y: number): { shot: Shot; travel: number } => {
@@ -345,8 +345,13 @@ export function createDrive(opts: DriveOptions): DriveHandle {
         const avg = (slowAcc / slowN) * 1000;
         // Missing the display's rhythm: first render fewer pixels, and only when that
         // is not enough hand over to the next rung of the quality ladder.
-        if (opts.onSlow && avg > 21 && resScale > 0.55) { resScale *= 0.8; applyDpr(); }
-        else if (avg > (low ? 48 : 36)) opts.onSlow?.();
+        // The first windows are skipped (shaders are still compiling), and leaving this
+        // quality level takes two bad windows in a row, so one hitch never costs the scene.
+        if (++slowWin > 2) {
+          if (opts.onSlow && avg > 21 && resScale > 0.6) { resScale *= 0.8; applyDpr(); slowBad = 0; }
+          else if (avg > 48) { if (++slowBad >= 2) opts.onSlow?.(); }
+          else slowBad = 0;
+        }
         slowT = slowAcc = slowN = 0;
       }
     }
