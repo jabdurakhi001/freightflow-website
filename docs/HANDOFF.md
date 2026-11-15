@@ -64,6 +64,19 @@ trailer, clear sky, Chicago expressway with the downtown skyline. The plates wer
 generating the hero first and passing it as a second reference for the other four, so the
 truck matches across shots. The 3D rig's cab is white to match.
 
+### Sketch look (current)
+
+The owner then chose a sketch style over photoreal. The same eight clips were converted
+with ffmpeg, no further generation: denoise, grey, dodge-blend against a blurred negative
+(the classic pencil-sketch trick), boost and floor the lines, map black/white to navy
+`#071528` / pale blue, then loop with a half-second dissolve. Each still is its clip's
+first frame. Main encode 1600 px wide, phones 960 px; about 9 MB for all eight on desktop.
+The photoreal sources are not in the repo.
+
+Known leftovers: the `drivers` trailer has no wordmark; loop seams are a short dissolve;
+the engine still builds the unused road scene (truck, road, scenery, gates), which is
+load time and memory that could be cut.
+
 ## Rules that still apply
 
 - Work on branch `ccr-8ce79623-sii4tw`; no pull request unless the owner asks.

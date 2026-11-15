@@ -295,20 +295,23 @@ p { margin: 0; }
 
 /* photographic plates that take over from the scene in the on-the-road chapters */
 .photos { position: fixed; inset: 0 auto auto 0; width: 100%; height: 100vh; height: 100lvh; z-index: 0; pointer-events: none; }
-.photo { position: absolute; inset: 0; opacity: 0; visibility: hidden; will-change: opacity; background: #050b16; }
+.photo { position: absolute; inset: 0; opacity: 0; visibility: hidden; will-change: opacity; background: #071528; overflow: hidden; }
 .photo img, .photo video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: var(--pos, 50% 50%); }
 .photo::after { content: ""; position: absolute; inset: 0; }
 .photo-left::after { background: linear-gradient(90deg, rgba(4, 10, 22, 0.86) 0%, rgba(4, 10, 22, 0.55) 38%, rgba(4, 10, 22, 0) 68%), linear-gradient(rgba(4, 10, 22, 0.55), rgba(4, 10, 22, 0) 22%); }
-.photo-right::after { background: linear-gradient(270deg, rgba(4, 10, 22, 0.86) 0%, rgba(4, 10, 22, 0.55) 38%, rgba(4, 10, 22, 0) 68%), linear-gradient(rgba(4, 10, 22, 0.55), rgba(4, 10, 22, 0) 22%); }
+/* copy on the right: slide the plate left so the rig and its wordmark clear the card */
+.photo-right img, .photo-right video { transform: translateX(-13%); }
+.photo-right::after { background: linear-gradient(270deg, #071528 0%, #071528 13%, rgba(7, 21, 40, 0.6) 40%, rgba(7, 21, 40, 0) 68%), linear-gradient(rgba(4, 10, 22, 0.55), rgba(4, 10, 22, 0) 22%); }
 .photo-wide::after { background: rgba(4, 10, 22, 0.5); }
-.photo-top::after { background: linear-gradient(rgba(4, 10, 22, 0.7) 0%, rgba(4, 10, 22, 0.25) 46%, rgba(4, 10, 22, 0) 70%); }
+.photo-top::after { background: linear-gradient(rgba(7, 21, 40, 0.92) 0%, rgba(7, 21, 40, 0.7) 44%, rgba(7, 21, 40, 0) 76%); }
 /* Portrait: the plate fills the top of the screen (the bottom for the closing chapter) and
    melts into the page colour, so the rig stays large instead of being cropped to a sliver. */
 @media (max-aspect-ratio: 4/5) {
   .photo img, .photo video { height: 62%; object-position: var(--pos-tall, 50% 50%); }
-  .photo-left::after, .photo-right::after, .photo-wide::after { background: linear-gradient(rgba(5, 11, 22, 0.5) 0%, rgba(5, 11, 22, 0.1) 22%, rgba(5, 11, 22, 0.35) 40%, #050b16 62%); }
+  .photo-left::after, .photo-right::after, .photo-wide::after { background: linear-gradient(rgba(5, 11, 22, 0.5) 0%, rgba(5, 11, 22, 0.1) 22%, rgba(5, 11, 22, 0.35) 40%, #071528 62%); }
   .photo-top img, .photo-top video { top: auto; bottom: 0; }
-  .photo-top::after { background: linear-gradient(#050b16 38%, rgba(5, 11, 22, 0.45) 58%, rgba(5, 11, 22, 0.05) 80%); }
+  .photo-right img, .photo-right video { transform: none; }
+  .photo-top::after { background: linear-gradient(#071528 38%, rgba(7, 21, 40, 0.3) 52%, rgba(7, 21, 40, 0) 66%); }
 }
 
 /* labels the engine pins to points in the scene */

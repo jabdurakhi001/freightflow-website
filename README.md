@@ -40,6 +40,15 @@ See [.env.example](.env.example). At minimum:
 
 ## The drive (3D scene)
 
+> **Current state.** The truck chapters no longer show the 3D road scene. Each one has a
+> sketch plate: a white-line-on-navy drawing of a white Freightliner Cascadia on a Chicago
+> expressway, as a still (`public/drive/photo/`) with a looping clip over it
+> (`public/drive/video/`), cross-faded by `src/components/drive/PhotoLayer.tsx`. The 3D
+> engine now only draws the dotted lane map behind the Lanes and Platform chapters; the
+> road, truck, gates and blueprint described below are still in the code but never framed.
+> `docs/HANDOFF.md` has how the plates were made.
+
+
 Everything 3D lives in [`src/drive/`](src/drive/); React only talks to it through a small bridge in [`src/components/drive/`](src/components/drive/).
 
 | File | What it is |

@@ -24,7 +24,13 @@ export class DriveBridge {
     this.engine?.setLane(from, to);
     this.laneListeners.forEach((cb) => cb());
   }
-  setPaused(paused: boolean) { this.paused = paused; this.engine?.setPaused(paused || this.covered); }
+  setPaused(paused: boolean) {
+    this.paused = paused;
+    this.engine?.setPaused(paused || this.covered);
+    this.pauseListeners.forEach((cb) => cb());
+  }
+  private pauseListeners = new Set<() => void>();
+  onPause = (cb: () => void) => { this.pauseListeners.add(cb); return () => { this.pauseListeners.delete(cb); }; };
   /** A photo layer fully hides the scene: stop drawing it until it shows again. */
   covered = false;
   setCovered(covered: boolean) {
