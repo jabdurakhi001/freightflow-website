@@ -135,7 +135,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
   // ---------- state ----------
   let dirty = 3;
   let paused = false, destroyed = false, raf = 0;
-  let sY = window.scrollY, lastScroll = sY;
+  let sY = window.scrollY, sVel = 0;
   let offset = 0, time = 0, headBoost = 0, intro = still ? 1 : 0;
   let orbitYaw = 0, orbitVel = 0;
   const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
@@ -210,10 +210,18 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     const dt = still ? 0 : dtRaw;
     // smoothed scroll: everything that follows the page eases after it
     const target = window.scrollY;
-    const scrollVel = (target - lastScroll) / Math.max(dtRaw, 1e-3);
-    lastScroll = target;
-    sY = still ? target : sY + (target - sY) * (1 - Math.exp(-dtRaw * 7));
-    if (Math.abs(target - sY) < 0.05) sY = target;
+    if (still) { sY = target; sVel = 0; }
+    else {
+      // critically damped spring: position and speed both stay continuous, so the steps of
+      // a mouse wheel come out as one even glide instead of a pulse per notch
+      const omega = 2 / 0.3, x = omega * dtRaw;
+      const decay = 1 / (1 + x + 0.48 * x * x + 0.235 * x * x * x);
+      const change = sY - target, temp = (sVel + omega * change) * dtRaw;
+      sVel = (sVel - omega * temp) * decay;
+      sY = target + (change + temp) * decay;
+      if (Math.abs(target - sY) < 0.05 && Math.abs(sVel) < 2) { sY = target; sVel = 0; }
+    }
+    const scrollVel = sVel;
     const moving = Math.abs(target - sY) > 0.05;
 
     const { shot, travel } = shotAt(sY);
@@ -288,7 +296,10 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     camPos.sub(camTgt).multiplyScalar(k * (1 + 0.32 * (1 - smoother(intro)))).add(camTgt);
     camPos.y = Math.max(camPos.y, 0.9);
     camera.fov = shot.fov;
-    camera.up.set(0, 1, 0);
+    // Looking straight down, "up" must be north: with a vertical up vector the view has no
+    // defined roll there, and the slightest camera drift spins the map.
+    const down = clamp01((Math.abs(camPos.y - camTgt.y) / Math.max(1e-3, camPos.distanceTo(camTgt)) - 0.75) / 0.2);
+    camera.up.set(0, 1 - down, -down).normalize();
     camera.position.copy(camPos);
     camera.lookAt(camTgt);
     // pointer parallax
@@ -322,6 +333,10 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     if (grade) { grade.uniforms.uTime.value = still ? 0 : time % 10; grade.uniforms.uAmount.value = 1 - shot.map * 0.6; }
     if (composer) composer.render(dtRaw); else renderer.render(scene, camera);
     if (!readySent) { readySent = true; opts.onReady?.(); }
+    if (fpsEl) {
+      fpsAcc += dtRaw; fpsN++;
+      if (fpsAcc > 0.5) { fpsEl.textContent = `${(fpsAcc / fpsN * 1000).toFixed(1)} ms · ${opts.quality} · res ${resScale.toFixed(2)} · dpr ${renderer.getPixelRatio().toFixed(2)}`; fpsAcc = fpsN = 0; }
+    }
 
     // ----- watchdog: tell the page when this device can't keep up -----
     if (!still && intro >= 1) {
@@ -339,6 +354,13 @@ export function createDrive(opts: DriveOptions): DriveHandle {
     else schedule();
   };
   const ORIGIN = new THREE.Vector3(0, 0.5, 0), tmp2 = new THREE.Vector3();
+  // `?fps` shows frame time and render quality, for diagnosing a slow device
+  let fpsEl: HTMLElement | null = null, fpsAcc = 0, fpsN = 0;
+  if (/[?&]fps\b/.test(window.location.search)) {
+    fpsEl = document.createElement('div');
+    fpsEl.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:9999;padding:4px 8px;font:12px monospace;color:#fff;background:rgba(0,0,0,.7);border-radius:4px;pointer-events:none';
+    document.body.appendChild(fpsEl);
+  }
   let last = performance.now(), lastTotal = 0;
   const schedule = () => { if (!raf && !paused && !destroyed && !document.hidden) { raf = requestAnimationFrame(frame); } };
   // Restart the clock only when the loop was idle; while it runs, a scroll event must not
@@ -368,6 +390,7 @@ export function createDrive(opts: DriveOptions): DriveHandle {
       ro.disconnect();
       window.removeEventListener('resize', resize);
       window.removeEventListener('scroll', kick);
+      fpsEl?.remove();
       window.removeEventListener('pointermove', onPointer);
       document.removeEventListener('visibilitychange', onVis);
       truck.dispose();
