@@ -55,13 +55,14 @@ those photographs are the plates and the start frames for video.
 
 Clips are in too: `public/drive/video/<name>.mp4` (1080p) and `<name>-720.mp4` (phones),
 made from the plates with Seedance 2.5 at 1080p, 8 s (128 credits each through the
-connector). `hero`, `compliance` and `sunrise` hold a steady framing and are encoded as
-seamless 7 s loops (last second cross-faded into the first). `drivers` and `aerial` have a
-camera move, so they play once as the chapter arrives and hold their last frame
-(`video: 'once'` in `PLATES`). Reduced motion and save-data get the stills only.
+connector) and encoded as seamless loops (last second cross-faded into the first; the
+`drivers` loop starts 2.5 s in, after its camera settles). Reduced motion and save-data
+get the stills only.
 
-The generated truck is not a Freightliner Cascadia, which the copy names. The owner has
-been told; regenerate the plates or use real fleet photos if that needs to match.
+Art direction from the owner: a white 2027 Freightliner Cascadia with the FreightFlow
+trailer, clear sky, Chicago expressway with the downtown skyline. The plates were made by
+generating the hero first and passing it as a second reference for the other four, so the
+truck matches across shots. The 3D rig's cab is white to match.
 
 ## Rules that still apply
 
