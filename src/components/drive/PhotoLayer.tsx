@@ -36,6 +36,8 @@ export default function PhotoLayer() {
   const layers = useRef<(HTMLDivElement | null)[]>([]);
   const videos = useRef<(HTMLVideoElement | null)[]>([]);
   // a plate's files are requested once its chapter is within reach, the hero's at once
+  // phones get the 720p encode
+  const [small] = useState(() => Math.min(window.innerWidth, window.innerHeight) < 600);
   const [armed, setArmed] = useState<boolean[]>(() => PLATES.map((_, i) => i === 0));
 
   useEffect(() => {
@@ -104,7 +106,7 @@ export default function PhotoLayer() {
               />
             )}
             {armed[i] && p.video && !still && (
-              <video ref={(el) => { videos.current[i] = el; }} src={`/drive/video/${p.name}.mp4`} poster={`${base}-1920.jpg`} muted loop playsInline preload="metadata" />
+              <video ref={(el) => { videos.current[i] = el; }} src={`/drive/video/${p.name}${small ? '-720' : ''}.mp4`} muted loop playsInline preload={i === 0 ? 'auto' : 'metadata'} />
             )}
           </div>
         );
