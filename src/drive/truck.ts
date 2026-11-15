@@ -995,14 +995,14 @@ export function createTruck(): Truck {
 
   const paint = reg(
     new THREE.MeshPhysicalMaterial({
-      color: '#0e2e59', // reads as brand navy #0b2545 once it is under night lighting
+      color: '#dfe5ee', // fleet white, matching the Cascadias in the photographic plates
       metalness: 0.18,
       roughness: 0.5,
       specularIntensity: 0.45,
       clearcoat: 0.28,
       clearcoatRoughness: 0.45,
       sheen: 0.3,
-      sheenColor: new THREE.Color('#6f9be0'),
+      sheenColor: new THREE.Color('#c9d8f0'),
       sheenRoughness: 0.45,
       envMap: envTex,
       envMapIntensity: 1.5,
